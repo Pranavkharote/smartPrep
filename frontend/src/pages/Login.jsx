@@ -41,14 +41,18 @@ const Login = () => {
         },
         { withCredentials: true }
       );
-
-      const { success, message } = data;
+      
+      console.log(data);
+      const { success, message, token } = data;
+      // const token = data.data.token;
       console.log(message);
       if (success == true || success == "true") {
+        localStorage.setItem("token", token);
         handleSuccess(message);
         setTimeout(() => {
-          navigate("/questions");
+          navigate("/");
           console.log("navigating");
+
         }, 500);
       } else {
         console.log(message);

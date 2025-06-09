@@ -81,6 +81,9 @@ const QuestionList = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white p-6">
+      <button className="flex bg-red-400 px-4 py-1 rounded-2xl text-white">
+        <a href="/">Back</a>
+      </button>
       <motion.h1
         className="text-3xl font-bold text-center text-blue-800 mb-8"
         initial={{ opacity: 0, y: -20 }}

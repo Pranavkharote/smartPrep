@@ -83,6 +83,31 @@ export const fetchLanguages = async () => {
 
 // Submit code for execution
 export const submitCode = async ({ source_code, language_id, stdin }) => {
+  // try {
+  //   const response = await axios.post(
+  //     `${BASE_URL}/submissions?base64_encoded=true&wait=true`,
+  //     {
+  //       source_code: toBase64(source_code),
+  //       language_id: language_id,
+  //       stdin: toBase64(stdin || ""),
+  //     },
+  //     options
+  //   );
+
+  //   // Decode response output fields
+  //   const { stdout, stderr, compile_output, message } = response.data;
+
+  //   return {
+  //     ...response.data,
+  //     stdout: stdout ? fromBase64(stdout) : null,
+  //     stderr: stderr ? fromBase64(stderr) : null,
+  //     compile_output: compile_output ? fromBase64(compile_output) : null,
+  //     message: message ? fromBase64(message) : null,
+  //   };
+  // } catch (error) {
+  //   console.error("Error submitting code:", error);
+  //   return null;
+  // }
   try {
     const response = await axios.post(
       `${BASE_URL}/submissions?base64_encoded=true&wait=true`,
@@ -94,16 +119,7 @@ export const submitCode = async ({ source_code, language_id, stdin }) => {
       options
     );
 
-    // Decode response output fields
-    const { stdout, stderr, compile_output, message } = response.data;
-
-    return {
-      ...response.data,
-      stdout: stdout ? fromBase64(stdout) : null,
-      stderr: stderr ? fromBase64(stderr) : null,
-      compile_output: compile_output ? fromBase64(compile_output) : null,
-      message: message ? fromBase64(message) : null,
-    };
+    return response.data; // NO decoding
   } catch (error) {
     console.error("Error submitting code:", error);
     return null;

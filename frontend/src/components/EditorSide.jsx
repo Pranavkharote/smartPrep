@@ -81,148 +81,108 @@ const EditorSide = () => {
     setRunning(true);
     setOutput("Running...");
 
-    try {
-      const result = await submitCode({
-        source_code: submittedCode,
-        language_id: 54, // use selected language
-        stdin: "",
-      });
-
+    const testCases = question.testCases || [];
+    if (testCases.length === 0) {
+      setOutput("No test cases available.");
       setRunning(false);
-
-      if (!result) {
-        setOutput("Failed to run code. Try again.");
-        return;
-      }
-
-      const decode = (str) => {
-        try {
-          return str ? atob(str) : "";
-        } catch {
-          return str || "";
-        }
-      };
-
-      const sanitizeOutput = (str) => {
-        if (!str) return "";
-        return str.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
-      };
-
-      if (result.stdout) {
-        const decoded = decode(result.stdout);
-        console.log("Decoded stdout:", decoded);
-        setOutput(sanitizeOutput(decoded));
-      } else if (result.stderr) {
-        const decoded = decode(result.stderr);
-        console.error("Decoded stderr:", decoded);
-        setOutput(sanitizeOutput(decoded));
-      } else if (result.compile_output) {
-        const decoded = decode(result.compile_output);
-        console.error("Decoded compile_output:", decoded);
-        setOutput(sanitizeOutput(decoded));
-      } else {
-        setOutput("No output from program.");
-      }
-    } catch (error) {
-      setRunning(false);
-      toast.error("Error running code. Try again.");
-      console.error(error);
+      return;
     }
+
+    const wrapCodeWithTests = (submittedCode, question) => {
+      const { functionName, testCases } = question;
+
+      return `
+${submittedCode}
+
+// Test Cases
+const testCases = ${JSON.stringify(testCases)};
+testCases.forEach((test, index) => {
+  try {
+    const result = ${functionName}(...test.input);
+    const expected = test.expectedOutput;
+    const passed = JSON.stringify(result) === JSON.stringify(expected);
+
+    if (passed) {
+      console.log(\`✅ Test Case \${index + 1}: Passed\`);
+    } else {
+      console.log(\`❌ Test Case \${index + 1}: Failed\\nExpected: \${JSON.stringify(expected)}\\nGot: \${JSON.stringify(result)}\`);
+    }
+  } catch (e) {
+    console.log(\`❌ Test Case \${index + 1}: Crashed - \${e.message}\`);
+  }
+});
+`;
+    };
+
+    let allPassed = true;
+    let results = [];
+
+    for (let i = 0; i < testCases.length; i++) {
+      const testCase = testCases[i];
+      const stdin = testCase.input || "";
+      const expectedOutput = testCase.expectedOutput || "";
+
+      const wrappedCode = wrapCodeWithTests(submittedCode, question);
+
+      try {
+        const result = await submitCode({
+          source_code: wrappedCode,
+          language_id: languageId,
+          // stdin: stdin,
+        });
+        const output = decode(result.stdout);
+        setOutput(output);
+
+        const decode = (str) => {
+          try {
+            return str
+              ? new TextDecoder().decode(
+                  Uint8Array.from(atob(str), (c) => c.charCodeAt(0))
+                )
+              : "";
+          } catch (err) {
+            return str || "";
+          }
+        };
+
+        const sanitizeOutput = (str) => {
+          if (!str) return "";
+          return str.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
+        };
+
+        const actualOutput = sanitizeOutput(decode(result.stdout)).trim();
+        const stderr = sanitizeOutput(decode(result.stderr)).trim();
+        const compileOutput = sanitizeOutput(
+          decode(result.compile_output)
+        ).trim();
+
+        if (stderr) {
+          results.push(`Test Case ${i + 1}: ⚠️ Runtime Error:\n${stderr}`);
+          allPassed = false;
+        } else if (compileOutput) {
+          results.push(
+            `Test Case ${i + 1}: 🛠️ Compile Error:\n${compileOutput}`
+          );
+          allPassed = false;
+        } else if (actualOutput === expectedOutput) {
+          results.push(`Test Case ${i + 1}: ✅ Passed`);
+        } else {
+          results.push(
+            `Test Case ${
+              i + 1
+            }: ❌ Failed\nExpected: ${expectedOutput}\nGot: ${actualOutput}`
+          );
+          allPassed = false;
+        }
+      } catch (error) {
+        results.push(`Test Case ${i + 1}: Error running code.`);
+        allPassed = false;
+      }
+    }
+
+    setOutput(results.join("\n\n"));
+    setRunning(false);
   };
-
-  //   const runCode = async () => {
-  //   if (!languageId) {
-  //     toast.error("Please select a programming language.");
-  //     return;
-  //   }
-  //   if (!submittedCode.trim()) {
-  //     toast.error("Please enter code to run.");
-  //     return;
-  //   }
-
-  //   setRunning(true);
-  //   setOutput("Running...");
-
-  //   const result = await submitCode({
-  //     source_code: submittedCode,
-  //     language_id: 63,
-  //     stdin: "", // Extend for user input later
-  //   });
-
-  //   setRunning(false);
-
-  //   if (!result) {
-  //     setOutput("Failed to run code. Try again.");
-  //     return;
-  //   }
-
-  //   // base64_encoded must be true if backend is encoding output
-  //   const decode = (str) => {
-  //     try {
-  //       return str ? atob(str) : "";
-  //     } catch {
-  //       return str || "";
-  //     }
-  //   };
-
-  //   if (result.stdout) {
-  //     setOutput(decode(result.stdout));
-  //   } else if (result.stderr) {
-  //     setOutput(decode(result.stderr));
-  //   } else if (result.compile_output) {
-  //     setOutput(decode(result.compile_output));
-  //   } else {
-  //     setOutput("No output from program.");
-  //   }
-  // };
-
-  // const runCode = async () => {
-  //   if (!languageId) {
-  //     toast.error("Please select a programming language.");
-  //     return;
-  //   }
-  //   if (!submittedCode.trim()) {
-  //     toast.error("Please enter code to run.");
-  //     return;
-  //   }
-
-  //   setRunning(true);
-  //   setOutput("Running...");
-
-  //   const result = await submitCode({
-  //     source_code: submittedCode,
-  //     language_id: 63,
-  //     stdin: "", // You can add input handling later
-  //   });
-
-  //   setRunning(false);
-
-  //   if (!result) {
-  //     setOutput("Failed to run code. Try again.");
-  //     return;
-  //   }
-  //   if (result?.stdout) {
-  //     console.log("Output:", result.stdout);
-  //   } else if (result?.stderr || result?.compile_output) {
-  //     console.error("Error:", result.stderr || result.compile_output);
-  //   } else {
-  //     console.log("No output");
-  //   }
-
-  //   //   const decodedOutput = result.stdout
-  //   // ? atob(result.stdout)
-  //   // : result.stderr
-  //   // ? atob(result.stderr)
-  //   // : result.compile_output
-  //   // ? atob(result.compile_output)
-  //   // : "No output from program.";
-  //   // if (result.stdout) setOutput(result.stdout);
-  //   // else if (result.stderr) setOutput(result.stderr);
-  //   // else if (result.compile_output) setOutput(result.compile_output);
-  //   // else setOutput("No output from program.");
-
-  //   setOutput();
-  // };
 
   return (
     <div className="w-1/2">

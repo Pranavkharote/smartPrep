@@ -30,20 +30,20 @@ router.post("/submission", authenticateUser, async (req, res) => {
   try {
     const userId = req.user._id;
     const { questionId, status, timeTaken, submittedCode } = req.body;
-    const existing = await UserProgress.findOne({ userId, questionId });
-    if (existing) {
-      (existing.status = status), (existing.timeTaken = timeTaken);
-      if (submittedCode)
-        (existing.submittedCode = submittedCode),
-          (existing.submittedAt = Date.now());
+    // const existing = await UserProgress.findOne({ userId, questionId });
+    // if (existing) {
+    //   (existing.status = status), (existing.timeTaken = timeTaken);
+    //   if (submittedCode)
+    //     (existing.submittedCode = submittedCode),
+    //       (existing.submittedAt = Date.now());
 
-      await existing.save();
-      return res.json({
-        message: "submission Updated",
-        submission: existing,
-        success: "true",
-      });
-    } else {
+    //   await existing.save();
+    //   return res.json({
+    //     message: "submission Updated",
+    //     submission: existing,
+    //     success: "true",
+    //   });
+    // } else {
       const newSubmission = new UserProgress({
         userId,
         questionId,
@@ -57,7 +57,6 @@ router.post("/submission", authenticateUser, async (req, res) => {
         submission: newSubmission,
         success: true,
       });
-    }
   } catch (error) {
     console.log(error);
     return res
@@ -65,6 +64,45 @@ router.post("/submission", authenticateUser, async (req, res) => {
       .json({ message: "Submission failed", success: false });
   }
 });
+// router.post("/submission", authenticateUser, async (req, res) => {
+//   try {
+//     const userId = req.user._id;
+//     const { questionId, status, timeTaken, submittedCode } = req.body;
+//     const existing = await UserProgress.findOne({ userId, questionId });
+//     if (existing) {
+//       (existing.status = status), (existing.timeTaken = timeTaken);
+//       if (submittedCode)
+//         (existing.submittedCode = submittedCode),
+//           (existing.submittedAt = Date.now());
+
+//       await existing.save();
+//       return res.json({
+//         message: "submission Updated",
+//         submission: existing,
+//         success: "true",
+//       });
+//     } else {
+//       const newSubmission = new UserProgress({
+//         userId,
+//         questionId,
+//         timeTaken,
+//         submittedCode,
+//         status,
+//       });
+//       await newSubmission.save();
+//       return res.json({
+//         message: "submission created",
+//         submission: newSubmission,
+//         success: true,
+//       });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     return res
+//       .status(500)
+//       .json({ message: "Submission failed", success: false });
+//   }
+// });
 
 router.get("/submission/:questionId", authenticateUser, async (req, res) => {
   try {

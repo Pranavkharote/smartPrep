@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 
-const Dashboard = ({ user = {}, stats = {}, recentSubmissions = [] }) => {
+const Dashboard = ({ user = {}, stats = {} }) => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchHistory = async () => {
       try {
@@ -19,11 +20,28 @@ const Dashboard = ({ user = {}, stats = {}, recentSubmissions = [] }) => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching submission history:", err);
-        setLoading(false);
       }
     };
     fetchHistory();
   }, []);
+  if (loading) {
+    return <p>Loading Dashboard...</p>;
+  }
+  const totalTime = history.reduce(
+    (sum, item) => sum + (item.timeTaken || 0),
+    0
+  );
+
+  const formatTime = (seconds) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${mins}m ${secs}s`;
+    // return `${hrs}h ${mins}m ${secs}s`;
+  };
+
+  const solvedCount = history.filter((item) => item.status == "solved").length;
+  console.log(history);
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6">
       <motion.div
@@ -55,17 +73,17 @@ const Dashboard = ({ user = {}, stats = {}, recentSubmissions = [] }) => {
           {[
             {
               title: "Questions Solved",
-              value: history.solved || 2,
+              value: solvedCount || 0,
               color: "text-green-600",
             },
             {
               title: "Submissions",
-              value: stats.submissions || 0,
+              value: history.length || 0,
               color: "text-blue-600",
             },
             {
               title: "Time Spent (mins)",
-              value: stats.timeSpent || 0,
+              value: formatTime(totalTime) || 0,
               color: "text-purple-600",
             },
           ].map((item, index) => (
@@ -101,7 +119,7 @@ const Dashboard = ({ user = {}, stats = {}, recentSubmissions = [] }) => {
                 >
                   <div>
                     <p className="text-lg font-semibold text-gray-800">
-                      {sub.questionId?.title || "unknown"}
+                      {sub?.questionId?.title || "unknown"}
                     </p>
                     <p className="text-sm text-gray-600">
                       Status:{" "}
