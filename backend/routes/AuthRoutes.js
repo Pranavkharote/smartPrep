@@ -11,6 +11,7 @@ router.post("/", authenticateUser);
 router.get("/", authenticateUser, async (req, res) => {
   const question = await Question.find();
   res.json(question);
+  // console.log(question)
 });
 
 

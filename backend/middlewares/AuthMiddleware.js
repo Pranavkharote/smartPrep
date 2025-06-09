@@ -8,7 +8,7 @@ const authenticateUser = async (req, res, next) => {
     return res.json({ status: false, message: "token not founding" });
   }
   jwt.verify(token, process.env.JWT_TOKEN, async (err, data) => {
-    if (err) {
+  if (err) {
       return res.json({ status: false, message: "Invalid token" });
     }
     const user = await UserModel.findById(data.id);

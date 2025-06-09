@@ -47,7 +47,7 @@ function Signup() {
       if (success == true || success == "true") {
         handleSuccess(message);
         setTimeout(() => {
-          console.log("navigating");
+          console.log("navigating to the route");
           navigate("/questions");
         }, 500);
       } else {
