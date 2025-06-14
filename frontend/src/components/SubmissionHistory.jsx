@@ -57,7 +57,7 @@ const SubmissionHistory = () => {
                   className={`px-3 py-1 text-sm rounded-full font-medium ${
                     sub.status === "solved"
                       ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
+                      : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
                   {sub.status}
@@ -94,28 +94,6 @@ const SubmissionHistory = () => {
         )}
       </div>
     </div>
-    // <div className="p-6">
-    //   <h2 className="text-2xl font-bold mb-4">Submission History</h2>
-    //   {history.map((entry, index) => (
-    //     <div
-    //       key={index}
-    //       className="bg-white border border-gray-300 rounded-lg p-4 mb-4 shadow"
-    //     >
-    //       <p><strong>UserId:</strong> {entry.questionId?._id || "not"}</p>
-    //       <p><strong>Question:</strong> {entry.questionId?.title || "Unknown"}</p>
-    //       <p><strong>Status:</strong> {entry.status}</p>
-    //       <p><strong>Time Taken:</strong> {entry.timeTaken} sec</p>
-    //       <p><strong>Submitted At:</strong> {new Date(entry.createdAt).toLocaleString()}</p>
-    //       <div className="mt-2">
-    //         <p className="font-semibold">Submitted Code:</p>
-    //         <pre className="bg-gray-100 p-3 rounded-md text-sm overflow-x-auto whitespace-pre-wrap">
-    //           {entry.submittedCode}
-    //         </pre>
-    //       </div>
-    //       <button className="bg-red-300 px-2 rounded-2xl"><a href={`/questions/${entry.questionId?._id}`}>ReAttempt</a></button>
-    //     </div>
-    //   ))}
-    // </div>
   );
 };
 

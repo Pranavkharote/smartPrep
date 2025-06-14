@@ -7,6 +7,10 @@ const QuestionSchema = new mongoose.Schema({
     type: String,
     enum: ["Easy", "Medium", "Hard"],
   },
+  functionName: {
+    type: String,
+    required: true,
+  },
   solution: String,
   explaination: String,
   stepByStepGuide: [String],
@@ -14,6 +18,10 @@ const QuestionSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  starterCode: {
+    type: String,
+    required: false,
   },
   testCases: [
     {
@@ -27,6 +35,7 @@ const QuestionSchema = new mongoose.Schema({
       },
     },
   ],
+  // constraints: String
 });
 
 const QuestionModel = mongoose.model("Question", QuestionSchema);

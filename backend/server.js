@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const AuthRoutes = require("./routes/AuthRoutes");
 const SubmissionRoutes = require("./routes/SubmissionRoutes");
-
+const Gemini = require("./routes/Gemini")
 
 const app = express();
 dotenv.config();
@@ -24,6 +24,7 @@ const PORT = process.env.PORT || 8080;
 
 app.use("/", AuthRoutes);
 app.use("/", SubmissionRoutes);
+app.use("/", Gemini);
 
 app.get("/", (req, res) => {
   res.send("Server is listening on 8080");

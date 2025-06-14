@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
+import Loader from "../assets/Loader";
 
 const Dashboard = ({ user = {}, stats = {} }) => {
   const [history, setHistory] = useState([]);
@@ -25,7 +26,11 @@ const Dashboard = ({ user = {}, stats = {} }) => {
     fetchHistory();
   }, []);
   if (loading) {
-    return <p>Loading Dashboard...</p>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader />
+      </div>
+    );
   }
   const totalTime = history.reduce(
     (sum, item) => sum + (item.timeTaken || 0),
@@ -99,6 +104,16 @@ const Dashboard = ({ user = {}, stats = {} }) => {
             </motion.div>
           ))}
         </div>
+        <div className="text-center mt-8">
+          <motion.button
+            onClick={() => (window.location.href = "/questions")}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow-md text-lg font-semibold transition"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            🚀 Solve a New Question
+          </motion.button>
+        </div>
 
         {/* Recent Submissions */}
         <div className="mb-10">
@@ -127,7 +142,7 @@ const Dashboard = ({ user = {}, stats = {} }) => {
                         className={`font-medium ${
                           sub.status === "solved"
                             ? "text-green-600"
-                            : "text-red-500"
+                            : "text-yellow-500"
                         }`}
                       >
                         {sub.status}
@@ -145,16 +160,6 @@ const Dashboard = ({ user = {}, stats = {} }) => {
         </div>
 
         {/* CTA */}
-        <div className="text-center mt-8">
-          <motion.button
-            onClick={() => (window.location.href = "/questions")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow-md text-lg font-semibold transition"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            🚀 Solve a New Question
-          </motion.button>
-        </div>
       </motion.div>
     </div>
   );

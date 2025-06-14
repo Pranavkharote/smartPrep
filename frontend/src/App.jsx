@@ -4,50 +4,32 @@ import MainQuestionEditorComponent from "./components/MainQuestionEditorComponen
 import Signup from "./pages/Signup";
 import { Routes, Route } from "react-router-dom";
 import "./index.css";
-import Hi from "./pages/Dashboard";
 import Dashboard from "./pages/Dashboard";
 import SubmissionHistory from "./components/SubmissionHistory";
-import ErrorBoundary from "./components/ErrorBoundary";
-import ProtectedRoute from "./context/ProtectedRoute";
+import Submission from "./components/Submission";
+import QuestionComponent from "./components/QuestionDetails";
+import Solution from "./components/Solution";
 
 const App = () => {
-  // const [languageId, setLanguageId] = useState(null);
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/questions"
-        element={
-          <ProtectedRoute>
-            <QuestionList />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/" element={<Dashboard />} />
+      <Route path="/questions" element={<QuestionList />} />
       <Route
         path="/questions/:questionId"
-        element={
-          <ProtectedRoute>
-            <MainQuestionEditorComponent />
-          </ProtectedRoute>
-        }
+        element={<MainQuestionEditorComponent />}
       />
+      <Route path="/submission" element={<SubmissionHistory />} />
       <Route
-        path="/submission"
-        element={
-          <ProtectedRoute>
-            <SubmissionHistory />
-          </ProtectedRoute>
-        }
-      />
+        path="/questions/:questionId"
+        element={<MainQuestionEditorComponent />}
+      >
+        <Route index element={<QuestionComponent />} />
+        <Route path="submission" element={<Submission />} />
+        <Route path="solution" element={<Solution />} />
+      </Route>
     </Routes>
   );
 };
