@@ -93,6 +93,7 @@ export default function MainNavbar() {
             </DisclosureButton>
           ))}
         </div>
+        
       </DisclosurePanel>
     </Disclosure>
   );

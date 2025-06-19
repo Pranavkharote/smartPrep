@@ -13,7 +13,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 
 const EditorSide = ({ question }) => {
   const [status, setStatus] = useState("attempted");
-  const [timeStart, setTimeStart] = useState(null);
+  const [timeStart, setTimeStart] = useState(Date.now());
   const [submittedCode, setSubmittedCode] = useState("");
   const [output, setOutput] = useState("");
   const [running, setRunning] = useState(false);
@@ -64,6 +64,11 @@ var ${functionName} = function(nums, target) {
       position: "top-center",
     });
   };
+  const handleSuccessRight = (msg) => {
+    toast.dark(msg, {
+      position: "bottom-right",
+    });
+  };
   const handleError = (msg) => {
     toast.error(msg, {
       position: "bottom-right",
@@ -73,34 +78,48 @@ var ${functionName} = function(nums, target) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
+    // if (!submittedCode.trim()) {
+    //   handleError("Code cannot be empty!");
+    //   return;
+    // } else {
+    //   handleSuccess("Code Submitted");
+    // }
 
-    const payload = {
-      questionId: questionId,
-      status: "attempted",
-      timeTaken: timeTaken,
-      submittedCode: submittedCode,
-    };
+    // const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
 
-    try {
-      const { data } = await axios.post(
-        "http://localhost:8080/submission",
-        payload,
-        { withCredentials: true }
-      );
+    // const payload = {
+    //   questionId: questionId,
+    //   status: "attempted",
+    //   timeTaken: timeTaken,
+    //   submittedCode: submittedCode,
+    // };
 
-      const { success, message } = data;
-      if (success === true || success === "true") {
-        handleSuccess(message);
-        setTimeStart(Date.now());
-        setStatus("solved");
-        setSubmittedCode("");
-      } else {
-        handleError(message);
-      }
-    } catch (err) {
-      handleError(err.response?.data?.message || err.message);
-    }
+    // try {
+    //   const { data } = await axios.post(
+    //     "http://localhost:8080/submission",
+    //     payload,
+    //     { withCredentials: true }
+    //   );
+
+    //   const { success, message } = data;
+    //   if (success === true || success === "true") {
+    //   //   handleSuccess(
+    //   //   submissionStatus === "solved"
+    //   //     ? "✅ All test cases passed. Marked as solved!"
+    //   //     : "⚠️ Submitted with some failed test cases."
+    //   // );
+    //   // if (status === "solved") setSubmittedCode("");
+    //   // setTimeStart(Date.now());
+    //     handleSuccess(message);
+    //     setTimeStart(Date.now());
+    //     setStatus("solved");
+    //     setSubmittedCode("");
+    //   } else {
+    //     handleError(message);
+    //   }
+    // } catch (err) {
+    //   handleError(err.response?.data?.message || err.message);
+    // }
   };
 
   const runCode = async () => {
@@ -137,22 +156,39 @@ if (typeof ${functionName} !== "function") {
   console.log("error\\n❌ Function '${functionName}' is not defined properly.");
 } else {
   const testCases = ${JSON.stringify(testCases)};
+  let allPassed = true;
   testCases.forEach((test, index) => {
     try {
-      const args = Object.values(test.input);
+      // 👇 Fix: parse input string if necessary
+      const rawInput = test.input;
+      const args = Array.isArray(rawInput)
+        ? rawInput
+        : typeof rawInput === 'string'
+          ? [JSON.parse(rawInput)]
+          : [rawInput];
+
       const result = ${functionName}(...args);
-      const expected = test.expectedOutput;
+      const expected = JSON.parse(test.expectedOutput); // convert "6" -> 6
       const passed = JSON.stringify(result) === JSON.stringify(expected);
+
       if (passed) {
         console.log(\`✅ Test Case \${index + 1}: Passed\\nExpected: \${JSON.stringify(expected)}\\nGot: \${JSON.stringify(result)}\`);
       } else {
         console.log(\`❌ Test Case \${index + 1}: Failed\\nExpected: \${JSON.stringify(expected)}\\nGot: \${JSON.stringify(result)}\`);
+      allPassed = false;
       }
     } catch (e) {
       console.log(\`❌ Test Case \${index + 1}: Crashed - \${e.message}\`);
+      // console.log(e)
+      allPassed = false;
     }
   });
-}
+
+  if(allPassed){
+  console.log("FINAL_STATUS: solved")
+  } else {
+   console.log("FINAL_STATUS: attempted")}
+} 
 `;
     };
 
@@ -165,7 +201,7 @@ if (typeof ${functionName} !== "function") {
         code: wrappedCode,
       });
 
-      console.log("🚀 Piston Result:", result);
+      // console.log("🚀 Piston Result:", result);
 
       const output =
         result?.run?.stdout?.trim() ||
@@ -174,6 +210,44 @@ if (typeof ${functionName} !== "function") {
         "No output returned.";
 
       setOutput(output);
+
+      // Detect and auto-submit if "FINAL_STATUS" is present
+      if (output.includes("FINAL_STATUS:")) {
+        const isSolved = output.includes("FINAL_STATUS: solved");
+        const submissionStatus = isSolved ? "solved" : "attempted";
+
+        const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
+        const payload = {
+          questionId: questionId,
+          status: submissionStatus,
+          timeTaken: timeTaken,
+          submittedCode: submittedCode,
+        };
+
+        try {
+          const { data } = await axios.post(
+            "http://localhost:8080/submission",
+            payload,
+            { withCredentials: true }
+          );
+
+          const { success, message } = data;
+          if (success === true || success === "true") {
+            handleSuccessRight(
+              submissionStatus === "solved"
+                ? "✅ All test cases passed!"
+                : "⚠️ Some failed test cases."
+            );
+            if (submissionStatus === "solved")
+              //  setSubmittedCode("");
+              setTimeStart(Date.now());
+          } else {
+            handleError(message);
+          }
+        } catch (err) {
+          handleError(err.response?.data?.message || err.message);
+        }
+      }
     } catch (error) {
       setOutput("❌ Error running code: " + (error.message || "Unknown error"));
     }
@@ -184,11 +258,6 @@ if (typeof ${functionName} !== "function") {
   //ai
   const handleAskAI = async (forcedPrompt = null) => {
     let rawPrompt = forcedPrompt || aiChatInput;
-    // const promptToSend =
-    //   typeof rawPrompt === "string"
-    //     ? rawPrompt.trim()
-    //     : String(rawPrompt).trim();
-    // if (!promptToSend.trim()) return;
 
     const promptToSend = rawPrompt.trim();
     if (!promptToSend) return;
@@ -235,34 +304,33 @@ if (typeof ${functionName} !== "function") {
   };
 
   useEffect(() => {
-  if (!timerRunning) return;
+    if (!timerRunning) return;
 
-  const interval = setInterval(() => {
-    const elapsed = Math.floor((Date.now() - timeStart) / 1000);
-    const minutes = String(Math.floor(elapsed / 60)).padStart(2, "0");
-    const seconds = String(elapsed % 60).padStart(2, "0");
-    setFormattedTime(`${minutes}:${seconds}`);
-  }, 1000);
+    const interval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - timeStart) / 1000);
+      const minutes = String(Math.floor(elapsed / 60)).padStart(2, "0");
+      const seconds = String(elapsed % 60).padStart(2, "0");
+      setFormattedTime(`${minutes}:${seconds}`);
+    }, 1000);
 
-  return () => clearInterval(interval);
-}, [timeStart, timerRunning]);
-
+    return () => clearInterval(interval);
+  }, [timeStart, timerRunning]);
 
   return (
     <div className="w-1/2 py-2">
-    <div className="flex">
-      <select
-        value={languageId}
-        onChange={(e) => setLanguageId(parseInt(e.target.value))}
-        className="mb-2 p-2 border rounded h-9 mr-5"
-      >
-        <option value={62}>Java</option>
-        <option value={54}>JavaScript</option>
-        <option value={71}>Python</option>
-        <option value={63}>C++</option>
-      </select>
-      <div className="text-white bg-gray-800 p-3 rounded mb-3 w-fit flex gap-3 items-center h-10">
-        ⏱ Time Spent: {formattedTime}
+      <div className="flex">
+        <select
+          value={languageId}
+          onChange={(e) => setLanguageId(parseInt(e.target.value))}
+          className="mb-2 p-2 border rounded h-9 mr-5"
+        >
+          <option value={62}>Java</option>
+          <option value={54}>JavaScript</option>
+          <option value={71}>Python</option>
+          <option value={63}>C++</option>
+        </select>
+        {/* <div className="text-white bg-gray-800 p-3 rounded mb-3 w-fit flex gap-3 items-center h-10">
+         {formattedTime}
         {!timerRunning && (
           <button
             type="button"
@@ -294,9 +362,8 @@ if (typeof ${functionName} !== "function") {
         >
           Reset
         </button>
+      </div> */}
       </div>
-    </div>
-
       <form onSubmit={handleSubmit}>
         <CodeEditor code={submittedCode} setCode={setSubmittedCode} />
         <div className="flex gap-2 mt-2">
@@ -308,8 +375,8 @@ if (typeof ${functionName} !== "function") {
           >
             {running ? "Running..." : "Run Code"}
           </button>
-
           <button
+            onClick={() => handleSuccess("Code Submitted")}
             type="submit"
             className="py-2 px-4 bg-blue-700 text-white rounded hover:bg-blue-800"
           >
@@ -415,7 +482,7 @@ if (typeof ${functionName} !== "function") {
           </pre>
         )}
       </form>
-      {/* <ToastContainer /> */}
+      <ToastContainer />
     </div>
   );
 };

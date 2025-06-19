@@ -9,13 +9,16 @@ import SubmissionHistory from "./components/SubmissionHistory";
 import Submission from "./components/Submission";
 import QuestionComponent from "./components/QuestionDetails";
 import Solution from "./components/Solution";
+import ErrorBoundary from "./context/ErrorBoundry";
 
 const App = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      {/* <ErrorBoundary>/ */}
       <Route path="/" element={<Dashboard />} />
+      {/* </ErrorBoundary> */}
       <Route path="/questions" element={<QuestionList />} />
       <Route
         path="/questions/:questionId"

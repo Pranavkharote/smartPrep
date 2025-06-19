@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import CopyCode from "./CopyCode";
 
 const Submission = () => {
   const [history, setHistory] = useState([]);
@@ -64,7 +65,8 @@ const Submission = () => {
                 <div>
                   <p className="font-medium mb-1">🧠 Submitted Code:</p>
                   <pre className="bg-gray-900 text-white p-4 rounded-md overflow-x-auto text-sm leading-relaxed">
-                    {sub.submittedCode}
+                    {/* {sub.submittedCode} */}
+                  <CopyCode code={sub.submittedCode}/>
                   </pre>
                 </div>
 

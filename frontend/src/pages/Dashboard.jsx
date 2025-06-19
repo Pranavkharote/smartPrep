@@ -1,10 +1,11 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+
 import axios from "axios";
 import Loader from "../assets/Loader";
 
-const Dashboard = ({ user = {}, stats = {} }) => {
+const Dashboard = ({ user = {} }) => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,6 +22,7 @@ const Dashboard = ({ user = {}, stats = {} }) => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching submission history:", err);
+        setLoading(false);
       }
     };
     fetchHistory();
@@ -38,12 +40,28 @@ const Dashboard = ({ user = {}, stats = {} }) => {
   );
 
   const formatTime = (seconds) => {
-    const hrs = Math.floor(seconds / 3600);
+    // const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
     return `${mins}m ${secs}s`;
     // return `${hrs}h ${mins}m ${secs}s`;
   };
+  // const totalSolvedTime = history.reduce(
+  //   (sum, sub) => sum + (sub.timeTaken || 0),
+  //   0
+  // );
+  // const formatSolvedTime = (s) => {
+  //   const hours = Math.floor(s / 3600);
+  //   const minutes = Math.floor((s % 3600) / 60);
+  //   const seconds = s % 60;
+
+  //   let result = "";
+  //   if (hours > 0) result += `${hours}h `;
+  //   if (minutes > 0 || hours > 0) result += `${minutes}m `;
+  //   result += `${seconds}s`;
+
+  //   return result.trim();
+  // };
 
   const solvedCount = history.filter((item) => item.status == "solved").length;
   console.log(history);
@@ -61,7 +79,7 @@ const Dashboard = ({ user = {}, stats = {} }) => {
           animate={{ scale: 1 }}
           transition={{ duration: 0.6 }}
         >
-          👋 Welcome back, {user.name || "Coder"}!
+          👋 Welcome back, {user?.name || "Coder"}!
         </motion.h1>
 
         <motion.p
@@ -147,7 +165,10 @@ const Dashboard = ({ user = {}, stats = {} }) => {
                       >
                         {sub.status}
                       </span>{" "}
-                      | Time: {sub.timeTaken}s
+                      | Time: {sub.timeTaken}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Time: {new Date(sub.submittedAt).toLocaleString()}
                     </p>
                   </div>
                   <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 transition text-sm font-medium">
