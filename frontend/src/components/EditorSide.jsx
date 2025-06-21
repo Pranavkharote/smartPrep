@@ -12,12 +12,12 @@ import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/ext-language_tools";
 
 const EditorSide = ({ question }) => {
-  const [status, setStatus] = useState("attempted");
+  // const [status, setStatus] = useState("attempted");
   const [timeStart, setTimeStart] = useState(Date.now());
   const [submittedCode, setSubmittedCode] = useState("");
   const [output, setOutput] = useState("");
   const [running, setRunning] = useState(false);
-  const [languageId, setLanguageId] = useState(54);
+  const [languageId, setLanguageId] = useState(63);
 
   //AI
   const [showAI, setShowAI] = useState(false);
@@ -37,12 +37,32 @@ const EditorSide = ({ question }) => {
     }
     if (question) {
       const code =
-        question.starterCode || generateStarterCode(question.functionName);
+        question.starterCode ||
+        generateStarterCode(question.functionName, languageId);
       setSubmittedCode(code);
     }
-  }, [question]);
-  const generateStarterCode = (functionName) => {
-    if (functionName === "twoSum") {
+  }, [question, languageId]);
+
+  //   const generateStarterCode = (functionName) => {
+  //     if (functionName === "twoSum") {
+  //       return `/**
+  //  * @param {number[]} nums
+  //  * @param {number} target
+  //  * @return {number[]}
+  //  */
+  // var ${functionName} = function(nums, target) {
+
+  // };`;
+  //     }
+
+  //     // Add more templates for other problems...
+  //     return `function ${functionName}() {
+
+  // }`;
+  //   };
+
+  const generateStarterCode = (functionName, langId) => {
+    if (functionName === "twoSum" && langId === 54) {
       return `/**
  * @param {number[]} nums
  * @param {number} target
@@ -52,11 +72,99 @@ var ${functionName} = function(nums, target) {
 
 };`;
     }
-
-    // Add more templates for other problems...
-    return `function ${functionName}() {
+    if(functionName === "twoSum" && langId === 62){
+      return `class Solution {
+    public int[] ${functionName}(int[] nums, int target) {
+        
+    }
+}`
+    }
+    if(functionName === "twoSum" && langId === 63){
+      return `class Solution {
+public:
+    vector<int> ${functionName}(vector<int>& nums, int target) {
+        
+    }
+};`
+    }
+    if(functionName === "twoSum" && langId === 71){
+      return `class Solution(object):
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        `
+    }
+    if (functionName === "validParentheses" && langId === 54) {//js
+      return `/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var ${functionName} = function(s){
+      //Your code here
 
 }`;
+    }
+    if (functionName === "validParentheses" && langId === 62 ) {//java
+      return `class Solution {
+    public boolean ${functionName}(String s) {
+        
+    }
+}`;
+    }
+    if (functionName === "validParentheses" && langId === 71) {//py
+      return `class Solution(object):
+    def ${functionName}(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        `;
+    }
+    if (functionName === "validParentheses" && langId === 63) {//cpp
+      return `class Solution {
+public:
+    bool ${functionName}(string s) {
+        
+    }
+};
+        `;
+    }
+    if (functionName === "maximumSubarray" && langId === 63) {//cpp
+      return `class Solution {
+public:
+    int ${functionName}(vector<int>& nums) {
+        
+    }
+};`;
+    }
+    if (functionName === "maximumSubarray" && langId === 54) {//js
+      return `/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var ${functionName} = function(nums) {
+    
+};`;
+    }
+    if (functionName === "maximumSubarray" && langId === 62) {//js
+      return `class Solution {
+    public int ${functionName}(int[] nums) {
+        
+    }
+}`;
+    }
+
+    
+  };
+
+  const languageMap = {
+    54: { piston: "javascript", ace: "javascript", filename: "main.js" },
+    62: { piston: "java", ace: "java", filename: "Main.java" },
+    71: { piston: "python3", ace: "python", filename: "main.py" },
+    63: { piston: "cpp", ace: "c_cpp", filename: "main.cpp" },
   };
 
   const handleSuccess = (msg) => {
@@ -77,49 +185,6 @@ var ${functionName} = function(nums, target) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // if (!submittedCode.trim()) {
-    //   handleError("Code cannot be empty!");
-    //   return;
-    // } else {
-    //   handleSuccess("Code Submitted");
-    // }
-
-    // const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
-
-    // const payload = {
-    //   questionId: questionId,
-    //   status: "attempted",
-    //   timeTaken: timeTaken,
-    //   submittedCode: submittedCode,
-    // };
-
-    // try {
-    //   const { data } = await axios.post(
-    //     "http://localhost:8080/submission",
-    //     payload,
-    //     { withCredentials: true }
-    //   );
-
-    //   const { success, message } = data;
-    //   if (success === true || success === "true") {
-    //   //   handleSuccess(
-    //   //   submissionStatus === "solved"
-    //   //     ? "✅ All test cases passed. Marked as solved!"
-    //   //     : "⚠️ Submitted with some failed test cases."
-    //   // );
-    //   // if (status === "solved") setSubmittedCode("");
-    //   // setTimeStart(Date.now());
-    //     handleSuccess(message);
-    //     setTimeStart(Date.now());
-    //     setStatus("solved");
-    //     setSubmittedCode("");
-    //   } else {
-    //     handleError(message);
-    //   }
-    // } catch (err) {
-    //   handleError(err.response?.data?.message || err.message);
-    // }
   };
 
   const runCode = async () => {
@@ -146,10 +211,58 @@ var ${functionName} = function(nums, target) {
       return;
     }
 
-    const wrapCodeWithTests = (submittedCode, question) => {
+    //original for js working
+    //     const wrapCodeWithTests = (submittedCode, question) => {
+    //       const { functionName, testCases } = question;
+
+    //       return `
+    // ${submittedCode}
+
+    // if (typeof ${functionName} !== "function") {
+    //   console.log("error\\n❌ Function '${functionName}' is not defined properly.");
+    // } else {
+    //   const testCases = ${JSON.stringify(testCases)};
+    //   let allPassed = true;
+    //   testCases.forEach((test, index) => {
+    //     try {
+    //       // 👇 Fix: parse input string if necessary
+    //       const rawInput = test.input;
+    //       const args = Array.isArray(rawInput)
+    //         ? rawInput
+    //         : typeof rawInput === 'string'
+    //           ? [JSON.parse(rawInput)]
+    //           : [rawInput];
+
+    //       const result = ${functionName}(...args);
+    //       const expected = JSON.parse(test.expectedOutput); // convert "6" -> 6
+    //       const passed = JSON.stringify(result) === JSON.stringify(expected);
+
+    //       if (passed) {
+    //         console.log(\`✅ Test Case \${index + 1}: Passed\\nExpected: \${JSON.stringify(expected)}\\nGot: \${JSON.stringify(result)}\`);
+    //       } else {
+    //         console.log(\`❌ Test Case \${index + 1}: Failed\\nExpected: \${JSON.stringify(expected)}\\nGot: \${JSON.stringify(result)}\`);
+    //       allPassed = false;
+    //       }
+    //     } catch (e) {
+    //       console.log(\`❌ Test Case \${index + 1}: Crashed - \${e.message}\`);
+    //       // console.log(e)
+    //       allPassed = false;
+    //     }
+    //   });
+
+    //   if(allPassed){
+    //   console.log("FINAL_STATUS: solved")
+    //   } else {
+    //    console.log("FINAL_STATUS: attempted")}
+    // }
+    // `;
+    //     };
+
+    //for all langugages
+    const wrapCodeWithTests = (submittedCode, question, languageId) => {
       const { functionName, testCases } = question;
 
-      return `
+      const jsWrapper = `
 ${submittedCode}
 
 if (typeof ${functionName} !== "function") {
@@ -159,7 +272,6 @@ if (typeof ${functionName} !== "function") {
   let allPassed = true;
   testCases.forEach((test, index) => {
     try {
-      // 👇 Fix: parse input string if necessary
       const rawInput = test.input;
       const args = Array.isArray(rawInput)
         ? rawInput
@@ -168,37 +280,252 @@ if (typeof ${functionName} !== "function") {
           : [rawInput];
 
       const result = ${functionName}(...args);
-      const expected = JSON.parse(test.expectedOutput); // convert "6" -> 6
+      const expected = JSON.parse(test.expectedOutput);
       const passed = JSON.stringify(result) === JSON.stringify(expected);
 
       if (passed) {
         console.log(\`✅ Test Case \${index + 1}: Passed\\nExpected: \${JSON.stringify(expected)}\\nGot: \${JSON.stringify(result)}\`);
       } else {
         console.log(\`❌ Test Case \${index + 1}: Failed\\nExpected: \${JSON.stringify(expected)}\\nGot: \${JSON.stringify(result)}\`);
-      allPassed = false;
+        allPassed = false;
       }
     } catch (e) {
       console.log(\`❌ Test Case \${index + 1}: Crashed - \${e.message}\`);
-      // console.log(e)
       allPassed = false;
     }
   });
 
-  if(allPassed){
-  console.log("FINAL_STATUS: solved")
+  if (allPassed) {
+    console.log("FINAL_STATUS: solved");
   } else {
-   console.log("FINAL_STATUS: attempted")}
-} 
+    console.log("FINAL_STATUS: attempted");
+  }
+}
 `;
+
+      const pythonWrapper = `
+${submittedCode}
+
+def run_tests():
+    import json
+    all_passed = True
+    test_cases = ${JSON.stringify(testCases)}
+    for i, test in enumerate(test_cases):
+        try:
+            args = json.loads(test["input"]) if isinstance(test["input"], str) else test["input"]
+            expected = json.loads(test["expectedOutput"])
+            result = ${functionName}(*args)
+            if result == expected:
+                print(f"✅ Test Case {i+1}: Passed\\nExpected: {expected}\\nGot: {result}")
+            else:
+                print(f"❌ Test Case {i+1}: Failed\\nExpected: {expected}\\nGot: {result}")
+                all_passed = False
+        except Exception as e:
+            print(f"❌ Test Case {i+1}: Crashed - {str(e)}")
+            all_passed = False
+
+    if all_passed:
+        print("FINAL_STATUS: solved")
+    else:
+        print("FINAL_STATUS: attempted")
+
+run_tests()
+`;
+
+      const cppWrapper = `
+#include <iostream>
+#include <vector>
+#include <string>
+#include <sstream>
+using namespace std;
+
+${submittedCode}
+
+int main() {
+    bool allPassed = true;
+${testCases
+  .map((test, i) => {
+    return `
+    {
+        auto result = ${functionName}(${test.input});
+        auto expected = ${test.expectedOutput};
+        if (result == expected) {
+            cout << "✅ Test Case ${
+              i + 1
+            }: Passed\\\\nExpected: " << expected << "\\\\nGot: " << result << "\\n";
+        } else {
+            cout << "❌ Test Case ${
+              i + 1
+            }: Failed\\\\nExpected: " << expected << "\\\\nGot: " << result << "\\n";
+            allPassed = false;
+        }
+    }`;
+  })
+  .join("\n")}
+
+    if (allPassed) {
+        cout << "FINAL_STATUS: solved\\n";
+    } else {
+        cout << "FINAL_STATUS: attempted\\n";
+    }
+    return 0;
+}
+`;
+
+//       const javaWrapper = `
+// ${submittedCode}
+
+// public class Main {
+//   public static void main(String[] args) {
+//     boolean allPassed = true;
+// ${testCases
+//   .map((test, i) => {
+//     return `
+//     try {
+      
+//       int[] input = new int[] ${test.input.replace("[", "{").replace("]", "}")};
+
+//       int expected = ${test.expectedOutput};
+//       int result = ${functionName}(input); // or use multiple params if needed
+//       if (result == expected) {
+//         System.out.println("✅ Test Case ${
+//           i + 1
+//         }: Passed\\nExpected: " + expected + "\\nGot: " + result);
+//       } else {
+//         System.out.println("❌ Test Case ${
+//           i + 1
+//         }: Failed\\nExpected: " + expected + "\\nGot: " + result);
+//         allPassed = false;
+//       }
+//     } catch (Exception e) {
+//       System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
+//       allPassed = false;
+//     }`;
+//   })
+//   .join("\n")}
+
+//     if (allPassed) {
+//       System.out.println("FINAL_STATUS: solved");
+//     } else {
+//       System.out.println("FINAL_STATUS: attempted");
+//     }
+//   }
+// }
+// `;
+// 1️⃣ Clean the student's submitted code:
+submittedCode = submittedCode.replace(/\bpublic\s+class\s+Solution\b/, "class Solution");
+
+// 2️⃣ Build the full Java wrapper:
+const javaWrapper = `
+${submittedCode}
+
+public class Main {
+  public static void main(String[] args) {
+    boolean allPassed = true;
+    Solution solution = new Solution();
+    ${testCases
+      .map((test, i) => {
+        return `
+    try {
+      int[] input = new int[] ${test.input.replace("[","{").replace("]","}")};
+      int expected = ${test.expectedOutput};
+      int result = solution.${functionName}(input); // call method on solution
+      if (result == expected) {
+        System.out.println("✅ Test Case ${i + 1}: Passed\\nExpected: " + expected + "\\nGot: " + result);
+      } else {
+        System.out.println("❌ Test Case ${i + 1}: Failed\\nExpected: " + expected + "\\nGot: " + result);
+        allPassed = false;
+      }
+    } catch (Exception e) {
+      System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
+      allPassed = false;
+    }`;
+      })
+      .join("\n")}
+    if (allPassed) {
+      System.out.println("FINAL_STATUS: solved");
+    } else {
+      System.out.println("FINAL_STATUS: attempted");
+    }
+  }
+}
+`;
+
+
+
+      //       const javaWrapper = `
+      // ${submittedCode}
+
+      // public class Main {
+      //   public static void main(String[] args) {
+      //     boolean allPassed = true;
+      // ${testCases
+      //   .map((test, i) => {
+      //     return `
+      //     try {
+      //       var result = ${functionName}(${test.input});
+      //       var expected = ${test.expectedOutput};
+      //       if (result.equals(expected)) {
+      //         System.out.println("✅ Test Case ${
+      //           i + 1
+      //         }: Passed\\nExpected: " + expected + "\\nGot: " + result);
+      //       } else {
+      //         System.out.println("❌ Test Case ${
+      //           i + 1
+      //         }: Failed\\nExpected: " + expected + "\\nGot: " + result);
+      //         allPassed = false;
+      //       }
+      //     } catch (Exception e) {
+      //       System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
+      //       allPassed = false;
+      //     }`;
+      //   })
+      //   .join("\n")}
+
+      //     if (allPassed) {
+      //       System.out.println("FINAL_STATUS: solved");
+      //     } else {
+      //       System.out.println("FINAL_STATUS: attempted");
+      //     }
+      //   }
+      // }
+      // `
+      // Return appropriate wrapper based on languageId
+      switch (languageId) {
+        case 54:
+          return jsWrapper;
+        case 71:
+          return pythonWrapper;
+        case 63:
+          return cppWrapper;
+        case 62:
+          return javaWrapper;
+        default:
+          return submittedCode;
+      }
     };
 
-    const wrappedCode = wrapCodeWithTests(submittedCode, question);
+    const wrappedCode = wrapCodeWithTests(submittedCode, question, languageId);
+    // const wrappedCode = wrapCodeWithTests(submittedCode, question);
 
     try {
+      const langInfo = languageMap[languageId];
+      // const codeToRun =
+      //   langInfo.piston === "javascript" ? wrappedCode : submittedCode;
+      const codeToRun =
+        langInfo.piston === "javascript" ||
+        langInfo.piston === "python3" ||
+        langInfo.piston === "cpp" ||
+        langInfo.piston === "java"
+          ? wrappedCode
+          : submittedCode;
       const result = await runCodeWithPiston({
-        language: "javascript",
+        // language: "javascript",
+        language: langInfo.piston,
         // language: languageId === 62 ? "java" : languageId === 71 ? "python3" : languageId === 63 ? "cpp" : "javascript",
-        code: wrappedCode,
+        code: codeToRun,
+        filename: langInfo.filename,
+        // code: submittedCode,
       });
 
       // console.log("🚀 Piston Result:", result);
@@ -318,51 +645,17 @@ if (typeof ${functionName} !== "function") {
 
   return (
     <div className="w-1/2 py-2">
-      <div className="flex">
+      <div className="flex absolute top-4 text-black right-1">
         <select
           value={languageId}
           onChange={(e) => setLanguageId(parseInt(e.target.value))}
-          className="mb-2 p-2 border rounded h-9 mr-5"
+          className="mb-2 p-2 border rounded h-9 mr-5 bg-white "
         >
           <option value={62}>Java</option>
           <option value={54}>JavaScript</option>
           <option value={71}>Python</option>
           <option value={63}>C++</option>
         </select>
-        {/* <div className="text-white bg-gray-800 p-3 rounded mb-3 w-fit flex gap-3 items-center h-10">
-         {formattedTime}
-        {!timerRunning && (
-          <button
-            type="button"
-            onClick={() => {
-              setTimeStart(Date.now());
-              setTimerRunning(true);
-            }}
-            className="text-sm bg-green-600 px-3 py-1 rounded hover:bg-green-700"
-          >
-            Start
-          </button>
-        )}
-        {timerRunning && (
-          <button
-            type="button"
-            onClick={() => setTimerRunning(false)}
-            className="text-sm bg-red-600 px-3 py-1 rounded hover:bg-red-700"
-          >
-            Stop
-          </button>
-        )}
-        <button
-          type="button"
-          onClick={() => {
-            setFormattedTime("00:00");
-            setTimerRunning(false);
-          }}
-          className="text-sm bg-yellow-500 text-black px-3 py-1 rounded hover:bg-yellow-400"
-        >
-          Reset
-        </button>
-      </div> */}
       </div>
       <form onSubmit={handleSubmit}>
         <CodeEditor code={submittedCode} setCode={setSubmittedCode} />
@@ -384,6 +677,7 @@ if (typeof ${functionName} !== "function") {
           </button>
           <button
             onClick={() => setShowAI(!showAI)}
+            type="button"
             className="fixed bottom-5 right-5 bg-black text-white px-5 py-2 rounded-full shadow-2xl hover:bg-cyan-800 z-50"
           >
             🧠 Ask AI

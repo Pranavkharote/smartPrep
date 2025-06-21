@@ -8,6 +8,7 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import ThemeToggle from "./ThemeToggle";
 
 const navigation = [
   { name: "Dashboard", href: "/", current: true },
@@ -66,11 +67,16 @@ export default function MainNavbar() {
               </div>
             </div>
             <div className="text-white h-[20px] text-[12px] ms-4 font-medium">
-            <p>See all the Questions List</p>
-                <a href="/questions" className="text-center text-blue-400 font-bold hover:underline">All Problems</a>
+              <p>See all the Questions List</p>
+              <a
+                href="/questions"
+                className="text-center text-blue-400 font-bold hover:underline"
+              >
+                All Problems
+              </a>
             </div>
+            {/* <ThemeToggle /> */}
           </div>
-          
         </div>
       </div>
 
@@ -93,7 +99,6 @@ export default function MainNavbar() {
             </DisclosureButton>
           ))}
         </div>
-        
       </DisclosurePanel>
     </Disclosure>
   );

@@ -1,13 +1,41 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-
 import axios from "axios";
 import Loader from "../assets/Loader";
+import * as jwt_decode from "jwt-decode"; // ✅ this is correct
 
 const Dashboard = ({ user = {} }) => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  function parseJwt(token) {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch (err) {
+      console.error("Invalid token", err);
+      return null;
+    }
+  }
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    const decoded = parseJwt(token);
+    if (decoded) {
+      console.log("Username:", decoded.username); // ✅ Use it
+    }
+  }
+  console.log("not token");
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -40,33 +68,16 @@ const Dashboard = ({ user = {} }) => {
   );
 
   const formatTime = (seconds) => {
-    // const hrs = Math.floor(seconds / 3600);
+    const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${mins}m ${secs}s`;
-    // return `${hrs}h ${mins}m ${secs}s`;
+    // return `${mins}m ${secs}s`;
+    return `${hrs}h ${mins}m ${secs}s`;
   };
-  // const totalSolvedTime = history.reduce(
-  //   (sum, sub) => sum + (sub.timeTaken || 0),
-  //   0
-  // );
-  // const formatSolvedTime = (s) => {
-  //   const hours = Math.floor(s / 3600);
-  //   const minutes = Math.floor((s % 3600) / 60);
-  //   const seconds = s % 60;
-
-  //   let result = "";
-  //   if (hours > 0) result += `${hours}h `;
-  //   if (minutes > 0 || hours > 0) result += `${minutes}m `;
-  //   result += `${seconds}s`;
-
-  //   return result.trim();
-  // };
-
   const solvedCount = history.filter((item) => item.status == "solved").length;
   console.log(history);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6 bg-[#0f172a] text-white">
       <motion.div
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}

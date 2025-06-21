@@ -33,7 +33,7 @@ const MainQuestionEditorComponent = () => {
       {/* <div className="w-64 fixed top-16 bottom-0 left-0 z-40 bg-red-300 border-r"> */}
       <LeftNavbar />
       {/* </div> */}
-      <div className="flex flex-col lg:flex-row h-screen   gap-4 overflow-hidden">
+      <div className="flex flex-col lg:flex-row h-screen   gap-4 overflow-hidden ">
         <Outlet context={question}/>
         <EditorSide question={question} />
       </div>

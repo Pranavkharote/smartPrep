@@ -4,7 +4,7 @@ const authenticateUser = require("../middlewares/AuthMiddleware");
 const UserProgress = require("../models/UserProgressModel");
 const Question = require("../models/QuestionModel");
 const { isQuestionId } = require("../middlewares/RouteMiddleware");
-
+const jwt_decode = require("jwt-decode")
 
 router.post("/newquestion", authenticateUser, async (req, res) => {
   const newQuestion = new Question(req.body);
@@ -162,10 +162,18 @@ router.get("/submission/:questionId", async (req ,res) => {
   let userId = req.user._id;
   // console.log("questionId: ", questionId, "userId: ", userId)
   const submission = await UserProgress.find({questionId, userId})
-  .sort({ createdAt: -1 });;
+  .sort({ createdAt: -1 });
+  // submission.unshift(newSubmission);
   return res.json(submission);
 })
 
+
+router.get("/user", async (req ,res) => {
+  let user = req.user;
+
+
+  return res.json({message: user})
+})
 
 
 module.exports = router;

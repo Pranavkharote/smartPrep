@@ -1,0 +1,13 @@
+MONGO_URI=mongodb+srv://pranavkharote2005:yIu2UqnJOVU8qzJO@cluster0.bnd1w.mongodb.net/SmartPrep?retryWrites=true&w=majority&appName=Cluster0
+JWT_TOKEN=secret
+
+
+MONGO_URI=mongodb+srv://pranavkharote2005:yIu2UqnJOVU8qzJO@cluster0.bnd1w.mongodb.net/SmartPrep?retryWrites=true&w=majority&appName=Cluster0
+JWT_TOKEN=secret
+OPENAI_API_KEY=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
+
+
+MONGO_URI=mongodb+srv://pranavkharote2005:yIu2UqnJOVU8qzJO@cluster0.bnd1w.mongodb.net/SmartPrep?retryWrites=true&w=majority&appName=Cluster0
+JWT_TOKEN=secret
+OPENAI_API_KEY=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
+GEMINI_API_KEY=AIzaSyCGf4ff-nfnxyY_Q8lnwH7cs9BCtraBvkQ
