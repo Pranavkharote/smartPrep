@@ -77,7 +77,7 @@ const Dashboard = ({ user = {} }) => {
   const solvedCount = history.filter((item) => item.status == "solved").length;
   console.log(history);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6 bg-[#0f172a] text-white">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6 text-white">
       <motion.div
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}

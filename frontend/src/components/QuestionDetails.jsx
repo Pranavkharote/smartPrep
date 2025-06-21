@@ -29,57 +29,66 @@ const QuestionComponent = () => {
   return (
     <>
       {/* <LeftNavbar /> */}
-      <div className="w-full lg:w-1/2 overflow-y-auto mb-17 ps-3">
-        <h2 className="text-xl font-semibold mb-2">Question Details</h2>
-        <strong className="text-2xl">{question.title}</strong>
-        <i className="mt-1 flex">{question.difficulty}</i>
-        <div className="mt-2">
-          <strong>Problem Statement:</strong>
-          <p>{question.description}</p>
-        </div>
-        {/* <p className="mt-2">
-            <strong>Solution:</strong>{" "}
-            <code className="text-sm bg-gray-100 p-1 rounded">
-              {question.solution}
-            </code>
-          </p> */}
+      <div className="w-full lg:w-1/2 overflow-y-auto mb-6 p-6 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-800 space-y-4">
+  {/* Title & Difficulty */}
+  
+  <strong className="text-2xl block mb-1 mt-3">{question.title}</strong>
+  <i className="text-sm text-slate-500">{question.difficulty}</i>
 
-        <div className="mt-4">
-          <h3 className="font-bold mb-2">Topics</h3>
-          {question.tags?.map((tag, index) => (
-            <p key={index}>
-              {index + 1}. {tag}
-            </p>
-          ))}
-        </div>
+  {/* Problem Statement */}
+  <div className="mt-4">
+    <h3 className="font-semibold mb-1 text-slate-700">Problem Statement</h3>
+    <p className="text-slate-800 leading-relaxed">{question.description}</p>
+  </div>
 
-        <div className="mt-4">
-          <h3 className="text-lg font-bold mb-2">Step-by-Step Guide:</h3>
-          {question.stepByStepGuide?.map((step, index) => (
-            <p key={index}>
-              {index + 1}. {step}
-            </p>
-          ))}
-        </div>
+  {/* Topics */}
+  {question.tags?.length > 0 && (
+    <div className="mt-4">
+      <h3 className="font-semibold mb-1 text-slate-700">Topics</h3>
+      <ul className="list-inside list-decimal space-y-1">
+        {question.tags?.map((tag, index) => (
+          <li key={index} className="text-slate-800">{tag}</li>
+        ))}
+      </ul>
+    </div>
+  )}
 
-        <div className="mt-4">
-          <h3 className="text-lg font-bold mb-2">Test Cases:</h3>
-          {question.testCases?.map((testCase, index) => (
-            <div key={index} className="mb-2 bg-gray-200 p-3 rounded-md">
-              <p>
-                <strong>Test Case {index + 1}:</strong>
-              </p>
-              <p>
-                <strong>Input:</strong> {JSON.stringify(testCase.input)}
-              </p>
-              <p>
-                <strong>Expected Output:</strong>{" "}
-                {JSON.stringify(testCase.expectedOutput)}
-              </p>
-            </div>
-          ))}
+  {/* Step-by-Step Guide */}
+  {question.stepByStepGuide?.length > 0 && (
+    <div className="mt-4">
+      <h3 className="font-semibold mb-1 text-slate-700">Step-by-Step Guide</h3>
+      <ol className="list-inside list-decimal space-y-1">
+        {question.stepByStepGuide?.map((step, index) => (
+          <li key={index} className="text-slate-800">{step}</li>
+        ))}
+      </ol>
+    </div>
+  )}
+
+  {/* Test Cases */}
+  {question.testCases?.length > 0 && (
+    <div className="mt-4">
+      <h3 className="font-semibold mb-2 text-slate-700">Test Cases</h3>
+      {question.testCases?.map((testCase, index) => (
+        <div
+          key={index}
+          className="mb-3 p-3 bg-slate-50 border border-slate-200 rounded-md text-sm"
+        >
+          <p className="font-medium text-slate-800 mb-1">
+            Test Case {index + 1}
+          </p>
+          <p className="text-slate-700">
+            <strong>Input:</strong> {JSON.stringify(testCase.input)}
+          </p>
+          <p className="text-slate-700">
+            <strong>Expected Output:</strong> {JSON.stringify(testCase.expectedOutput)}
+          </p>
         </div>
-      </div>
+      ))}
+    </div>
+  )}
+</div>
+
     </>
   );
 };

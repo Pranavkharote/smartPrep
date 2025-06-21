@@ -12,7 +12,7 @@ const difficultyColors = {
 
 const QuestionList = () => {
   const [questions, setQuestions] = useState([]);
-  const [filters, setFilters] = useState({ difficulty: "", tags: [] });
+  const [filters, setFilters] = useState({ difficulty: "", tags: [], search: "" });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,13 +29,17 @@ const QuestionList = () => {
     fetchQuestions();
   }, []);
 
+
   // Filtering logic
   const filteredQuestions = questions.filter((q) => {
     const matchesDifficulty =
-      !filters.difficulty || q.difficulty === filters.difficulty;
+    !filters.difficulty || q.difficulty === filters.difficulty;
     const matchesTags =
-      filters.tags.length === 0 || filters.tags.every((tag) => q.tags.includes(tag));
-    return matchesDifficulty && matchesTags;
+    filters.tags.length === 0 || filters.tags.every((tag) => q.tags.includes(tag));
+    const matchesSearch = filters.search
+    ? q.title.toLowerCase().includes(filters.search.toLowerCase())
+    : true;
+    return matchesDifficulty && matchesTags && matchesSearch;
   });
 
   return (

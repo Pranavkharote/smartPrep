@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { useEffect } from "react";
 const difficulties = ["Easy", "Medium", "Hard"];
 const topics = [
   "Array",
@@ -13,25 +13,67 @@ const topics = [
 ];
 
 export default function NavbarFilter({ onFilterChange }) {
+  
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  
+    const [isDarkMode, setIsDarkMode] = useState(
+    () => localStorage.getItem("darkMode") === "true"
+  );
+
+  useEffect(() => {
+    // Sync dark mode to document
+    document.documentElement.classList.toggle("dark", isDarkMode);
+    localStorage.setItem("darkMode", isDarkMode);
+  }, [isDarkMode]);
+
 
   const handleDifficultyChange = (e) => {
     const value = e.target.value;
     setSelectedDifficulty(value);
-    onFilterChange({ difficulty: value, tags: selectedTags });
+    onFilterChange({ difficulty: value, tags: selectedTags, search: searchTerm });
   };
+
+  useEffect(() => {
+  if (isDarkMode) {
+    document.documentElement.classList.add('dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+  }
+  localStorage.setItem('darkMode', isDarkMode)
+}, [isDarkMode])
 
   const handleTagToggle = (topic) => {
     const updatedTags = selectedTags.includes(topic)
       ? selectedTags.filter((t) => t !== topic)
       : [...selectedTags, topic];
     setSelectedTags(updatedTags);
-    onFilterChange({ difficulty: selectedDifficulty, tags: updatedTags });
+    onFilterChange({ difficulty: selectedDifficulty, tags: updatedTags, search: searchTerm });
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    onFilterChange({ difficulty: selectedDifficulty, tags: selectedTags, search: value });
+  };
+   const handleDarkModeToggle = () => {
+    setIsDarkMode((prev) => !prev);
   };
 
   return (
     <nav className="bg-gradient-to-r from-white to-slate-50 shadow-md p-4 rounded-xl border border-slate-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between transition-all duration-200">
+      {/* Search */}
+      <div className="flex items-center space-x-2 w-full md:w-1/5">
+        <input
+          type="text"
+          placeholder="Search by title..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="flex-1 rounded-md border border-slate-300 bg-white text-slate-700 px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        />
+      </div>
+
       {/* Difficulty */}
       <div className="flex items-center space-x-2">
         <span className="text-sm font-semibold text-slate-700">Difficulty:</span>
@@ -42,9 +84,7 @@ export default function NavbarFilter({ onFilterChange }) {
         >
           <option value="">All</option>
           {difficulties.map((level) => (
-            <option key={level} value={level}>
-              {level}
-            </option>
+            <option key={level} value={level}>{level}</option>
           ))}
         </select>
       </div>
@@ -69,6 +109,22 @@ export default function NavbarFilter({ onFilterChange }) {
             </button>
           );
         })}
+      </div>
+        {/* Dark Mode Toggle */}
+      <div className="flex items-center space-x-2">
+        <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Dark Mode:</span>
+        <button
+          onClick={handleDarkModeToggle}
+          className={`w-10 h-6 flex items-center rounded-full p-1 transition-colors ${
+            isDarkMode ? "bg-blue-600" : "bg-slate-300"
+          }`}
+        >
+          <div
+            className={`bg-white w-4 h-4 rounded-full transform transition-transform ${
+              isDarkMode ? "translate-x-4" : ""
+            }`}
+          ></div>
+        </button>
       </div>
     </nav>
   );

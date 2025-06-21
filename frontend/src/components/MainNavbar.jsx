@@ -29,12 +29,15 @@ export default function MainNavbar() {
     fetchQuestions();
   }, []);
   const { questionId } = useParams();
-  const firstId = "683edc13038900eab30fa6ee";
-  const currentIndex = questions.findIndex((q) => q._id === questionId);
-  const prevQuestion = currentIndex >= 0 ? questions[currentIndex - 1] : null;
-  const nextQuestion =
-    currentIndex < questions.length - 1 ? questions[currentIndex + 1] : null;
+  const currentIndex = questions
+    ? questions.findIndex((q) => q._id === questionId)
+    : -1;
 
+  const prevQuestion = currentIndex > 0 ? questions[currentIndex - 1] : null;
+  const nextQuestion =
+    currentIndex >= 0 && currentIndex < questions.length - 1
+      ? questions[currentIndex + 1]
+      : null;
   return (
     <Disclosure as="nav" className="bg-gray-800 ">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -82,13 +85,29 @@ export default function MainNavbar() {
               </div>
             </div>
             <div className="text-white mx-5 text-3xl ps-3">
-              {/* <Link to={""}>
-                <i class="fa-solid fa-angle-left mr-3"></i>
-              </Link> */}
-              {/* <Link to={`/questions/${prevQuestion._id}`}>
-                <i class="fa-solid fa-angle-left mr-3"></i>
-              </Link>
-              <Link to={`/questions/${nextQuestion._id}`}>
+                {prevQuestion ? (
+      <Link
+        to={`/questions/${prevQuestion._id}`}
+       
+      >
+        <i class="fa-solid fa-angle-left mr-3"></i>
+      </Link>
+    ) : (
+      <span className="">
+       <i class="fa-solid fa-angle-left cursor-not-allowed mr-3"></i>
+      </span>
+    )}
+     {nextQuestion ? (
+      <Link
+        to={`/questions/${nextQuestion._id}`}>
+       <i class="fa-solid fa-angle-right mr-3"></i>
+      </Link>
+    ) : (
+      <span className="cursor-not-allowed">
+       <i class="fa-solid fa-angle-right mr-3"></i>
+      </span>
+    )}
+              {/* <Link to={`/questions/${nextQuestion._id}`}>
                 <i class="fa-solid fa-angle-right mr-3"></i>
               </Link> */}
             </div>
