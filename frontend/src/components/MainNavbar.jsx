@@ -2,24 +2,39 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import ThemeToggle from "./ThemeToggle";
-
-const navigation = [
-  { name: "Dashboard", href: "/", current: true },
-  { name: "QuestionList", href: "#", current: false },
-];
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+const navigation = [{ name: "Dashboard", href: "/", current: true }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function MainNavbar() {
+  const [questions, setQuestions] = useState([]);
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/questions", {
+          withCredentials: true,
+        });
+        setQuestions(res.data || []);
+      } catch (err) {
+        console.error("Error fetching questions:", err);
+      }
+    };
+    fetchQuestions();
+  }, []);
+  const { questionId } = useParams();
+  const firstId = "683edc13038900eab30fa6ee";
+  const currentIndex = questions.findIndex((q) => q._id === questionId);
+  const prevQuestion = currentIndex >= 0 ? questions[currentIndex - 1] : null;
+  const nextQuestion =
+    currentIndex < questions.length - 1 ? questions[currentIndex + 1] : null;
+
   return (
     <Disclosure as="nav" className="bg-gray-800 ">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -66,6 +81,17 @@ export default function MainNavbar() {
                 ))}
               </div>
             </div>
+            <div className="text-white mx-5 text-3xl ps-3">
+              {/* <Link to={""}>
+                <i class="fa-solid fa-angle-left mr-3"></i>
+              </Link> */}
+              {/* <Link to={`/questions/${prevQuestion._id}`}>
+                <i class="fa-solid fa-angle-left mr-3"></i>
+              </Link>
+              <Link to={`/questions/${nextQuestion._id}`}>
+                <i class="fa-solid fa-angle-right mr-3"></i>
+              </Link> */}
+            </div>
             <div className="text-white h-[20px] text-[12px] ms-4 font-medium">
               <p>See all the Questions List</p>
               <a
@@ -75,6 +101,7 @@ export default function MainNavbar() {
                 All Problems
               </a>
             </div>
+
             {/* <ThemeToggle /> */}
           </div>
         </div>

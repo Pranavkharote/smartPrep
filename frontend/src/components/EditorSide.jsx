@@ -72,22 +72,22 @@ var ${functionName} = function(nums, target) {
 
 };`;
     }
-    if(functionName === "twoSum" && langId === 62){
+    if (functionName === "twoSum" && langId === 62) {
       return `class Solution {
     public int[] ${functionName}(int[] nums, int target) {
         
     }
-}`
+}`;
     }
-    if(functionName === "twoSum" && langId === 63){
+    if (functionName === "twoSum" && langId === 63) {
       return `class Solution {
 public:
     vector<int> ${functionName}(vector<int>& nums, int target) {
         
     }
-};`
+};`;
     }
-    if(functionName === "twoSum" && langId === 71){
+    if (functionName === "twoSum" && langId === 71) {
       return `class Solution(object):
     def twoSum(self, nums, target):
         """
@@ -95,9 +95,10 @@ public:
         :type target: int
         :rtype: List[int]
         """
-        `
+        `;
     }
-    if (functionName === "validParentheses" && langId === 54) {//js
+    if (functionName === "validParentheses" && langId === 54) {
+      //js
       return `/**
  * @param {string} s
  * @return {boolean}
@@ -107,14 +108,16 @@ var ${functionName} = function(s){
 
 }`;
     }
-    if (functionName === "validParentheses" && langId === 62 ) {//java
+    if (functionName === "validParentheses" && langId === 62) {
+      //java
       return `class Solution {
     public boolean ${functionName}(String s) {
         
     }
 }`;
     }
-    if (functionName === "validParentheses" && langId === 71) {//py
+    if (functionName === "validParentheses" && langId === 71) {
+      //py
       return `class Solution(object):
     def ${functionName}(self, s):
         """
@@ -123,7 +126,8 @@ var ${functionName} = function(s){
         """
         `;
     }
-    if (functionName === "validParentheses" && langId === 63) {//cpp
+    if (functionName === "validParentheses" && langId === 63) {
+      //cpp
       return `class Solution {
 public:
     bool ${functionName}(string s) {
@@ -132,7 +136,8 @@ public:
 };
         `;
     }
-    if (functionName === "maximumSubarray" && langId === 63) {//cpp
+    if (functionName === "maximumSubarray" && langId === 63) {
+      //cpp
       return `class Solution {
 public:
     int ${functionName}(vector<int>& nums) {
@@ -140,7 +145,8 @@ public:
     }
 };`;
     }
-    if (functionName === "maximumSubarray" && langId === 54) {//js
+    if (functionName === "maximumSubarray" && langId === 54) {
+      //js
       return `/**
  * @param {number[]} nums
  * @return {number}
@@ -149,15 +155,14 @@ var ${functionName} = function(nums) {
     
 };`;
     }
-    if (functionName === "maximumSubarray" && langId === 62) {//js
+    if (functionName === "maximumSubarray" && langId === 62) {
+      //js
       return `class Solution {
     public int ${functionName}(int[] nums) {
         
     }
 }`;
     }
-
-    
   };
 
   const languageMap = {
@@ -183,8 +188,12 @@ var ${functionName} = function(nums) {
     });
   };
 
-  const handleSubmit = async (e) => {
+const isSolved = output.includes("FINAL_STATUS: solved");
+const handleSubmit = async (e) => {
     e.preventDefault();
+    if(isSolved){
+      !handleSubmit();
+    }
   };
 
   const runCode = async () => {
@@ -412,24 +421,25 @@ ${testCases
 //   }
 // }
 // `;
-// 1️⃣ Clean the student's submitted code:
+
+
+// Strip public from Solution
 submittedCode = submittedCode.replace(/\bpublic\s+class\s+Solution\b/, "class Solution");
 
-// 2️⃣ Build the full Java wrapper:
 const javaWrapper = `
 ${submittedCode}
 
 public class Main {
   public static void main(String[] args) {
     boolean allPassed = true;
-    Solution solution = new Solution();
-    ${testCases
-      .map((test, i) => {
-        return `
+    Solution solution = new Solution(); // ✅ instantiate the student's class
+${testCases
+  .map((test, i) => {
+    return `
     try {
-      int[] input = new int[] ${test.input.replace("[","{").replace("]","}")};
+      int[] input = new int[] ${test.input.replace("[", "{").replace("]", "}")};
       int expected = ${test.expectedOutput};
-      int result = solution.${functionName}(input); // call method on solution
+      int result = solution.${functionName}(input); // ✅ call method on the instance
       if (result == expected) {
         System.out.println("✅ Test Case ${i + 1}: Passed\\nExpected: " + expected + "\\nGot: " + result);
       } else {
@@ -440,8 +450,8 @@ public class Main {
       System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
       allPassed = false;
     }`;
-      })
-      .join("\n")}
+  })
+  .join("\n")}
     if (allPassed) {
       System.out.println("FINAL_STATUS: solved");
     } else {
@@ -449,9 +459,9 @@ public class Main {
     }
   }
 }
-`;
+`
 
-
+      // Remove public from the student's class
 
       //       const javaWrapper = `
       // ${submittedCode}

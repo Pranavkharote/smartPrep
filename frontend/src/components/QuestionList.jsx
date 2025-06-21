@@ -1,59 +1,8 @@
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import { Link } from "react-router-dom";
-
-// const QuestionList = () => {
-//   const [question, setQuestion] = useState([]);
-//   useEffect(() => {
-//     const fetchQuestions = async () => {
-//       try {
-//         const QuestionRes = await axios.get("http://localhost:8080/questions");
-//         setQuestion(QuestionRes.data);
-//         // console.log(QuestionRes.data);
-//       } catch (err) {
-//         console.log("Question error", err);
-//       }
-//     };
-//     fetchQuestions();
-//   }, []);
-//   return (
-//     <>
-//       <h2>All Questions</h2>
-//       {question.length === 0 ? (
-//         <p>No question found</p>
-//       ) : (
-//         <ul>
-//           {question.map((q) => {
-//             return (
-//               <div className="bg-green-300 m-2">
-//                 <Link to={`/questions/${q._id}`}>
-//                   <li
-//                     key={q._id}
-//                     style={{
-//                       cursor: "pointer",
-//                       border: "1px solid #ddd",
-//                       padding: "10px",
-//                       marginBottom: "8px",
-//                     }}
-//                   >
-//                     <strong>{q.title}</strong>
-//                     <em> {q.difficulty}</em>
-//                   </li>
-//                 </Link>
-//               </div>
-//             );
-//           })}
-//         </ul>
-//       )}
-//     </>
-//   );
-// };
-
-// export default QuestionList;
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import NavbarFilter from "./NavbarFilter"; // the new UI version of NavbarFilter
 
 const difficultyColors = {
   Easy: "bg-green-100 text-green-800",
@@ -63,6 +12,7 @@ const difficultyColors = {
 
 const QuestionList = () => {
   const [questions, setQuestions] = useState([]);
+  const [filters, setFilters] = useState({ difficulty: "", tags: [] });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -79,48 +29,63 @@ const QuestionList = () => {
     fetchQuestions();
   }, []);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white p-6">
-      <button className="flex bg-red-400 px-4 py-1 rounded-2xl text-white">
-        <a href="/">Back</a>
-      </button>
-      <motion.h1
-        className="text-3xl font-bold text-center text-blue-800 mb-8"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        📚 Question Bank
-      </motion.h1>
+  // Filtering logic
+  const filteredQuestions = questions.filter((q) => {
+    const matchesDifficulty =
+      !filters.difficulty || q.difficulty === filters.difficulty;
+    const matchesTags =
+      filters.tags.length === 0 || filters.tags.every((tag) => q.tags.includes(tag));
+    return matchesDifficulty && matchesTags;
+  });
 
-      <div className="max-w-5xl mx-auto grid gap-5">
-        {questions.length === 0 ? (
-          <p className="text-center text-gray-600">No questions found.</p>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white p-4 md:p-8">
+      {/* Top bar with back button */}
+      <div className="flex justify-between items-center mb-6">
+        <button
+          onClick={() => navigate("/")}
+          className="bg-red-500 text-white px-4 py-1 rounded-full shadow hover:bg-red-600 transition"
+        >
+          ← Back
+        </button>
+        <h1 className="text-2xl md:text-3xl font-bold text-blue-800 text-center flex-1 mx-4">
+          📚 Question Bank
+        </h1>
+      </div>
+
+      {/* Filter navbar */}
+      <NavbarFilter onFilterChange={setFilters} />
+
+      {/* Question list */}
+      <div className="mt-8 max-w-5xl mx-auto grid gap-5">
+        {filteredQuestions.length === 0 ? (
+          <p className="text-center text-gray-500">No questions match the selected filters.</p>
         ) : (
-          questions.map((question, index) => (
+          filteredQuestions.map((question, index) => (
             <motion.div
               key={question._id}
+              onClick={() => navigate(`/questions/${question._id}`)}
+              className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer transition"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 * index }}
-              onClick={() => navigate(`/questions/${question._id}`)}
-              className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg cursor-pointer transition"
             >
               <div className="flex justify-between items-center mb-2">
-                <h2 className="text-xl font-semibold text-gray-800">
-                  {question.title}
+                <h2 className="text-lg md:text-xl font-semibold text-gray-800">
+                  {index + 1}. {question.title}
                 </h2>
                 <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    difficultyColors[question.difficulty] || "bg-gray-200"
+                  className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium ${
+                    difficultyColors[question.difficulty] || "bg-gray-200 text-gray-800"
                   }`}
                 >
                   {question.difficulty}
                 </span>
               </div>
-              <p className="text-gray-600 text-sm mb-2">
-                {question.description.slice(0, 120)}...
+              <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+                {question.description}
               </p>
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex gap-2 flex-wrap mt-1">
                 {question.tags?.map((tag, i) => (
                   <span
                     key={i}

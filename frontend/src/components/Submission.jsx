@@ -6,7 +6,7 @@ import CopyCode from "./CopyCode";
 
 const Submission = () => {
   const [history, setHistory] = useState([]);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   let { questionId } = useParams();
   console.log("qId: ", questionId);

@@ -9,7 +9,6 @@ import SubmissionHistory from "./components/SubmissionHistory";
 import Submission from "./components/Submission";
 import QuestionComponent from "./components/QuestionDetails";
 import Solution from "./components/Solution";
-import ErrorBoundary from "./context/ErrorBoundry";
 
 const App = () => {
   return (
