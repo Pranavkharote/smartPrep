@@ -5,37 +5,10 @@ import axios from "axios";
 import Loader from "../assets/Loader";
 import * as jwt_decode from "jwt-decode"; // ✅ this is correct
 
-const Dashboard = ({ user = {} }) => {
+const Dashboard = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  function parseJwt(token) {
-    try {
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split("")
-          .map((c) => {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
-      );
-      return JSON.parse(jsonPayload);
-    } catch (err) {
-      console.error("Invalid token", err);
-      return null;
-    }
-  }
-  const token = localStorage.getItem("token");
-
-  if (token) {
-    const decoded = parseJwt(token);
-    if (decoded) {
-      console.log("Username:", decoded.username); // ✅ Use it
-    }
-  }
-  console.log("not token");
+  const name = localStorage.getItem("name")
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -90,7 +63,7 @@ const Dashboard = ({ user = {} }) => {
           animate={{ scale: 1 }}
           transition={{ duration: 0.6 }}
         >
-          👋 Welcome back, {user?.name || "Coder"}!
+          👋 Welcome back, {name || "Coder"}!
         </motion.h1>
 
         <motion.p

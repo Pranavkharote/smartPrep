@@ -43,12 +43,14 @@ function Signup() {
         }
       );
       const { success, message } = data;
+            localStorage.setItem('name', data.name); 
+      console.log(data)
       console.log(success)
       if (success == true || success == "true") {
         handleSuccess(message);
         setTimeout(() => {
           console.log("navigating to the route");
-          navigate("/questions");
+          navigate("/");
         }, 500);
       } else {
         handleError(message || "something wrong");

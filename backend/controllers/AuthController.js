@@ -20,7 +20,7 @@ const Signup = async (req, res) => {
     });
     res
       .status(201)
-      .json({ message: "User Registered Successfully!", success: true });
+      .json({ message: "User Registered Successfully!", success: true, name: name });
   } catch (error) {
     console.error(error);
   }
@@ -34,6 +34,7 @@ const Login = async (req, res) => {
       return res.status(401).json({ message: "All fields are required." });
     }
     const user = await UserModel.findOne({ email });
+    console.log(user);
     if (!user) {
       return res.status(401).json({ message: "Incorrect email or password" });
     }
@@ -46,6 +47,8 @@ const Login = async (req, res) => {
       withCredentials: true,
       httpOnly: true,
     });
+    // const username = await UserModel.fin/dOne({})
+    // console.log("username :", username)
     
     res.status(201).json({ message: "LoggedIn successfully", success: true });
   } catch (error) {

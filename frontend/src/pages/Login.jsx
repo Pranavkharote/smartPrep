@@ -42,12 +42,13 @@ const Login = () => {
         { withCredentials: true }
       );
       
-      console.log(data);
-      const { success, message, token } = data;
-      // const token = data.data.token;
-      console.log(message);
+      // console.log("data :", data);
+      // localStorage.setItem('username', data.name); 
+      const { success, message } = data;
+      const token = document.cookie; 
+      console.log("token :", token);
       if (success == true || success == "true") {
-        localStorage.setItem("token", token);
+        // localStorage.setItem("token", token);
         handleSuccess(message);
         setTimeout(() => { 
           navigate("/");

@@ -2,6 +2,7 @@ const { Login, Signup } = require("../controllers/authController");
 const router = require("express").Router();
 const authenticateUser = require("../middlewares/AuthMiddleware");
 const Question = require("../models/QuestionModel");
+const { UserModel } = require("../models/UserModel");
 const UserProgress = require("../models/UserProgressModel");
 
 router.post("/login", Login);
@@ -13,6 +14,11 @@ router.get("/", authenticateUser, async (req, res) => {
   res.json(question);
   // console.log(question)
 });
+
+router.get("/user", async (req ,res) => {
+  const username = await UserModel.find({}).select("name -_id");
+  return res.json(username);
+})
 
 
 module.exports = router;
