@@ -28,7 +28,7 @@ const MainQuestionEditorComponent = () => {
     fetchQuestionDetail();
   }, [questionId]);
   return (
-    <div className="overflow-hidden h-screen ">
+    <div className="overflow-hidden h-screen  ">
       <MainNavbar />
       {/* <div className="w-64 fixed top-16 bottom-0 left-0 z-40 bg-red-300 border-r"> */}
       <LeftNavbar />

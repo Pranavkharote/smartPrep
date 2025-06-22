@@ -311,7 +311,7 @@ var ${functionName} = function(nums) {
   };
 
   const handleSuccess = (msg) => {
-    toast.success(msg, {
+    toast.dark(msg, {
       position: "top-center",
     });
   };

@@ -7,8 +7,8 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import DarkModeToggle from "./ThemeToggle";
 const navigation = [{ name: "Dashboard", href: "/", current: true }];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -39,7 +39,7 @@ export default function MainNavbar() {
       ? questions[currentIndex + 1]
       : null;
   return (
-    <Disclosure as="nav" className="bg-gray-800 ">
+    <Disclosure as="nav" className="bg-white">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -85,28 +85,24 @@ export default function MainNavbar() {
               </div>
             </div>
             <div className="text-white mx-5 text-3xl ps-3">
-                {prevQuestion ? (
-      <Link
-        to={`/questions/${prevQuestion._id}`}
-       
-      >
-        <i class="fa-solid fa-angle-left mr-3"></i>
-      </Link>
-    ) : (
-      <span className="">
-       <i class="fa-solid fa-angle-left cursor-not-allowed mr-3"></i>
-      </span>
-    )}
-     {nextQuestion ? (
-      <Link
-        to={`/questions/${nextQuestion._id}`}>
-       <i class="fa-solid fa-angle-right mr-3"></i>
-      </Link>
-    ) : (
-      <span className="cursor-not-allowed">
-       <i class="fa-solid fa-angle-right mr-3"></i>
-      </span>
-    )}
+              {prevQuestion ? (
+                <Link to={`/questions/${prevQuestion._id}`}>
+                  <i class="fa-solid fa-angle-left mr-3"></i>
+                </Link>
+              ) : (
+                <span className="">
+                  <i class="fa-solid fa-angle-left cursor-not-allowed mr-3"></i>
+                </span>
+              )}
+              {nextQuestion ? (
+                <Link to={`/questions/${nextQuestion._id}`}>
+                  <i class="fa-solid fa-angle-right mr-3"></i>
+                </Link>
+              ) : (
+                <span className="cursor-not-allowed">
+                  <i class="fa-solid fa-angle-right mr-3"></i>
+                </span>
+              )}
               {/* <Link to={`/questions/${nextQuestion._id}`}>
                 <i class="fa-solid fa-angle-right mr-3"></i>
               </Link> */}
@@ -121,7 +117,7 @@ export default function MainNavbar() {
               </a>
             </div>
 
-            {/* <ThemeToggle /> */}
+            <DarkModeToggle />
           </div>
         </div>
       </div>

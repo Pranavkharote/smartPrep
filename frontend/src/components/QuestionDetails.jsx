@@ -29,7 +29,7 @@ const QuestionComponent = () => {
   return (
     <>
       {/* <LeftNavbar /> */}
-      <div className="w-full lg:w-1/2 overflow-y-auto mb-6 p-6 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-800 space-y-4">
+      <div className="w-full lg:w-1/2 overflow-y-auto mb-6 p-6 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-800 space-y-4 dark:bg-black">
   {/* Title & Difficulty */}
   
   <strong className="text-2xl block mb-1 mt-3">{question.title}</strong>
