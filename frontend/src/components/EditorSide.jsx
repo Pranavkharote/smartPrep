@@ -17,7 +17,7 @@ const EditorSide = ({ question }) => {
   const [submittedCode, setSubmittedCode] = useState("");
   const [output, setOutput] = useState("");
   const [running, setRunning] = useState(false);
-  const [languageId, setLanguageId] = useState(63);
+  // const [languageId, setLanguageId] = useState(63);
 
   //AI
   const [showAI, setShowAI] = useState(false);
@@ -30,6 +30,15 @@ const EditorSide = ({ question }) => {
   const [formattedTime, setFormattedTime] = useState("00:00");
   const [timerRunning, setTimerRunning] = useState(false);
   // const [timeStart, setTimeStart] = useState(Date.now());
+// 1. Get saved language or fallback to a default
+const [languageId, setLanguageId] = useState(
+  () => parseInt(localStorage.getItem('languageId')) || 54 // 54 is JS as default
+);
+
+// 2. Save to localStorage every time the language changes
+useEffect(() => {
+  localStorage.setItem('languageId', languageId);
+}, [languageId]);
 
   useEffect(() => {
     if (question?.starterCode) {
@@ -42,24 +51,6 @@ const EditorSide = ({ question }) => {
       setSubmittedCode(code);
     }
   }, [question, languageId]);
-
-  //   const generateStarterCode = (functionName) => {
-  //     if (functionName === "twoSum") {
-  //       return `/**
-  //  * @param {number[]} nums
-  //  * @param {number} target
-  //  * @return {number[]}
-  //  */
-  // var ${functionName} = function(nums, target) {
-
-  // };`;
-  //     }
-
-  //     // Add more templates for other problems...
-  //     return `function ${functionName}() {
-
-  // }`;
-  //   };
 
   const generateStarterCode = (functionName, langId) => {
     if (functionName === "twoSum" && langId === 54) {
@@ -163,6 +154,161 @@ var ${functionName} = function(nums) {
     }
 }`;
     }
+    if (functionName === "maximumSubarray" && langId === 71) {
+      //js
+      return `class Solution(object):
+    def ${functionName}(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        `;
+    }
+    if (functionName === "mergeTwoSortedLists" && langId === 71) {
+      //js
+      return `# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution(object):
+    def ${functionName} (self, list1, list2):
+        """
+        :type list1: Optional[ListNode]
+        :type list2: Optional[ListNode]
+        :rtype: Optional[ListNode]
+        """
+        `;
+    }
+    if (functionName === "mergeTwoSortedLists" && langId === 54) {
+      //js
+      return `/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} list1
+ * @param {ListNode} list2
+ * @return {ListNode}
+ */
+var ${functionName} = function(list1, list2) {
+    
+};`;
+    }
+    if (functionName === "mergeTwoSortedList" && langId === 62) {
+      //js
+      return `/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode ${functionName}(ListNode list1, ListNode list2) {
+        
+    }
+}`;
+    }
+    if (functionName === "mergeTwoSortedList" && langId === 63) {
+      //js
+      return `/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* ${functionName}(ListNode* list1, ListNode* list2) {
+        
+    }
+};`;
+    }
+    if (functionName === "bestTimeToBuyAndSellStock" && langId === 63) {
+      
+      return `class Solution {
+public:
+    int ${functionName}(vector<int>& prices) {
+        
+    }
+};`;
+    }
+    if (functionName === "bestTimeToBuyAndSellStock" && langId === 62) {
+      
+      return `class Solution {
+    public int ${functionName}(int[] prices) {
+        int buyPrice = Integer.
+    }
+}`;
+    }
+    if (functionName === "bestTimeToBuyAndSellStock" && langId === 54) {
+      
+      return `/**
+ * @param {number[]} prices
+ * @return {number}
+ */
+var ${functionName} = function(prices) {
+    
+};`;
+    }
+    if (functionName === "bestTimeToBuyAndSellStock" && langId === 71) {
+      
+      return `class Solution(object):
+    def ${functionName}(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        `;
+    }
+    if (functionName === "removeDuplicatesFromSortedArray" && langId === 63) {
+      
+      return `class Solution {
+public:
+    int ${functionName}(vector<int>& nums) {
+        
+    }
+};`;
+    }
+    if (functionName === "removeDuplicatesFromSortedArray" && langId === 62) {
+      
+      return `class Solution {
+    public int ${functionName}(int[] nums) {
+        
+    }
+}`;
+    }
+    if (functionName === "removeDuplicatesFromSortedArray" && langId === 54) {
+      
+      return `/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var ${functionName} = function(nums) {
+    
+};`;
+    }
+    if (functionName === "removeDuplicatesFromSortedArray" && langId === 71) {
+      
+      return `class Solution(object):
+    def ${functionName}(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        `;
+    }
   };
 
   const languageMap = {
@@ -188,15 +334,16 @@ var ${functionName} = function(nums) {
     });
   };
 
-const isSolved = output.includes("FINAL_STATUS: solved");
-const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(isSolved){
-      !handleSubmit();
+    if(!generateStarterCode && !submittedCode){
+      return;
     }
   };
 
   const runCode = async () => {
+    setSubmittedCode(submittedCode);
     if (!languageId) {
       toast.error("Please select a programming language.");
       return;
@@ -209,7 +356,6 @@ const handleSubmit = async (e) => {
       toast.error("Question not loaded yet.");
       return;
     }
-
     setRunning(true);
     setOutput("Running...");
 
@@ -381,52 +527,54 @@ ${testCases
 }
 `;
 
-//       const javaWrapper = `
-// ${submittedCode}
+      //       const javaWrapper = `
+      // ${submittedCode}
 
-// public class Main {
-//   public static void main(String[] args) {
-//     boolean allPassed = true;
-// ${testCases
-//   .map((test, i) => {
-//     return `
-//     try {
-      
-//       int[] input = new int[] ${test.input.replace("[", "{").replace("]", "}")};
+      // public class Main {
+      //   public static void main(String[] args) {
+      //     boolean allPassed = true;
+      // ${testCases
+      //   .map((test, i) => {
+      //     return `
+      //     try {
 
-//       int expected = ${test.expectedOutput};
-//       int result = ${functionName}(input); // or use multiple params if needed
-//       if (result == expected) {
-//         System.out.println("✅ Test Case ${
-//           i + 1
-//         }: Passed\\nExpected: " + expected + "\\nGot: " + result);
-//       } else {
-//         System.out.println("❌ Test Case ${
-//           i + 1
-//         }: Failed\\nExpected: " + expected + "\\nGot: " + result);
-//         allPassed = false;
-//       }
-//     } catch (Exception e) {
-//       System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
-//       allPassed = false;
-//     }`;
-//   })
-//   .join("\n")}
+      //       int[] input = new int[] ${test.input.replace("[", "{").replace("]", "}")};
 
-//     if (allPassed) {
-//       System.out.println("FINAL_STATUS: solved");
-//     } else {
-//       System.out.println("FINAL_STATUS: attempted");
-//     }
-//   }
-// }
-// `;
+      //       int expected = ${test.expectedOutput};
+      //       int result = ${functionName}(input); // or use multiple params if needed
+      //       if (result == expected) {
+      //         System.out.println("✅ Test Case ${
+      //           i + 1
+      //         }: Passed\\nExpected: " + expected + "\\nGot: " + result);
+      //       } else {
+      //         System.out.println("❌ Test Case ${
+      //           i + 1
+      //         }: Failed\\nExpected: " + expected + "\\nGot: " + result);
+      //         allPassed = false;
+      //       }
+      //     } catch (Exception e) {
+      //       System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
+      //       allPassed = false;
+      //     }`;
+      //   })
+      //   .join("\n")}
 
+      //     if (allPassed) {
+      //       System.out.println("FINAL_STATUS: solved");
+      //     } else {
+      //       System.out.println("FINAL_STATUS: attempted");
+      //     }
+      //   }
+      // }
+      // `;
 
-// Strip public from Solution
-submittedCode = submittedCode.replace(/\bpublic\s+class\s+Solution\b/, "class Solution");
+      // Strip public from Solution
+      submittedCode = submittedCode.replace(
+        /\bpublic\s+class\s+Solution\b/,
+        "class Solution"
+      );
 
-const javaWrapper = `
+      const javaWrapper = `
 ${submittedCode}
 
 public class Main {
@@ -441,9 +589,13 @@ ${testCases
       int expected = ${test.expectedOutput};
       int result = solution.${functionName}(input); // ✅ call method on the instance
       if (result == expected) {
-        System.out.println("✅ Test Case ${i + 1}: Passed\\nExpected: " + expected + "\\nGot: " + result);
+        System.out.println("✅ Test Case ${
+          i + 1
+        }: Passed\\nExpected: " + expected + "\\nGot: " + result);
       } else {
-        System.out.println("❌ Test Case ${i + 1}: Failed\\nExpected: " + expected + "\\nGot: " + result);
+        System.out.println("❌ Test Case ${
+          i + 1
+        }: Failed\\nExpected: " + expected + "\\nGot: " + result);
         allPassed = false;
       }
     } catch (Exception e) {
@@ -459,7 +611,7 @@ ${testCases
     }
   }
 }
-`
+`;
 
       // Remove public from the student's class
 
@@ -570,11 +722,11 @@ ${testCases
 
           const { success, message } = data;
           if (success === true || success === "true") {
-            handleSuccessRight(
-              submissionStatus === "solved"
-                ? "✅ All test cases passed!"
-                : "⚠️ Some failed test cases."
-            );
+            // handleSuccessRight(
+            //   submissionStatus === "solved"
+            //     ? "✅ All test cases passed!"
+            //     : "⚠️ Some failed test cases."
+            // );
             if (submissionStatus === "solved")
               //  setSubmittedCode("");
               setTimeStart(Date.now());
@@ -612,6 +764,7 @@ ${testCases
         prompt: promptToSend,
         questionTitle: question.title,
         questionDescription: question.description,
+        userCode: submittedCode,
       });
 
       const aiAnswer = response.data.answer || "AI didn't respond";
@@ -653,18 +806,20 @@ ${testCases
     return () => clearInterval(interval);
   }, [timeStart, timerRunning]);
 
+  
   return (
     <div className="w-1/2 py-2">
       <div className="flex absolute top-4 text-black right-1">
         <select
+        
           value={languageId}
           onChange={(e) => setLanguageId(parseInt(e.target.value))}
           className="mb-2 p-2 border rounded h-9 mr-5 bg-white "
         >
+          <option value={54} default >JavaScript</option>
           <option value={62}>Java</option>
-          <option value={54}>JavaScript</option>
-          <option value={71}>Python</option>
           <option value={63}>C++</option>
+          <option value={71}>Python</option>
         </select>
       </div>
       <form onSubmit={handleSubmit}>

@@ -63,16 +63,6 @@ export default function NavbarFilter({ onFilterChange }) {
 
   return (
     <nav className="bg-gradient-to-r from-white to-slate-50 shadow-md p-4 rounded-xl border border-slate-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between transition-all duration-200">
-      {/* Search */}
-      <div className="flex items-center space-x-2 w-full md:w-1/5">
-        <input
-          type="text"
-          placeholder="Search by title..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="flex-1 rounded-md border border-slate-300 bg-white text-slate-700 px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        />
-      </div>
 
       {/* Difficulty */}
       <div className="flex items-center space-x-2">
@@ -89,6 +79,16 @@ export default function NavbarFilter({ onFilterChange }) {
         </select>
       </div>
 
+      {/* Search */}
+      <div className="flex items-center space-x-2 w-full md:w-1/5">
+        <input
+          type="text"
+          placeholder="Search by title..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="flex-1 rounded-md border border-slate-300 bg-white text-slate-700 px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        />
+      </div>
       {/* Topics */}
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-semibold text-slate-700">Topics:</span>
@@ -111,7 +111,7 @@ export default function NavbarFilter({ onFilterChange }) {
         })}
       </div>
         {/* Dark Mode Toggle */}
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Dark Mode:</span>
         <button
           onClick={handleDarkModeToggle}
@@ -125,7 +125,7 @@ export default function NavbarFilter({ onFilterChange }) {
             }`}
           ></div>
         </button>
-      </div>
+      </div> */}
     </nav>
   );
 }

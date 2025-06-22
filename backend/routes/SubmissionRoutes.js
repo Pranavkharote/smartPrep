@@ -4,7 +4,7 @@ const authenticateUser = require("../middlewares/AuthMiddleware");
 const UserProgress = require("../models/UserProgressModel");
 const Question = require("../models/QuestionModel");
 const { isQuestionId } = require("../middlewares/RouteMiddleware");
-const jwt_decode = require("jwt-decode")
+const jwt_decode = require("jwt-decode");
 
 router.post("/newquestion", authenticateUser, async (req, res) => {
   const newQuestion = new Question(req.body);
@@ -30,38 +30,27 @@ router.post("/submit", authenticateUser, async (req, res) => {
 router.post("/submission", authenticateUser, async (req, res) => {
   try {
     const userId = req.user._id;
-    const { questionId, status, timeTaken, submittedCode } = req.body;
-    // const existing = await UserProgress.findOne({ userId, questionId });
-    // if (existing) {
-      //   (existing.status = status), (existing.timeTaken = timeTaken);
-    //   if (submittedCode)
-    //     (existing.submittedCode = submittedCode),
-    //       (existing.submittedAt = Date.now());
+    const { questionId, status, timeTaken, submittedCode, submittedAt } =
+      req.body;
 
-    //   await existing.save();
-    //   return res.json({
-      //     message: "submission Updated",
-    //     submission: existing,
-    //     success: "true",
-    //   });
-    // } else {
-      const newSubmission = new UserProgress({
-        userId,
-        questionId,
-        timeTaken,
-        submittedCode,
-        status,
-      });
-      await newSubmission.save();
-      return res.json({
-        message: "submission created",
-        submission: newSubmission,
-        success: true,
-      });
+    const newSubmission = new UserProgress({
+      userId,
+      questionId,
+      timeTaken,
+      submittedCode,
+      status,
+      submittedAt: new Date(),
+    });
+    await newSubmission.save();
+    return res.json({
+      message: "submission created",
+      submission: newSubmission,
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     return res
-    .status(500)
+      .status(500)
       .json({ message: "Submission failed", success: false });
   }
 });
@@ -89,8 +78,8 @@ router.get("/submission", authenticateUser, async (req, res) => {
       .select("status timeTaken submittedAt questionId")
       .sort({ submittedAt: -1 });
 
-      const formattedData = rawData.map(
-        ({ status, timeTaken, submittedAt, questionId }) => ({
+    const formattedData = rawData.map(
+      ({ status, timeTaken, submittedAt, questionId }) => ({
         status,
         timeTaken,
         submittedAt,
@@ -147,9 +136,9 @@ router.get("/submission-history", authenticateUser, async (req, res) => {
     const userId = req.user._id;
 
     const submission = await UserProgress.find({ userId })
-    .populate("questionId", "title")
-    .sort({ createdAt: -1 });
-    
+      .populate("questionId", "title")
+      .sort({ createdAt: -1 });
+
     res.json({ success: true, submission });
   } catch (err) {
     console.log(err);
@@ -157,23 +146,24 @@ router.get("/submission-history", authenticateUser, async (req, res) => {
   }
 });
 
-router.get("/submission/:questionId", async (req ,res) => {
+router.get("/submission/:questionId", async (req, res) => {
   let questionId = req.params.questionId;
   let userId = req.user._id;
   // console.log("questionId: ", questionId, "userId: ", userId)
-  const submission = await UserProgress.find({questionId, userId})
-  .sort({ createdAt: -1 });
+  const submission = await UserProgress.find({ questionId, userId })
+    .sort({
+      submittedAt: -1,
+      createdAt: -1,
+    })
+    .exec();
   // submission.unshift(newSubmission);
   return res.json(submission);
-})
+});
 
-
-router.get("/user", async (req ,res) => {
+router.get("/user", async (req, res) => {
   let user = req.user;
 
-
-  return res.json({message: user})
-})
-
+  return res.json({ message: user });
+});
 
 module.exports = router;

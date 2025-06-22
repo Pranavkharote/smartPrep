@@ -33,7 +33,7 @@ const QuestionComponent = () => {
   {/* Title & Difficulty */}
   
   <strong className="text-2xl block mb-1 mt-3">{question.title}</strong>
-  <i className="text-sm text-slate-500">{question.difficulty}</i>
+  <i className="text-sm text-slate-500">{question.difficulty == "Easy"? <p className="text-green-600">Easy</p> : <p className="text-yellow-600">Medium </p> }{question.difficulty == "hard" ? <p className="text-red-500">Hard</p> : " "}</i>
 
   {/* Problem Statement */}
   <div className="mt-4">
