@@ -30,15 +30,15 @@ const EditorSide = ({ question }) => {
   const [formattedTime, setFormattedTime] = useState("00:00");
   const [timerRunning, setTimerRunning] = useState(false);
   // const [timeStart, setTimeStart] = useState(Date.now());
-// 1. Get saved language or fallback to a default
-const [languageId, setLanguageId] = useState(
-  () => parseInt(localStorage.getItem('languageId')) || 54 // 54 is JS as default
-);
+  // 1. Get saved language or fallback to a default
+  const [languageId, setLanguageId] = useState(
+    () => parseInt(localStorage.getItem("languageId")) || 54 // 54 is JS as default
+  );
 
-// 2. Save to localStorage every time the language changes
-useEffect(() => {
-  localStorage.setItem('languageId', languageId);
-}, [languageId]);
+  // 2. Save to localStorage every time the language changes
+  useEffect(() => {
+    localStorage.setItem("languageId", languageId);
+  }, [languageId]);
 
   useEffect(() => {
     if (question?.starterCode) {
@@ -236,7 +236,6 @@ public:
 };`;
     }
     if (functionName === "bestTimeToBuyAndSellStock" && langId === 63) {
-      
       return `class Solution {
 public:
     int ${functionName}(vector<int>& prices) {
@@ -245,7 +244,6 @@ public:
 };`;
     }
     if (functionName === "bestTimeToBuyAndSellStock" && langId === 62) {
-      
       return `class Solution {
     public int ${functionName}(int[] prices) {
         int buyPrice = Integer.
@@ -253,7 +251,6 @@ public:
 }`;
     }
     if (functionName === "bestTimeToBuyAndSellStock" && langId === 54) {
-      
       return `/**
  * @param {number[]} prices
  * @return {number}
@@ -263,7 +260,6 @@ var ${functionName} = function(prices) {
 };`;
     }
     if (functionName === "bestTimeToBuyAndSellStock" && langId === 71) {
-      
       return `class Solution(object):
     def ${functionName}(self, prices):
         """
@@ -273,7 +269,6 @@ var ${functionName} = function(prices) {
         `;
     }
     if (functionName === "removeDuplicatesFromSortedArray" && langId === 63) {
-      
       return `class Solution {
 public:
     int ${functionName}(vector<int>& nums) {
@@ -282,7 +277,6 @@ public:
 };`;
     }
     if (functionName === "removeDuplicatesFromSortedArray" && langId === 62) {
-      
       return `class Solution {
     public int ${functionName}(int[] nums) {
         
@@ -290,7 +284,6 @@ public:
 }`;
     }
     if (functionName === "removeDuplicatesFromSortedArray" && langId === 54) {
-      
       return `/**
  * @param {number[]} nums
  * @return {number}
@@ -300,7 +293,6 @@ var ${functionName} = function(nums) {
 };`;
     }
     if (functionName === "removeDuplicatesFromSortedArray" && langId === 71) {
-      
       return `class Solution(object):
     def ${functionName}(self, nums):
         """
@@ -334,10 +326,9 @@ var ${functionName} = function(nums) {
     });
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!generateStarterCode && !submittedCode){
+    if (!generateStarterCode && !submittedCode) {
       return;
     }
   };
@@ -365,53 +356,6 @@ var ${functionName} = function(nums) {
       setRunning(false);
       return;
     }
-
-    //original for js working
-    //     const wrapCodeWithTests = (submittedCode, question) => {
-    //       const { functionName, testCases } = question;
-
-    //       return `
-    // ${submittedCode}
-
-    // if (typeof ${functionName} !== "function") {
-    //   console.log("error\\n❌ Function '${functionName}' is not defined properly.");
-    // } else {
-    //   const testCases = ${JSON.stringify(testCases)};
-    //   let allPassed = true;
-    //   testCases.forEach((test, index) => {
-    //     try {
-    //       // 👇 Fix: parse input string if necessary
-    //       const rawInput = test.input;
-    //       const args = Array.isArray(rawInput)
-    //         ? rawInput
-    //         : typeof rawInput === 'string'
-    //           ? [JSON.parse(rawInput)]
-    //           : [rawInput];
-
-    //       const result = ${functionName}(...args);
-    //       const expected = JSON.parse(test.expectedOutput); // convert "6" -> 6
-    //       const passed = JSON.stringify(result) === JSON.stringify(expected);
-
-    //       if (passed) {
-    //         console.log(\`✅ Test Case \${index + 1}: Passed\\nExpected: \${JSON.stringify(expected)}\\nGot: \${JSON.stringify(result)}\`);
-    //       } else {
-    //         console.log(\`❌ Test Case \${index + 1}: Failed\\nExpected: \${JSON.stringify(expected)}\\nGot: \${JSON.stringify(result)}\`);
-    //       allPassed = false;
-    //       }
-    //     } catch (e) {
-    //       console.log(\`❌ Test Case \${index + 1}: Crashed - \${e.message}\`);
-    //       // console.log(e)
-    //       allPassed = false;
-    //     }
-    //   });
-
-    //   if(allPassed){
-    //   console.log("FINAL_STATUS: solved")
-    //   } else {
-    //    console.log("FINAL_STATUS: attempted")}
-    // }
-    // `;
-    //     };
 
     //for all langugages
     const wrapCodeWithTests = (submittedCode, question, languageId) => {
@@ -527,47 +471,6 @@ ${testCases
 }
 `;
 
-      //       const javaWrapper = `
-      // ${submittedCode}
-
-      // public class Main {
-      //   public static void main(String[] args) {
-      //     boolean allPassed = true;
-      // ${testCases
-      //   .map((test, i) => {
-      //     return `
-      //     try {
-
-      //       int[] input = new int[] ${test.input.replace("[", "{").replace("]", "}")};
-
-      //       int expected = ${test.expectedOutput};
-      //       int result = ${functionName}(input); // or use multiple params if needed
-      //       if (result == expected) {
-      //         System.out.println("✅ Test Case ${
-      //           i + 1
-      //         }: Passed\\nExpected: " + expected + "\\nGot: " + result);
-      //       } else {
-      //         System.out.println("❌ Test Case ${
-      //           i + 1
-      //         }: Failed\\nExpected: " + expected + "\\nGot: " + result);
-      //         allPassed = false;
-      //       }
-      //     } catch (Exception e) {
-      //       System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
-      //       allPassed = false;
-      //     }`;
-      //   })
-      //   .join("\n")}
-
-      //     if (allPassed) {
-      //       System.out.println("FINAL_STATUS: solved");
-      //     } else {
-      //       System.out.println("FINAL_STATUS: attempted");
-      //     }
-      //   }
-      // }
-      // `;
-
       // Strip public from Solution
       submittedCode = submittedCode.replace(
         /\bpublic\s+class\s+Solution\b/,
@@ -613,46 +516,6 @@ ${testCases
 }
 `;
 
-      // Remove public from the student's class
-
-      //       const javaWrapper = `
-      // ${submittedCode}
-
-      // public class Main {
-      //   public static void main(String[] args) {
-      //     boolean allPassed = true;
-      // ${testCases
-      //   .map((test, i) => {
-      //     return `
-      //     try {
-      //       var result = ${functionName}(${test.input});
-      //       var expected = ${test.expectedOutput};
-      //       if (result.equals(expected)) {
-      //         System.out.println("✅ Test Case ${
-      //           i + 1
-      //         }: Passed\\nExpected: " + expected + "\\nGot: " + result);
-      //       } else {
-      //         System.out.println("❌ Test Case ${
-      //           i + 1
-      //         }: Failed\\nExpected: " + expected + "\\nGot: " + result);
-      //         allPassed = false;
-      //       }
-      //     } catch (Exception e) {
-      //       System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
-      //       allPassed = false;
-      //     }`;
-      //   })
-      //   .join("\n")}
-
-      //     if (allPassed) {
-      //       System.out.println("FINAL_STATUS: solved");
-      //     } else {
-      //       System.out.println("FINAL_STATUS: attempted");
-      //     }
-      //   }
-      // }
-      // `
-      // Return appropriate wrapper based on languageId
       switch (languageId) {
         case 54:
           return jsWrapper;
@@ -806,17 +669,17 @@ ${testCases
     return () => clearInterval(interval);
   }, [timeStart, timerRunning]);
 
-  
   return (
     <div className="w-1/2 py-2">
       <div className="flex absolute top-4 text-black right-1">
         <select
-        
           value={languageId}
           onChange={(e) => setLanguageId(parseInt(e.target.value))}
           className="mb-2 p-2 border rounded h-9 mr-5 bg-white "
         >
-          <option value={54} default >JavaScript</option>
+          <option value={54} default>
+            JavaScript
+          </option>
           <option value={62}>Java</option>
           <option value={63}>C++</option>
           <option value={71}>Python</option>
