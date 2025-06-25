@@ -39,29 +39,14 @@ export default function MainNavbar() {
       ? questions[currentIndex + 1]
       : null;
   return (
-    <Disclosure as="nav" className="bg-white">
+    <Disclosure as="nav" className="bg-gray-100 mainNav">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            {/* Mobile menu button*/}
-            <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset">
-              <span className="absolute -inset-0.5" />
-              <span className="sr-only">Open main menu</span>
-              <Bars3Icon
-                aria-hidden="true"
-                className="block size-6 group-data-open:hidden"
-              />
-              <XMarkIcon
-                aria-hidden="true"
-                className="hidden size-6 group-data-open:block"
-              />
-            </DisclosureButton>
-          </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
               <button className="flex px-2 rounded-2xl text-white text-2xl">
                 <a href="/questions">
-                  <i class="fa-solid fa-left-long"></i>
+                  <i class="fa-solid fa-left-long text-[#454545]"></i>
                 </a>
               </button>
             </div>
@@ -74,7 +59,7 @@ export default function MainNavbar() {
                     aria-current={item.current ? "page" : undefined}
                     className={classNames(
                       item.current
-                        ? "bg-gray-900 text-white"
+                        ? "bg-white border text-[#222222] mainNav"
                         : "text-gray-300 hover:bg-gray-700 hover:text-white",
                       "rounded-md px-3 py-2 text-sm font-medium"
                     )}
@@ -84,10 +69,10 @@ export default function MainNavbar() {
                 ))}
               </div>
             </div>
-            <div className="text-white mx-5 text-3xl ps-3">
+            <div className="text-[#e1e1e1 ] mx-5 text-3xl ps-3 c">
               {prevQuestion ? (
                 <Link to={`/questions/${prevQuestion._id}`}>
-                  <i class="fa-solid fa-angle-left mr-3"></i>
+                  <i class="fa-solid fa-angle-left mr-3 text-[#222222]"></i>
                 </Link>
               ) : (
                 <span className="">
@@ -96,18 +81,16 @@ export default function MainNavbar() {
               )}
               {nextQuestion ? (
                 <Link to={`/questions/${nextQuestion._id}`}>
-                  <i class="fa-solid fa-angle-right mr-3"></i>
+                  <i class="fa-solid fa-angle-right mr-3 "></i>
                 </Link>
               ) : (
                 <span className="cursor-not-allowed">
                   <i class="fa-solid fa-angle-right mr-3"></i>
                 </span>
               )}
-              {/* <Link to={`/questions/${nextQuestion._id}`}>
-                <i class="fa-solid fa-angle-right mr-3"></i>
-              </Link> */}
+              
             </div>
-            <div className="text-white h-[20px] text-[12px] ms-4 font-medium">
+            <div className="text-[#343434] h-[20px] text-[12px] ms-4 font-medium">
               <p>See all the Questions List</p>
               <a
                 href="/questions"
@@ -117,31 +100,11 @@ export default function MainNavbar() {
               </a>
             </div>
 
-            <DarkModeToggle />
           </div>
+            <DarkModeToggle  />
         </div>
       </div>
 
-      <DisclosurePanel className="sm:hidden">
-        <div className="space-y-1 px-2 pt-2 pb-3">
-          {navigation.map((item) => (
-            <DisclosureButton
-              key={item.name}
-              as="a"
-              href={item.href}
-              aria-current={item.current ? "page" : undefined}
-              className={classNames(
-                item.current
-                  ? "bg-gray-900 text-white"
-                  : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                "block rounded-md px-3 py-2 text-base font-medium"
-              )}
-            >
-              {item.name}
-            </DisclosureButton>
-          ))}
-        </div>
-      </DisclosurePanel>
-    </Disclosure>
+         </Disclosure>
   );
 }

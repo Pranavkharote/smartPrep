@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import NavbarFilter from "./NavbarFilter"; // the new UI version of NavbarFilter
+import DarkModeToggle from "./ThemeToggle";
 
 const difficultyColors = {
   Easy: "bg-green-100 text-green-800",
@@ -12,7 +13,11 @@ const difficultyColors = {
 
 const QuestionList = () => {
   const [questions, setQuestions] = useState([]);
-  const [filters, setFilters] = useState({ difficulty: "", tags: [], search: "" });
+  const [filters, setFilters] = useState({
+    difficulty: "",
+    tags: [],
+    search: "",
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,22 +34,23 @@ const QuestionList = () => {
     fetchQuestions();
   }, []);
 
-
   // Filtering logic
   const filteredQuestions = questions.filter((q) => {
     const matchesDifficulty =
-    !filters.difficulty || q.difficulty === filters.difficulty;
+      !filters.difficulty || q.difficulty === filters.difficulty;
     const matchesTags =
-    filters.tags.length === 0 || filters.tags.every((tag) => q.tags.includes(tag));
+      filters.tags.length === 0 ||
+      filters.tags.every((tag) => q.tags.includes(tag));
     const matchesSearch = filters.search
-    ? q.title.toLowerCase().includes(filters.search.toLowerCase())
-    : true;
+      ? q.title.toLowerCase().includes(filters.search.toLowerCase())
+      : true;
     return matchesDifficulty && matchesTags && matchesSearch;
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white p-4 md:p-8 qlist">
       {/* Top bar with back button */}
+      <DarkModeToggle />
       <div className="flex justify-between items-center mb-6">
         <button
           onClick={() => navigate("/")}
@@ -63,13 +69,15 @@ const QuestionList = () => {
       {/* Question list */}
       <div className="mt-8 max-w-5xl mx-auto grid gap-5">
         {filteredQuestions.length === 0 ? (
-          <p className="text-center text-gray-500">No questions match the selected filters.</p>
+          <p className="text-center text-gray-500">
+            No questions match the selected filters.
+          </p>
         ) : (
           filteredQuestions.map((question, index) => (
             <motion.div
               key={question._id}
               onClick={() => navigate(`/questions/${question._id}`)}
-              className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer transition"
+              className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer transition questions"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 * index }}
@@ -80,7 +88,8 @@ const QuestionList = () => {
                 </h2>
                 <span
                   className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium ${
-                    difficultyColors[question.difficulty] || "bg-gray-200 text-gray-800"
+                    difficultyColors[question.difficulty] ||
+                    "bg-gray-200 text-gray-800"
                   }`}
                 >
                   {question.difficulty}

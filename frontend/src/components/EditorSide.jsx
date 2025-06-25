@@ -670,8 +670,8 @@ ${testCases
   }, [timeStart, timerRunning]);
 
   return (
-    <div className="w-1/2 py-2">
-      <div className="flex absolute top-4 text-black right-1">
+    <div className="w-1/2 py-2 editorSide">
+      <div className="flex absolute top-4 text-black right-30">
         <select
           value={languageId}
           onChange={(e) => setLanguageId(parseInt(e.target.value))}
@@ -706,7 +706,7 @@ ${testCases
           <button
             onClick={() => setShowAI(!showAI)}
             type="button"
-            className="fixed bottom-5 right-5 bg-black text-white px-5 py-2 rounded-full shadow-2xl hover:bg-cyan-800 z-50"
+            className="fixed bottom-5 right-5 bg-[#00d1b2] text-white px-5 py-2 rounded-full shadow-2xl hover:bg-cyan-800 z-50"
           >
             🧠 Ask AI
           </button>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AceEditor from "react-ace";
-
+import "../index.css"
 // Import modes and themes you want
 import "ace-builds/src-noconflict/mode-javascript"; // or mode-cpp, mode-java etc
 import "ace-builds/src-noconflict/theme-github"; // choose a theme
@@ -16,6 +16,7 @@ const CodeEditor = ({ code, setCode }) => {
       fontSize={14}
       width="100%"
       height="300px"
+      className="aceEditor"
       setOptions={{
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true,

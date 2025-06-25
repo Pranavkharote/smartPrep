@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import Loader from "../assets/Loader";
-import * as jwt_decode from "jwt-decode"; // ✅ this is correct
-
+import DarkModeToggle from "../components/ThemeToggle";
+import "../index.css"
 const Dashboard = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,19 +43,29 @@ const Dashboard = () => {
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    // return `${mins}m ${secs}s`;
+    const secs = Math.floor(seconds % 60);
     return `${hrs}h ${mins}m ${secs}s`;
   };
   const solvedCount = history.filter((item) => item.status == "solved").length;
   console.log(history);
+  // Inspect the first few items
+history.slice(0, 5).forEach((item, i) => {
+  console.log(`Item ${i}: timeTaken =`, item.timeTaken);
+});
+// What is the average timeTaken?
+const averageTime = history.reduce((sum, i) => sum + (i.timeTaken || 0), 0) / history.length;
+console.log('Average timeTaken =', averageTime);
+// Check how many items
+console.log('history length:', history.length);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6 text-white">
+    <DarkModeToggle/>
       <motion.div
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-6xl mx-auto"
+        className="max-w-6xl mx-auto "
       >
         <motion.h1
           className="text-4xl font-extrabold text-center text-blue-800 mb-6"

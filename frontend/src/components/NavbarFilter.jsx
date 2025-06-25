@@ -50,7 +50,7 @@ export default function NavbarFilter({ onFilterChange }) {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-white to-slate-50 shadow-md p-4 rounded-xl border border-slate-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between transition-all duration-200">
+    <nav className="bg-gradient-to-r from-white to-slate-50 shadow-md p-4 rounded-xl border border-slate-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between transition-all duration-200 navFilter">
       {/* Difficulty */}
       <div className="flex items-center space-x-2">
         <span className="text-sm font-semibold text-slate-700">

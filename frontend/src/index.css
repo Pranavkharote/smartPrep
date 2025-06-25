@@ -21,3 +21,39 @@
 }
 
 
+body.dark-mode {
+  background: #121212;
+  color: white;
+}
+body.dark-mode .questionDetails {
+  background: #343434;
+}
+body.dark-mode .leftNav {
+  background: #1c1c1c;
+}
+body.dark-mode .testCases {
+  background: #222222;
+}
+body.dark-mode .aceEditor {
+  background: #343434;
+}
+body.dark-mode .mainNav {
+  background: #2a2a2a;
+  color: #e0e0e0;
+}
+body.dark-mode .qlist{
+  background: #2a2a2a;
+  color: aliceblue;
+}
+body.dark-mode .navFilter {
+  color: white;
+  background: #343434;
+}
+body.dark-mode .questions > {
+  background: #121212;
+  color: #e0e0e0;
+}
+body.dark-mode .navFilter button {
+  background: #e1e1e1;
+}
+

@@ -14,7 +14,7 @@ import { Routes, Link, useParams } from "react-router-dom";
 export default function LeftNavbar() {
   const { questionId} = useParams();
   return (
-    <Disclosure as="nav" className="bg-gray-300 fixed  w-153">
+    <Disclosure as="nav" className=" leftNav bg-[#f7f7f7] fixed  w-153">
       <div className="mx-auto max-w-7xl px-1 sm:px-5 lg:px-1" >
         <div className="relative flex h-8 items-center justify-between">
           <div className="flex flex-1 items-center justify-evenly sm:items-stretch sm:justify-evenly">
