@@ -58,7 +58,7 @@ const QuestionList = () => {
         >
           ← Back
         </button>
-        <h1 className="text-2xl md:text-3xl font-bold text-blue-800 text-center flex-1 mx-4">
+        <h1 className="text-2xl md:text-3xl font-bold  text-center flex-1 mx-4">
           📚 Question Bank
         </h1>
       </div>
@@ -77,13 +77,13 @@ const QuestionList = () => {
             <motion.div
               key={question._id}
               onClick={() => navigate(`/questions/${question._id}`)}
-              className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer transition questions"
+              className=" p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer transition questions"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 * index }}
             >
               <div className="flex justify-between items-center mb-2">
-                <h2 className="text-lg md:text-xl font-semibold text-gray-800">
+                <h2 className="text-lg md:text-xl font-semibold ">
                   {index + 1}. {question.title}
                 </h2>
                 <span
@@ -95,7 +95,7 @@ const QuestionList = () => {
                   {question.difficulty}
                 </span>
               </div>
-              <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+              <p className="text-gray-600 tgray text-sm mb-2 line-clamp-2">
                 {question.description}
               </p>
               <div className="flex gap-2 flex-wrap mt-1">

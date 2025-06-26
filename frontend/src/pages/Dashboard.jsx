@@ -59,7 +59,7 @@ console.log('Average timeTaken =', averageTime);
 console.log('history length:', history.length);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-6 text-white">
+    <div className="min-h-screen bg-gradient-to-br p-6  ">
     <DarkModeToggle/>
       <motion.div
         initial={{ opacity: 0, y: -40 }}
@@ -68,7 +68,7 @@ console.log('history length:', history.length);
         className="max-w-6xl mx-auto "
       >
         <motion.h1
-          className="text-4xl font-extrabold text-center text-blue-800 mb-6"
+          className="text-4xl font-extrabold text-center text-blue-700 mb-6 colorText"
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.6 }}
@@ -86,7 +86,7 @@ console.log('history length:', history.length);
         </motion.p>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10 ">
           {[
             {
               title: "Questions Solved",
@@ -106,7 +106,7 @@ console.log('history length:', history.length);
           ].map((item, index) => (
             <motion.div
               key={index}
-              className="bg-white p-6 rounded-2xl shadow-lg"
+              className="dashCard p-6 rounded-2xl shadow-lg"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + index * 0.2 }}
@@ -129,26 +129,26 @@ console.log('history length:', history.length);
 
         {/* Recent Submissions */}
         <div className="mb-10">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+          <h2 className="text-2xl  mb-4">
             📝 Recent Submissions
           </h2>
           {history.length === 0 ? (
-            <p className="text-gray-500">No submissions yet. Start solving!</p>
+            <p className="">No submissions yet. Start solving!</p>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 ">
               {history.map((sub, idx) => (
                 <motion.div
                   key={idx}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 * idx }}
-                  className="bg-white p-5 rounded-xl shadow flex justify-between items-center hover:shadow-md transition"
+                  className="dashCard p-5 rounded-xl shadow flex justify-between items-center hover:shadow-md transition"
                 >
                   <div>
-                    <p className="text-lg font-semibold text-gray-800">
+                    <p className="text-lg font-semibold ">
                       {sub?.questionId?.title || "unknown"}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm opacity-70 ">
                       Status:{" "}
                       <span
                         className={`font-medium ${
@@ -161,11 +161,11 @@ console.log('history length:', history.length);
                       </span>{" "}
                       | Time: {sub.timeTaken}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm opacity-70 ">
                       Time: {new Date(sub.submittedAt).toLocaleString()}
                     </p>
                   </div>
-                  <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 transition text-sm font-medium">
+                  <button className="bg-blue-600  px-4 py-1.5 rounded hover:bg-blue-700 transition text-sm font-medium">
                     <a href="/submission">View</a>
                   </button>
                 </motion.div>

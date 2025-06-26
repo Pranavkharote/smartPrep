@@ -671,11 +671,11 @@ ${testCases
 
   return (
     <div className="w-1/2 py-2 editorSide">
-      <div className="flex absolute top-4 text-black right-30">
+      <div className="flex absolute top-4 right-35">
         <select
           value={languageId}
           onChange={(e) => setLanguageId(parseInt(e.target.value))}
-          className="mb-2 p-2 border rounded h-9 mr-5 bg-white "
+          className="mb-2 p-2 border rounded h-9 mr-5  "
         >
           <option value={54} default>
             JavaScript

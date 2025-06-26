@@ -26,7 +26,7 @@ const Submission = () => {
   }, [questionId]);
 
   return (
-    <div className="w-full lg:w-1/2 overflow-y-auto ps-3 my-10">
+    <div className="w-full lg:w-1/2 overflow-y-auto ps-3 my-10 " >
       {/* <div className="p-6 bg-gray-100 min-h-screen w-200px "> */}
 
         <div className="space-y-6">
@@ -38,7 +38,7 @@ const Submission = () => {
             history.map((sub, index) => (
               <div
                 key={index}
-                className="bg-white shadow-lg rounded-xl p-6 border border-gray-200"
+                className="bg-white shadow-lg rounded-xl p-6 border border-gray-200 mainNav "
               >
                 <div className="flex flex-wrap justify-between items-center mb-4">
                   <span
@@ -52,7 +52,7 @@ const Submission = () => {
                   </span>
                 </div>
 
-                <div className="text-gray-700 space-y-1 mb-4">
+                <div className="text-gray-700 space-y-1 mb-4 mainNav">
                   <p>
                     ⏱ <strong>Time Taken:</strong> {sub.timeTaken} sec
                   </p>

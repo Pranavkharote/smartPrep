@@ -17,7 +17,7 @@ export default function DarkModeToggle() {
   }, [isDarkMode]);
 
   return (
-    <button  className="absolute right-3 top-3 text-black"
+    <button  className="absolute right-3 top-3 "
       onClick={() => setIsDarkMode(!isDarkMode)}
       style={{
         padding: '0.5rem 1rem',

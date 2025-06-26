@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
+import DarkModeToggle from "../components/ThemeToggle";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -72,41 +73,65 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-grey-800 flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded w-full shadow-md max-w-sm">
-        <h2 className="text-center mb-6 font-bold text-2xl">SmartPrep Login</h2>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <label>Enter your Email</label>
-          <input
-            type="email"
-            placeholder="Enter Your Email"
-            className="w-full px-4 py-2 border rounded"
-            name="email"
-            onChange={handleOnChange}
-            value={email}
-          />
-          <label>Enter password</label>
-          <input
-            type="password"
-            placeholder="Enter Your Password"
-            className="w-full px-4 py-2 border rounded"
-            onChange={handleOnChange}
-            value={password}
-            name="password"
-          />
-          <button className="w-full bg-green-600 hover:bg-green-700 rounded py-2 text-white">
-            Login
-          </button>
-          <p className="text-center mt-4">
-            Dont have an account{" "}
-            <Link className="text-blue-600 hover:underline" to="/signup">
-              Signup
-            </Link>
-          </p>
-        </form>
-      </div>
-      <ToastContainer />
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 login">
+  <DarkModeToggle/>
+  <div className="bg-white  shadow-xl rounded-xl w-full max-w-md p-8 inlogin">
+    {/* Logo / Icon */}
+    <div className="flex justify-center mb-6">
+      <img
+        src="src/assets/ChatGPT Image Jun 13, 2025, 02_34_46 PM.png" // replace with your logo or icon // replace with your logo or icon
+        alt="SmartPrep Logo"
+        className="w-16 h-16"
+      />
     </div>
+
+    <h2 className="text-center mb-4 text-3xl font-bold tracking-tight text-green-600">
+      SmartPrep Login
+    </h2>
+    <p className="text-center opacity-50 mb-6 text-sm">
+      Practice coding questions, track your progress & grow!
+    </p>
+
+    <form className="space-y-5" onSubmit={handleSubmit}>
+      <div>
+        <label className="block text-sm mb-1 opacity-80">Email</label>
+        <input
+          type="email"
+          placeholder="you@example.com"
+          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-80"
+          name="email"
+          onChange={handleOnChange}
+          value={email}
+          required
+        />
+      </div>
+      <div>
+        <label className="block text-sm mb-1 opacity-80">Password</label>
+        <input
+          type="password"
+          placeholder="••••••••"
+          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-50"
+          name="password"
+          onChange={handleOnChange}
+          value={password}
+          required
+        />
+      </div>
+      <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-md transition-colors duration-200">
+        Log In
+      </button>
+    </form>
+
+    <p className="text-center mt-4 text-gray-500 text-sm">
+      Don’t have an account?{" "}
+      <Link className="text-green-600 hover:underline" to="/signup">
+        Sign up
+      </Link>
+    </p>
+  </div>
+  <ToastContainer />
+</div>
+
   );
 };
 

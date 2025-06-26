@@ -44,9 +44,9 @@ export default function MainNavbar() {
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
-              <button className="flex px-2 rounded-2xl text-white text-2xl">
+              <button className="flex px-2 rounded-2xl text-2xl">
                 <a href="/questions">
-                  <i class="fa-solid fa-left-long text-[#454545]"></i>
+                  <i class="fa-solid fa-left-long "></i>
                 </a>
               </button>
             </div>
@@ -72,7 +72,7 @@ export default function MainNavbar() {
             <div className="text-[#e1e1e1 ] mx-5 text-3xl ps-3 c">
               {prevQuestion ? (
                 <Link to={`/questions/${prevQuestion._id}`}>
-                  <i class="fa-solid fa-angle-left mr-3 text-[#222222]"></i>
+                  <i class="fa-solid fa-angle-left mr-3 "></i>
                 </Link>
               ) : (
                 <span className="">
@@ -90,7 +90,7 @@ export default function MainNavbar() {
               )}
               
             </div>
-            <div className="text-[#343434] h-[20px] text-[12px] ms-4 font-medium">
+            <div className=" h-[20px] text-[12px] ms-4 font-medium">
               <p>See all the Questions List</p>
               <a
                 href="/questions"

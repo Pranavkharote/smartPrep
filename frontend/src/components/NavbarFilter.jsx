@@ -53,7 +53,7 @@ export default function NavbarFilter({ onFilterChange }) {
     <nav className="bg-gradient-to-r from-white to-slate-50 shadow-md p-4 rounded-xl border border-slate-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between transition-all duration-200 navFilter">
       {/* Difficulty */}
       <div className="flex items-center space-x-2">
-        <span className="text-sm font-semibold text-slate-700">
+        <span className="text-sm font-semibold ">
           Difficulty:
         </span>
         <select
@@ -101,22 +101,7 @@ export default function NavbarFilter({ onFilterChange }) {
           );
         })}
       </div>
-      {/* Dark Mode Toggle */}
-      {/* <div className="flex items-center space-x-2">
-        <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Dark Mode:</span>
-        <button
-          onClick={handleDarkModeToggle}
-          className={`w-10 h-6 flex items-center rounded-full p-1 transition-colors ${
-            isDarkMode ? "bg-blue-600" : "bg-slate-300"
-          }`}
-        >
-          <div
-            className={`bg-white w-4 h-4 rounded-full transform transition-transform ${
-              isDarkMode ? "translate-x-4" : ""
-            }`}
-          ></div>
-        </button>
-      </div> */}
+  
     </nav>
   );
 }

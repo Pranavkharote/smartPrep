@@ -19,7 +19,14 @@
     }
   }
 }
-
+/* global.css */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
 
 body.dark-mode {
   background: #121212;
@@ -36,24 +43,58 @@ body.dark-mode .testCases {
 }
 body.dark-mode .aceEditor {
   background: #343434;
+  color: white;
+}
+body.dark-mode .editorSide  {
+  background: #121212;
+  color: white; 
 }
 body.dark-mode .mainNav {
   background: #2a2a2a;
   color: #e0e0e0;
 }
-body.dark-mode .qlist{
+body.dark-mode .dashCard {
   background: #2a2a2a;
+  /* color: #e0e0e0; */
+}
+body.dark-mode .dash{
+  background: #2a2a2a;
+  /* color: #e0e0e0; */
+}
+body.dark-mode .dashA :nth-child(even) {
+  background: #e1e1e1;
+  /* color: #e0e0e0; */
+}
+body.dark-mode .qlist{
+  background: #121212;
   color: aliceblue;
 }
-body.dark-mode .navFilter {
+body.dark-mode .navFilter{
   color: white;
   background: #343434;
 }
-body.dark-mode .questions > {
-  background: #121212;
+body.dark-mode .tgray {
+  color: rgb(218, 215, 215);
+  /* background: #343434; */
+}
+body.dark-mode .questions  {
+  background: #343434;
   color: #e0e0e0;
 }
 body.dark-mode .navFilter button {
   background: #e1e1e1;
+}
+body.dark-mode .colorText {
+  /* background: #e1e1e1; */
+  color: rgb(0, 195, 255);
+}
+body.dark-mode .login {
+  background: #121212;
+  
+}
+body.dark-mode .inlogin {
+  background: #232323;
+  color: white;
+  
 }
 

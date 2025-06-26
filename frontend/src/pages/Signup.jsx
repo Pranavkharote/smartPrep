@@ -43,9 +43,9 @@ function Signup() {
         }
       );
       const { success, message } = data;
-            localStorage.setItem('name', data.name); 
-      console.log(data)
-      console.log(success)
+      localStorage.setItem("name", data.name);
+      console.log(data);
+      console.log(success);
       if (success == true || success == "true") {
         handleSuccess(message);
         setTimeout(() => {
@@ -68,41 +68,58 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 login">
+      <div className="bg-white  shadow-xl rounded-xl w-full max-w-md p-7 inlogin">
+        <div className="flex justify-center mb-6">
+          <img
+            src="src/assets/ChatGPT Image Jun 13, 2025, 02_34_46 PM.png" // replace with your logo or icon
+            alt="SmartPrep Logo"
+            className="w-20 h-20"
+          />
+        </div>
+        <h2 className="text-center mb-4 text-3xl font-bold tracking-tight text-green-600">
           SmartPrep Signup
         </h2>
+        <p className="text-center opacity-50 mb-6 text-sm">
+          Practice coding questions, track your progress & grow!
+        </p>
         <form className="space-y-4" onSubmit={handleSubmit}>
-        <label>Enter your Full Name:</label>
+          <label className="block text-sm mb-1 opacity-80">
+            Enter your Full Name:
+          </label>
           <input
             type="text"
             name="name"
             placeholder="Full Name"
-            className="w-full px-4 py-2 border rounded"
             value={name}
             onChange={handleOnChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-80"
           />
-          <label>Enter you Email:</label>
+          <label className="block text-sm mb-1 opacity-80">
+            Enter you Email:
+          </label>
           <input
             type="email"
-          name="email"
+            name="email"
             placeholder="Email"
-            className="w-full px-4 py-2 border rounded"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-80"
             value={email}
             onChange={handleOnChange}
           />
-          <label>Enter you password</label>
+          <label className="block text-sm mb-1 opacity-80">
+            Enter you password
+          </label>
           <input
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-80"
             type="password"
             name="password"
-            placeholder="Password"
-            className="w-full px-4 py-2 border rounded"
+            placeholder="••••••••"
             value={password}
             onChange={handleOnChange}
           />
           <button
             type="submit"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-80"
             className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
           >
             Sign Up
@@ -115,7 +132,7 @@ function Signup() {
           </Link>
         </p>
       </div>
-    <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }
