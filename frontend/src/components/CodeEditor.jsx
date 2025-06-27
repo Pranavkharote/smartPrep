@@ -3,13 +3,13 @@ import AceEditor from "react-ace";
 import "../index.css"
 // Import modes and themes you want
 import "ace-builds/src-noconflict/mode-javascript"; // or mode-cpp, mode-java etc
-import "ace-builds/src-noconflict/theme-github"; // choose a theme
+import "ace-builds/src-noconflict/theme-xcode"; // choose a theme
 
 const CodeEditor = ({ code, setCode }) => {
   return (
     <AceEditor
       mode="javascript" // change mode dynamically based on question language later
-      theme="abyss"
+      theme="xcode"
       name="code_editor"
       value={code}
       onChange={setCode}

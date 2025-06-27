@@ -59,7 +59,7 @@ console.log('Average timeTaken =', averageTime);
 console.log('history length:', history.length);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br p-6  ">
+    <div className="min-h-screen bg-gradient-to-br p-6">
     <DarkModeToggle/>
       <motion.div
         initial={{ opacity: 0, y: -40 }}
@@ -68,7 +68,7 @@ console.log('history length:', history.length);
         className="max-w-6xl mx-auto "
       >
         <motion.h1
-          className="text-4xl font-extrabold text-center text-blue-700 mb-6 colorText"
+          className="text-4xl font-extrabold text-center text-blue-700 mb-6 colorText typing"
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.6 }}
@@ -142,7 +142,7 @@ console.log('history length:', history.length);
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 * idx }}
-                  className="dashCard p-5 rounded-xl shadow flex justify-between items-center hover:shadow-md transition"
+                  className="dashCard p-5 rounded-xl shadow-xl flex justify-between items-center hover:shadow-md transition"
                 >
                   <div>
                     <p className="text-lg font-semibold ">
@@ -165,7 +165,7 @@ console.log('history length:', history.length);
                       Time: {new Date(sub.submittedAt).toLocaleString()}
                     </p>
                   </div>
-                  <button className="bg-blue-600  px-4 py-1.5 rounded hover:bg-blue-700 transition text-sm font-medium">
+                  <button className="bg-blue-600 text-white  px-4 py-1.5 rounded hover:bg-blue-700 transition text-sm font-medium">
                     <a href="/submission">View</a>
                   </button>
                 </motion.div>

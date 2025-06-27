@@ -9,7 +9,6 @@ const Submission = () => {
   // const navigate = useNavigate();
 
   let { questionId } = useParams();
-  console.log("qId: ", questionId);
   useEffect(() => {
     const submission = async () => {
       try {

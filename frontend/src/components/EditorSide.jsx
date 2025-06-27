@@ -302,6 +302,12 @@ var ${functionName} = function(nums) {
         `;
     }
   };
+useEffect(() => {
+  if (question && languageId) {
+    const starter = generateStarterCode(question.functionName, languageId);
+    setSubmittedCode(starter);
+  }
+}, [question, languageId]);
 
   const languageMap = {
     54: { piston: "javascript", ace: "javascript", filename: "main.js" },
@@ -356,12 +362,48 @@ var ${functionName} = function(nums) {
       setRunning(false);
       return;
     }
-
+    
     //for all langugages
     const wrapCodeWithTests = (submittedCode, question, languageId) => {
       const { functionName, testCases } = question;
+      
+//       const jsWrapper = `
+// ${submittedCode}
 
-      const jsWrapper = `
+// if (typeof ${functionName} !== "function") {
+//   console.log("error\\n❌ Function '${functionName}' is not defined properly.");
+// } else {
+//   const testCases = ${JSON.stringify(testCases)};
+//   let allPassed = true;
+//   testCases.forEach((test, index) => {
+//     try {
+//       const rawInput = test.input;
+//     const input = test.input;
+
+//       const result = ${functionName}(...args);
+//       const expected = JSON.parse(test.expectedOutput);
+//       const passed = JSON.stringify(result) === JSON.stringify(expected);
+
+//       if (passed) {
+//         console.log(\`✅ Test Case \${index + 1}: Passed\\nExpected: \${JSON.stringify(expected)}\\nGot: \${JSON.stringify(result)}\`);
+//       } else {
+//         console.log(\`❌ Test Case \${index + 1}: Failed\\nExpected: \${JSON.stringify(expected)}\\nGot: \${JSON.stringify(result)}\`);
+//         allPassed = false;
+//       }
+//     } catch (e) {
+//       console.log(\`❌ Test Case \${index + 1}: Crashed - \${e}\`);
+//       allPassed = false;
+//     }
+//   });
+
+//   if (allPassed) {
+//     console.log("FINAL_STATUS: solved");
+//   } else {
+//     console.log("FINAL_STATUS: attempted");
+//   }
+// }
+// `;
+const jsWrapper = `
 ${submittedCode}
 
 if (typeof ${functionName} !== "function") {
@@ -369,17 +411,19 @@ if (typeof ${functionName} !== "function") {
 } else {
   const testCases = ${JSON.stringify(testCases)};
   let allPassed = true;
+
   testCases.forEach((test, index) => {
     try {
-      const rawInput = test.input;
-      const args = Array.isArray(rawInput)
-        ? rawInput
-        : typeof rawInput === 'string'
-          ? [JSON.parse(rawInput)]
-          : [rawInput];
 
+      const args = Array.isArray(test.input)
+        ? test.input
+        : typeof test.input === 'object'
+          ? Object.values(test.input)
+          : [test.input];
+
+      const expected = test.expectedOutput;
+      
       const result = ${functionName}(...args);
-      const expected = JSON.parse(test.expectedOutput);
       const passed = JSON.stringify(result) === JSON.stringify(expected);
 
       if (passed) {
@@ -401,6 +445,7 @@ if (typeof ${functionName} !== "function") {
   }
 }
 `;
+
 
       const pythonWrapper = `
 ${submittedCode}
@@ -477,44 +522,44 @@ ${testCases
         "class Solution"
       );
 
-      const javaWrapper = `
-${submittedCode}
+      //       const javaWrapper = `
+      // ${submittedCode}
 
-public class Main {
-  public static void main(String[] args) {
-    boolean allPassed = true;
-    Solution solution = new Solution(); // ✅ instantiate the student's class
-${testCases
-  .map((test, i) => {
-    return `
-    try {
-      int[] input = new int[] ${test.input.replace("[", "{").replace("]", "}")};
-      int expected = ${test.expectedOutput};
-      int result = solution.${functionName}(input); // ✅ call method on the instance
-      if (result == expected) {
-        System.out.println("✅ Test Case ${
-          i + 1
-        }: Passed\\nExpected: " + expected + "\\nGot: " + result);
-      } else {
-        System.out.println("❌ Test Case ${
-          i + 1
-        }: Failed\\nExpected: " + expected + "\\nGot: " + result);
-        allPassed = false;
-      }
-    } catch (Exception e) {
-      System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
-      allPassed = false;
-    }`;
-  })
-  .join("\n")}
-    if (allPassed) {
-      System.out.println("FINAL_STATUS: solved");
-    } else {
-      System.out.println("FINAL_STATUS: attempted");
-    }
-  }
-}
-`;
+      // public class Main {
+      //   public static void main(String[] args) {
+      //     boolean allPassed = true;
+      //     Solution solution = new Solution(); // ✅ instantiate the student's class
+      // ${testCases
+      //   .map((test, i) => {
+      //     return `
+      //     try {
+      //       int[] input = new int[] ${test.input.replace("[", "{").replace("]", "}")};
+      //       int expected = ${test.expectedOutput};
+      //       int result = solution.${functionName}(input); // ✅ call method on the instance
+      //       if (result == expected) {
+      //         System.out.println("✅ Test Case ${
+      //           i + 1
+      //         }: Passed\\nExpected: " + expected + "\\nGot: " + result);
+      //       } else {
+      //         System.out.println("❌ Test Case ${
+      //           i + 1
+      //         }: Failed\\nExpected: " + expected + "\\nGot: " + result);
+      //         allPassed = false;
+      //       }
+      //     } catch (Exception e) {
+      //       System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
+      //       allPassed = false;
+      //     }`;
+      //   })
+      //   .join("\n")}
+      //     if (allPassed) {
+      //       System.out.println("FINAL_STATUS: solved");
+      //     } else {
+      //       System.out.println("FINAL_STATUS: attempted");
+      //     }
+      //   }
+      // }
+      // `;
 
       switch (languageId) {
         case 54:
@@ -797,7 +842,7 @@ ${testCases
 
         {output && (
           <pre
-            className="mt-4 p-4 bg-gray-100 rounded text-sm whitespace-pre-wrap pb-30"
+            className="mt-4 p-4 rounded text-sm whitespace-pre-wrap pb-30"
             style={{ maxHeight: "200px", overflowY: "auto" }}
           >
             {output}
