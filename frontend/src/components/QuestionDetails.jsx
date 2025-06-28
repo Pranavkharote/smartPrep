@@ -79,6 +79,12 @@ const QuestionComponent = () => {
             </ol>
           </div>
         )}
+        <div className="mt-4">
+        <strong className="font-medium">Constraints: </strong> <br></br>
+          <code className="bg-gray-300 text-sm">
+            {question.constraints}
+          </code>
+        </div>
 
         {/* Test Cases */}
         {question.testCases?.length > 0 && (
