@@ -19,10 +19,6 @@ const QuestionSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  starterCode: {
-    type: String,
-    required: false,
-  },
   testCases: [
     {
       input: {
@@ -35,7 +31,8 @@ const QuestionSchema = new mongoose.Schema({
       },
     },
   ],
-  // constraints: String
+  constraints: String,
+  youtubeSolutionURL: String
 });
 
 const QuestionModel = mongoose.model("Question", QuestionSchema);

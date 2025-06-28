@@ -6,7 +6,8 @@ const Question = require("../models/QuestionModel");
 const { isQuestionId } = require("../middlewares/RouteMiddleware");
 const jwt_decode = require("jwt-decode");
 
-router.post("/newquestion", authenticateUser, async (req, res) => {
+router.post("/newquestion", async (req, res) => {
+  console.log(req.body);
   const newQuestion = new Question(req.body);
   await newQuestion.save();
   res.status(201).json({ message: "Question Added" });
@@ -100,6 +101,16 @@ router.get("/submission", authenticateUser, async (req, res) => {
 router.get("/questions", async (req, res) => {
   try {
     const allQuestion = await Question.find({});
+    return res.json(allQuestion);
+  } catch (error) {
+    console.log(error);
+    return res.status(404).json("something error in question");
+  }
+});
+router.get("/questions/:questionId", async (req, res) => {
+  try {
+      const questionId = req.params.questionId;
+    const allQuestion = await Question.findById(questionId);
     return res.json(allQuestion);
   } catch (error) {
     console.log(error);
