@@ -9,20 +9,32 @@ const Submission = () => {
   // const navigate = useNavigate();
 
   let { questionId } = useParams();
+  // useEffect(() => {
+  //   const submission = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:8080/submission/${questionId}`,
+  //         { withCredentials: true }
+  //       );
+  //       setHistory(response.data);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   submission();
+  // }, [questionId]);
   useEffect(() => {
-    const submission = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/submission/${questionId}`,
-          { withCredentials: true }
-        );
-        setHistory(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    submission();
-  }, [questionId]);
+  const fetchSubmissions = async () => {
+    const res = await axios.get(`http://localhost:8080/submission/${questionId}`,
+      { withCredentials: true}
+    );
+    const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    setHistory(sorted);
+  };
+
+  fetchSubmissions();
+}, [questionId]);
+
 
   return (
     <div className="w-full lg:w-1/2 overflow-y-auto ps-3 my-10 " >

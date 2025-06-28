@@ -85,7 +85,7 @@ const QuestionComponent = () => {
             {question.constraints}
           </code>
         </div>
-
+        <p>{question.functionName}</p>
         {/* Test Cases */}
         {question.testCases?.length > 0 && (
           <div className="mt-4 ">

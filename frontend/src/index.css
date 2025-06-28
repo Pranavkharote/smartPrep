@@ -45,7 +45,7 @@ body.dark-mode .aceEditor {
   background: #232323;
   color: white;
 }
-body.dark-mode .editorSide  {
+body.dark-mode .editorSide select {
   background: #121212;
   color: white; 
 }
