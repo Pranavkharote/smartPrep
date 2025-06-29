@@ -119,7 +119,7 @@ function Signup() {
           />
           <button
             type="submit"
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-80"
+            // className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-80"
             className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
           >
             Sign Up

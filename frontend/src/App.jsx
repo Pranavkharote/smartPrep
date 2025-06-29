@@ -9,28 +9,32 @@ import SubmissionHistory from "./components/SubmissionHistory";
 import Submission from "./components/Submission";
 import QuestionComponent from "./components/QuestionDetails";
 import Solution from "./components/Solution";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import PublicRoute from "./context/PublicRoute";
+import ProtectedRoute from "./context/ProtectedRoute";
+// import AuthRedirector from "./utils/AuthDirector";
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      {/* <ErrorBoundary>/ */}
-      <Route path="/" element={<Dashboard />} />
-      {/* </ErrorBoundary> */}
-      <Route path="/questions" element={<QuestionList />} />
-      <Route
-        path="/questions/:questionId"
-        element={<MainQuestionEditorComponent />}
-      />
-      <Route path="/submission" element={<SubmissionHistory />} />
-      <Route
-        path="/questions/:questionId"
-        element={<MainQuestionEditorComponent />}
-      >
-        <Route index element={<QuestionComponent />} />
-        <Route path="submission" element={<Submission />} />
-        <Route path="solution" element={<Solution />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/questions" element={<QuestionList />} />
+        <Route
+          path="/questions/:questionId"
+          element={<MainQuestionEditorComponent />}
+        />
+        <Route path="/submission" element={<SubmissionHistory />} />
+        <Route
+          path="/questions/:questionId"
+          element={<MainQuestionEditorComponent />}
+        >
+          <Route index element={<QuestionComponent />} />
+          <Route path="submission" element={<Submission />} />
+          <Route path="solution" element={<Solution />} />
+        {/* </Route> */}
       </Route>
     </Routes>
   );

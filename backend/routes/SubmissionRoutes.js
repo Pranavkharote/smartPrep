@@ -31,12 +31,13 @@ router.post("/submit", authenticateUser, async (req, res) => {
 router.post("/submission", authenticateUser, async (req, res) => {
   try {
     const userId = req.user._id;
-    const { questionId, status, timeTaken, submittedCode, submittedAt } =
+    const { questionId, status, timeTaken, submittedCode, languageId } =
       req.body;
 
     const newSubmission = new UserProgress({
       userId,
       questionId,
+      languageId,
       timeTaken,
       submittedCode,
       status,

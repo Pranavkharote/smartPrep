@@ -46,7 +46,7 @@ export default function MainNavbar() {
             <div className="flex shrink-0 items-center">
               <button className="flex px-2 rounded-2xl text-2xl">
                 <a href="/questions">
-                  <i class="fa-solid fa-left-long "></i>
+                  <i className="fa-solid fa-left-long "></i>
                 </a>
               </button>
             </div>
@@ -76,16 +76,16 @@ export default function MainNavbar() {
                 </Link>
               ) : (
                 <span className="">
-                  <i class="fa-solid fa-angle-left cursor-not-allowed mr-3"></i>
+                  <i className="fa-solid fa-angle-left cursor-not-allowed mr-3"></i>
                 </span>
               )}
               {nextQuestion ? (
                 <Link to={`/questions/${nextQuestion._id}`}>
-                  <i class="fa-solid fa-angle-right mr-3 "></i>
+                  <i className="fa-solid fa-angle-right mr-3 "></i>
                 </Link>
               ) : (
                 <span className="cursor-not-allowed">
-                  <i class="fa-solid fa-angle-right mr-3"></i>
+                  <i className="fa-solid fa-angle-right mr-3"></i>
                 </span>
               )}
               

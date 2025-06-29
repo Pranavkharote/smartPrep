@@ -2,13 +2,19 @@ import axios from "axios";
 
 const PISTON_URL = "https://emkc.org/api/v2/piston/execute";
 
-export const runCodeWithPiston = async ({ language, code, stdin = "" }) => {
+export const runCodeWithPiston = async ({
+  language,
+  code,
+  stdin = "",
+  filename,
+}) => {
   try {
     const response = await axios.post(PISTON_URL, {
       language: language,
-      version: "*", // Always required
+      version: "*",
       files: [
         {
+          name: filename,
           content: code?.toString() || "",
         },
       ],

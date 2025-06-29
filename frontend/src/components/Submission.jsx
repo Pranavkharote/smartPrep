@@ -71,6 +71,7 @@ const Submission = () => {
                     📅 <strong>Submitted At:</strong>{" "}
                     {new Date(sub.submittedAt).toLocaleString()}
                   </p>
+                  {/* <p>language: {sub.languageId}</p> */}
                 </div>
 
                 <div>

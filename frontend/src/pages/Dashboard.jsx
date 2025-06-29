@@ -5,6 +5,9 @@ import axios from "axios";
 import Loader from "../assets/Loader";
 import DarkModeToggle from "../components/ThemeToggle";
 import "../index.css"
+import "@theme-toggles/react/css/Expand.css"
+import { Expand } from "@theme-toggles/react"
+
 const Dashboard = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,10 +39,10 @@ const Dashboard = () => {
     );
   }
   const totalTime = history.reduce(
-    (sum, item) => sum + (item.timeTaken || 0),
+    (sum, item) => sum + (typeof item.timeTaken === "number" ? item.timeTaken: 0),
     0
   );
-
+  
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
@@ -60,6 +63,7 @@ console.log('history length:', history.length);
 
   return (
     <div className="min-h-screen bg-gradient-to-br p-6">
+{/* <Expand duration={750}  /> */}
     <DarkModeToggle/>
       <motion.div
         initial={{ opacity: 0, y: -40 }}
