@@ -6,6 +6,7 @@ import { runCodeWithPiston } from "../api/Piston";
 import "../index.css";
 import { motion, AnimatePresence } from "framer-motion";
 import CodeEditor from "./CodeEditor";
+// import RunCode from "../utils/RunCode";
 
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-github";
@@ -29,8 +30,7 @@ const EditorSide = ({ question }) => {
 
   const [formattedTime, setFormattedTime] = useState("00:00");
   const [timerRunning, setTimerRunning] = useState(false);
-  // const [timeStart, setTimeStart] = useState(Date.now());
-  // 1. Get saved language or fallback to a default
+
   const [languageId, setLanguageId] = useState(
     () => parseInt(localStorage.getItem("languageId")) || 54 // 54 is JS as default
   );
@@ -311,13 +311,21 @@ var ${functionName} = function(n) {
     
 };`;
     }
+    if (functionName === "climbStairs" && langId === 63) {
+      return `class Solution {
+public:
+    int ${functionName}(int n) {
+        
+    }
+};`;
+    }
   };
-useEffect(() => {
-  if (question && languageId) {
-    const starter = generateStarterCode(question.functionName, languageId);
-    setSubmittedCode(starter);
-  }
-}, [question, languageId]);
+  useEffect(() => {
+    if (question && languageId) {
+      const starter = generateStarterCode(question.functionName, languageId);
+      setSubmittedCode(starter);
+    }
+  }, [question, languageId]);
 
   const languageMap = {
     54: { piston: "javascript", ace: "javascript", filename: "main.js" },
@@ -341,37 +349,38 @@ useEffect(() => {
       position: "bottom-right",
     });
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userCode = submittedCode;          // User's current code
-  const starterCode = generateStarterCode(question.functionName, languageId);
-  console.log(starterCode) // Starter template
+    const userCode = submittedCode; // User's current code
+    const starterCode = generateStarterCode(question.functionName, languageId);
+    console.log(starterCode); // Starter template
 
     if (!userCode || !starterCode) {
-    toast.error("Code or starter template is missing.");
-    return;
-  }
+      toast.error("Code or starter template is missing.");
+      return;
+    }
 
-   const normalize = (code) =>
-    code
-      .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '') // remove comments
-      .replace(/\s/g, '');                    // remove whitespace
+    const normalize = (code) =>
+      code
+        .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, "") // remove comments
+        .replace(/\s/g, ""); // remove whitespace
 
-  if (normalize(userCode) === normalize(starterCode)) {
-    toast.error("⚠️ Please write your solution before submitting.");
-    return;
-  }
+    if (normalize(userCode) === normalize(starterCode)) {
+      toast.error("⚠️ Please write your solution before submitting.");
+      return;
+    }
 
-  await runCode(userCode)
-  toast.success("Code Submitted.!")
+    runCode(userCode);
+    console.log(userCode);
+    toast.success("Code Submitted.!");
   };
-  
-
 
   const runCode = async () => {
-    setSubmittedCode(submittedCode);
+    // setSubmittedCode(submittedCode);
+    const finalSubmittedCode = submittedCode.trim();
+
     if (!languageId) {
       toast.error("Please select a programming language.");
       return;
@@ -393,13 +402,12 @@ useEffect(() => {
       setRunning(false);
       return;
     }
-    
+
     //for all langugages
     const wrapCodeWithTests = (submittedCode, question, languageId) => {
       const { functionName, testCases } = question;
-      
 
-const jsWrapper = `
+      const jsWrapper = `
 ${submittedCode}
 
 if (typeof ${functionName} !== "function") {
@@ -441,7 +449,6 @@ if (typeof ${functionName} !== "function") {
 }
 `;
 
-
       const pythonWrapper = `
 ${submittedCode}
 
@@ -471,51 +478,253 @@ def run_tests():
 run_tests()
 `;
 
+      // const formatArray = (arr) =>
+      // //   Array.isArray(arr) ? `vector<int>{${arr.join(", ")}}` : "vector<int>{}";
+
+      // // const cppWrapper = `
+      // // #include <iostream>
+      // // #include <vector>
+      // // #include <unordered_map>
+      // // using namespace std;
+
+      // // ${submittedCode}  // 👈 User's function (must define class Solution and function)
+
+      // // void printVector(const vector<int>& vec) {
+      // //     cout << "[";
+      // //     for (size_t i = 0; i < vec.size(); ++i) {
+      // //         cout << vec[i];
+      // //         if (i != vec.size() - 1) cout << ", ";
+      // //     }
+      // //     cout << "]";
+      // // }
+
+      // // bool areEqual(const vector<int>& a, const vector<int>& b) {
+      // //     if (a.size() != b.size()) return false;
+      // //     for (size_t i = 0; i < a.size(); ++i) {
+      // //         if (a[i] != b[i]) return false;
+      // //     }
+      // //     return true;
+      // // }
+
+      // // int main() {
+      // //     bool allPassed = true;
+      // //     Solution solution;  // ✅ instantiate user class
+
+      // // ${testCases
+      // //   .map((test, i) => {
+      // //     const input = test.input || {};
+      // //     const expectedStr = formatArray(test.expectedOutput || []);
+      // //     const nums = formatArray(input.nums || []);
+      // //     const target = input.target ?? 0;
+
+      // //     return `
+      // //     {
+      // //         vector<int> nums = ${nums};
+      // //         int target = ${target};
+      // //         vector<int> result = solution.${functionName}(nums, target);
+      // //         vector<int> expected = ${expectedStr};
+
+      // //         if (areEqual(result, expected)) {
+      // //             cout << "✅ Test Case ${i + 1}: Passed\\n";
+      // //             cout << "Expected: "; printVector(expected); cout << "\\n";
+      // //             cout << "Got: "; printVector(result); cout << "\\n";
+      // //         } else {
+      // //             cout << "❌ Test Case ${i + 1}: Failed\\n";
+      // //             cout << "Expected: "; printVector(expected); cout << "\\n";
+      // //             cout << "Got: "; printVector(result); cout << "\\n";
+      // //             allPassed = false;
+      // //         }
+      // //     }`;
+      // //   })
+      // //   .join("\n")}
+
+      // //     if (allPassed) {
+      // //         cout << "FINAL_STATUS: solved\\n";
+      // //     } else {
+      // //         cout << "FINAL_STATUS: attempted\\n";
+      // //     }
+
+      // //     return 0;
+      // // }
+      // // `;
+
+      const formatArray = (arr) =>
+        Array.isArray(arr) ? `vector<int>{${arr.join(", ")}}` : "vector<int>{}";
+
       const cppWrapper = `
 #include <iostream>
 #include <vector>
+#include <unordered_map>
+#include <stack>
 #include <string>
-#include <sstream>
+#include <climits>
 using namespace std;
 
 ${submittedCode}
 
+void printVector(const vector<int>& vec) {
+    cout << "[";
+    for (size_t i = 0; i < vec.size(); ++i) {
+        cout << vec[i];
+        if (i != vec.size() - 1) cout << ", ";
+    }
+    cout << "]";
+}
+
 int main() {
     bool allPassed = true;
+    Solution solution;
+
 ${testCases
   .map((test, i) => {
-    return `
+    const input = test.input || {};
+    const expected = test.expectedOutput || 0;
+
+    if (functionName === "maximumSubarray") {
+      const nums = formatArray(input.nums || []);
+      return `
+{
+      vector<int> nums = ${nums};
+    int result = solution.${functionName}(nums); // ✅ Return type is int
+    int expected = ${expected};
+
+    if (result == expected) {
+        cout << "✅ Test Case ${i + 1}: Passed\\n";
+        cout << "Expected: " << expected << "\\n";
+        cout << "Got: " << result << "\\n";
+    } else {
+        cout << "❌ Test Case ${i + 1}: Failed\\n";
+        cout << "Expected: " << expected << "\\n";
+        cout << "Got: " << result << "\\n";
+        allPassed = false;
+    }
+}`;
+    }
+
+    if (functionName === "maxProfit" || functionName === "maxSubArray") {
+      const nums = formatArray(input.prices || input.nums || []);
+      return `
     {
-        auto result = ${functionName}(${test.input});
-        auto expected = ${test.expectedOutput};
+        vector<int> nums = ${nums};
+        int result = solution.${functionName}(nums);
+        int expected = ${expected};
         if (result == expected) {
-            cout << "✅ Test Case ${
-              i + 1
-            }: Passed\\\\nExpected: " << expected << "\\\\nGot: " << result << "\\n";
+            cout << "✅ Test Case ${i + 1}: Passed\\n";
         } else {
-            cout << "❌ Test Case ${
-              i + 1
-            }: Failed\\\\nExpected: " << expected << "\\\\nGot: " << result << "\\n";
+            cout << "❌ Test Case ${i + 1}: Failed\\n";
+            cout << "Expected: " << expected << "\\n";
+            cout << "Got: " << result << "\\n";
             allPassed = false;
         }
+    }`;
+    }
+    if (functionName === "twoSum") {
+      const input = test.input || {};
+      const expectedStr = formatArray(test.expectedOutput || []);
+      const nums = formatArray(input.nums || []);
+      const target = input.target ?? 0;
+      return `
+    {
+        vector<int> nums = ${nums};
+        int target = ${target};
+        vector<int> result = solution.${functionName}(nums, target);
+        vector<int> expected = ${expectedStr};
+        
+       if (areEqual(result, expected)) {
+            cout << "✅ Test Case ${i + 1}: Passed\\n";
+            cout << "Expected: ", printVector(expected); cout << "\\n";
+            cout << "Got: "; printVector(result); cout << "\\n";
+        } else {
+            cout << "❌ Test Case ${i + 1}: Failed\\n";
+            cout << "Expected: " << printVector(expected) << "\\n";
+            cout << "Got: " << printVector(result) << "\\n";
+            allPassed = false;
+        }
+    }`;
+    }
+
+    if (functionName === "isValid") {
+      // bool expected = ${expected === true ? "true" : "false"};
+      return `
+    {
+        string s = "${input}";
+        bool result = solution.isValid(s);
+        bool expected = ${JSON.stringify(expected)};
+
+        if (result == expected) {
+            cout << "✅ Test Case ${i + 1}: Passed\\n";
+            cout << "Expected: " << (expected ? "true" : "false") << "\\n";
+            cout << "Got: " << (result ? "true" : "false") << "\\n";
+        } else {
+            cout << "❌ Test Case ${i + 1}: Failed\\n";
+            cout << "Expected: " << (expected ? "true" : "false") << "\\n";
+            cout << "Got: " << (result ? "true" : "false") << "\\n";
+            allPassed = false;
+        }
+    }`;
+    }
+
+    if (functionName === "climbStairs") {
+      return `
+    {
+        int n = ${input};
+        int result = solution.climbStairs(n);
+        int expected = ${expected};
+        if (result == expected) {
+            cout << "✅ Test Case ${i + 1}: Passed\\n";
+            cout << "Expected: " << expected << "\\n";
+            cout << "Got: " << result << "\\n";
+        } else {
+            cout << "❌ Test Case ${i + 1}: Failed\\n";
+            cout << "Expected: " << expected << "\\n";
+            cout << "Got: " << result << "\\n";
+            allPassed = false;
+        }
+    }`;
+    }
+    if (functionName === "bestTimeToBuyAndSellStock") {
+      const prices = formatArray(input.prices || []);
+      console.log(prices);
+      return `
+    {
+        vector<int> prices = ${prices};
+        int result = solution.bestTimeToBuyAndSellStock(prices);
+        int expected = ${expected};
+        if (result == expected) {
+            cout << "✅ Test Case ${i + 1}: Passed\\n";
+            cout << "Expected: " << expected << "\\n";
+            cout << "Got: " << result << "\\n";
+        } else {
+            cout << "❌ Test Case ${i + 1}: Failed\\n";
+            cout << "Expected: " << expected << "\\n";
+            cout << "Got: " << result << "\\n";
+            allPassed = false;
+        }
+    }`;
+    }
+
+    return `
+    {
+        // fallback if nothing matches
+        cout << "⚠️ Unsupported functionName: ${functionName}\\n";
     }`;
   })
   .join("\n")}
 
-    if (allPassed) {
-        cout << "FINAL_STATUS: solved\\n";
-    } else {
-        cout << "FINAL_STATUS: attempted\\n";
-    }
+   
+
     return 0;
 }
 `;
-// Remove `public` from user's class if present
-const safeCode = submittedCode.replace(/\bpublic\s+class\s+Solution\b/, "class Solution");
 
-const javaWrapper = `
+      const safeCode = submittedCode
+        .replace(/\bpublic\s+class\s+Solution\b/, "class Solution")
+        .replace(/\bpublic\s+class\s+Main\b/, "class Main"); // in case user writes 'Main'
+      console.log(safeCode);
+
+      // ✅ Regular dynamic case
+      const javaWrapper = `
 ${safeCode}
-
 public class Main {
   public static void main(String[] args) {
     boolean allPassed = true;
@@ -523,31 +732,44 @@ public class Main {
 
 ${testCases
   .map((test, i) => {
-    const inputArray = `new int[] {${test.input.join(",")}}`;
+    const input = test.input;
+    const expected = test.expectedOutput;
+
+    let numsArray = "new int[]{}";
+    let target = 0;
+
+    if (
+      typeof input === "object" &&
+      input !== null &&
+      Array.isArray(input.nums)
+    ) {
+      numsArray = `new int[]{${input.nums.join(",")}}`;
+      target = input.target;
+    }
+
     return `
     try {
-      int[] input = ${inputArray};
-      int expected = ${test.expectedOutput};
-      int result = solution.${functionName}(input);
+      int[] nums = ${numsArray};
+      int target = ${target};
+      int[] result = solution.${functionName}(nums, target);
+      int[] expected = new int[]{${expected.join(",")}};
 
-      if (result == expected) {
+      boolean passed = java.util.Arrays.equals(result, expected);
+
+      if (passed) {
         System.out.println("✅ Test Case ${i + 1}: Passed");
-        System.out.println("Expected: " + expected);
-        System.out.println("Got: " + result);
       } else {
         System.out.println("❌ Test Case ${i + 1}: Failed");
-        System.out.println("Expected: " + expected);
-        System.out.println("Got: " + result);
+        System.out.println("Expected: " + java.util.Arrays.toString(expected));
+        System.out.println("Got: " + java.util.Arrays.toString(result));
         allPassed = false;
       }
     } catch (Exception e) {
       System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
       allPassed = false;
-    }
-    `;
+    }`;
   })
   .join("\n")}
-    
     if (allPassed) {
       System.out.println("FINAL_STATUS: solved");
     } else {
@@ -556,78 +778,6 @@ ${testCases
   }
 }
 `;
-const finalCodeToRun = javaWrapper;
-  try {
-    const res = await fetch("https://emkc.org/api/v2/piston/execute", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        language: "java",
-        version: "latest",
-        files: [
-          {
-            name: "Main.java",
-            content: finalCodeToRun,
-          },
-        ],
-      }),
-    });
-
-    const result = await res.json();
-    console.log(result.run.output); // ✅ Your test result output
-  } catch (error) {
-    console.error("Code execution error:", error);
-  }
-};
-//         const javaWrapper = `
-//   ${submittedCode}
-
-//   public class Main {
-//     public static void main(String[] args) {
-//       boolean allPassed = true;
-//       Solution solution = new Solution(); // ✅ instantiate the student's class
-//   ${testCases
-//     .map((test, i) => {
-//         const inputArray = `new int[] {${test.input.join(",")}}`;
-//       return `
-//       try {
-//         int[] input = ${inputArray};
-// int output = new Solution().${functionName}(input);
-// if (output == ${test.expectedOutput}) {
-//   System.out.println("✅ Test Case ${i + 1}: Passed");
-// } else {
-//   System.out.println("❌ Test Case ${i + 1}: Failed");
-//   System.out.println("Expected: ${test.expectedOutput}");
-//   System.out.println("Got: " + output);
-// }
-//         int expected = ${test.expectedOutput};
-//         int result = solution.${functionName}(input); // ✅ call method on the instance
-//         if (result == expected) {
-//           System.out.println("✅ Test Case ${
-//             i + 1
-//           }: Passed\\nExpected: " + expected + "\\nGot: " + result);
-//         } else {
-//           System.out.println("❌ Test Case ${
-//             i + 1
-//           }: Failed\\nExpected: " + expected + "\\nGot: " + result);
-//           allPassed = false;
-//         }
-//       } catch (Exception e) {
-//         System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
-//         allPassed = false;
-//       }`;
-//     })
-//     .join("\n")}
-//       if (allPassed) {
-//         System.out.println("FINAL_STATUS: solved");
-//       } else {
-//         System.out.println("FINAL_STATUS: attempted");
-//       }
-//     }
-//   }
-//   `;
 
       switch (languageId) {
         case 54:
@@ -658,12 +808,9 @@ const finalCodeToRun = javaWrapper;
           ? wrappedCode
           : submittedCode;
       const result = await runCodeWithPiston({
-        // language: "javascript",
         language: langInfo.piston,
-        // language: languageId === 62 ? "java" : languageId === 71 ? "python3" : languageId === 63 ? "cpp" : "javascript",
         code: codeToRun,
         filename: langInfo.filename,
-        // code: submittedCode,
       });
 
       // console.log("🚀 Piston Result:", result);
@@ -684,10 +831,16 @@ const finalCodeToRun = javaWrapper;
         const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
         const payload = {
           questionId: questionId,
+          languageId: languageId,
           status: submissionStatus,
           timeTaken: timeTaken,
-          submittedCode: submittedCode,
+          submittedCode: finalSubmittedCode,
         };
+        console.log("💾 Submitting code:", {
+          languageId,
+          submittedCode: finalSubmittedCode,
+          output,
+        });
 
         try {
           const { data } = await axios.post(
@@ -697,6 +850,7 @@ const finalCodeToRun = javaWrapper;
           );
 
           const { success, message } = data;
+          console.log(data);
           if (success === true || success === "true") {
             // handleSuccessRight(
             //   submissionStatus === "solved"
