@@ -79,13 +79,9 @@ public:
 };`;
     }
     if (functionName === "twoSum" && langId === 71) {
-      return `class Solution(object):
-    def twoSum(self, nums, target):
-        """
-        :type nums: List[int]
-        :type target: int
-        :rtype: List[int]
-        """
+      return `class Solution:
+    def ${functionName}(self, nums: List[int], target: int) -> List[int]:
+        
         `;
     }
     if (functionName === "isValid" && langId === 54) {
@@ -319,6 +315,19 @@ public:
     }
 };`;
     }
+    if (functionName === "climbStairs" && langId === 62) {
+      return `class Solution {
+    public int ${functionName}(int n) {
+        
+    }
+}
+};`;
+    }
+    if (functionName === "climbStairs" && langId === 71) {
+      return `class Solution:
+    def ${functionName}(self, n: int) -> int:
+        `;
+    }
   };
   useEffect(() => {
     if (question && languageId) {
@@ -449,18 +458,47 @@ if (typeof ${functionName} !== "function") {
 }
 `;
 
-      const pythonWrapper = `
+const pythonWrapper = `
 ${submittedCode}
 
 def run_tests():
     import json
+    import ast
+    import inspect
     all_passed = True
     test_cases = ${JSON.stringify(testCases)}
+    solution = Solution()
+
+    def safe_parse(value):
+        if isinstance(value, str):
+            try:
+                return ast.literal_eval(value)
+            except:
+                return value
+        return value
+
+    # Get function signature
+    func = getattr(solution, "${functionName}")
+    sig = inspect.signature(func)
+    param_count = len(sig.parameters) - 1  # subtract 'self'
+
     for i, test in enumerate(test_cases):
         try:
-            args = json.loads(test["input"]) if isinstance(test["input"], str) else test["input"]
-            expected = json.loads(test["expectedOutput"])
-            result = ${functionName}(*args)
+            args = test["input"]
+            expected = test["expectedOutput"]
+
+            if isinstance(args, dict):
+                args = {k: safe_parse(v) for k, v in args.items()}
+                result = func(**args)
+            elif isinstance(args, list):
+                args = [safe_parse(a) for a in args]
+                if param_count == 1:
+                    result = func(args[0])  # ✅ pass the list itself
+                else:
+                    result = func(*args)
+            else:
+                result = func(args)
+
             if result == expected:
                 print(f"✅ Test Case {i+1}: Passed\\nExpected: {expected}\\nGot: {result}")
             else:
@@ -477,6 +515,7 @@ def run_tests():
 
 run_tests()
 `;
+
 
       // const formatArray = (arr) =>
       // //   Array.isArray(arr) ? `vector<int>{${arr.join(", ")}}` : "vector<int>{}";
@@ -581,7 +620,8 @@ ${testCases
     const expected = test.expectedOutput || 0;
 
     if (functionName === "maximumSubarray") {
-      const nums = formatArray(input.nums || []);
+      const nums = formatArray(input || []);
+      console.log("input :", input);
       return `
 {
       vector<int> nums = ${nums};
@@ -601,23 +641,25 @@ ${testCases
 }`;
     }
 
-    if (functionName === "maxProfit" || functionName === "maxSubArray") {
-      const nums = formatArray(input.prices || input.nums || []);
-      return `
-    {
-        vector<int> nums = ${nums};
-        int result = solution.${functionName}(nums);
-        int expected = ${expected};
-        if (result == expected) {
-            cout << "✅ Test Case ${i + 1}: Passed\\n";
-        } else {
-            cout << "❌ Test Case ${i + 1}: Failed\\n";
-            cout << "Expected: " << expected << "\\n";
-            cout << "Got: " << result << "\\n";
-            allPassed = false;
-        }
-    }`;
-    }
+    // if (functionName === "maximumSubarray") {
+    //   const nums = formatArray(input || input.nums || []);
+    //   console.log("input:", input);
+    //   console.log("input:");
+    //   return `
+    // {
+    //     vector<int> nums = ${nums};
+    //     int result = solution.${functionName}(nums);
+    //     int expected = ${expected};
+    //     if (result == expected) {
+    //         cout << "✅ Test Case ${i + 1}: Passed\\n";
+    //     } else {
+    //         cout << "❌ Test Case ${i + 1}: Failed\\n";
+    //         cout << "Expected: " << expected << "\\n";
+    //         cout << "Got: " << result << "\\n";
+    //         allPassed = false;
+    //     }
+    // }`;
+    // }
     if (functionName === "twoSum") {
       const input = test.input || {};
       const expectedStr = formatArray(test.expectedOutput || []);
@@ -630,14 +672,21 @@ ${testCases
         vector<int> result = solution.${functionName}(nums, target);
         vector<int> expected = ${expectedStr};
         
-       if (areEqual(result, expected)) {
+       if (result == expected) {
             cout << "✅ Test Case ${i + 1}: Passed\\n";
-            cout << "Expected: ", printVector(expected); cout << "\\n";
-            cout << "Got: "; printVector(result); cout << "\\n";
+            cout << "Expected: ", 
+            printVector(expected); 
+            cout << "\\n";
+            cout << "Got: ";
+           printVector(result);
+             cout << "\\n";
         } else {
             cout << "❌ Test Case ${i + 1}: Failed\\n";
-            cout << "Expected: " << printVector(expected) << "\\n";
-            cout << "Got: " << printVector(result) << "\\n";
+            cout << "Expected: ", printVector(expected);
+            cout << "\\n";
+            cout << "Got: ";
+            printVector(result);
+            cout << "\\n";
             allPassed = false;
         }
     }`;
@@ -683,7 +732,7 @@ ${testCases
     }`;
     }
     if (functionName === "bestTimeToBuyAndSellStock") {
-      const prices = formatArray(input.prices || []);
+      const prices = formatArray(input || []);
       console.log(prices);
       return `
     {
@@ -717,67 +766,67 @@ ${testCases
 }
 `;
 
-      const safeCode = submittedCode
-        .replace(/\bpublic\s+class\s+Solution\b/, "class Solution")
-        .replace(/\bpublic\s+class\s+Main\b/, "class Main"); // in case user writes 'Main'
-      console.log(safeCode);
+      // const safeCode = submittedCode
+      //   .replace(/\bpublic\s+class\s+Solution\b/, "class Solution")
+      //   .replace(/\bpublic\s+class\s+Main\b/, "class Main"); // in case user writes 'Main'
+      // console.log(safeCode);
 
       // ✅ Regular dynamic case
-      const javaWrapper = `
-${safeCode}
-public class Main {
-  public static void main(String[] args) {
-    boolean allPassed = true;
-    Solution solution = new Solution();
+      //       const javaWrapper = `
+      // ${safeCode}
+      // public class Main {
+      //   public static void main(String[] args) {
+      //     boolean allPassed = true;
+      //     Solution solution = new Solution();
 
-${testCases
-  .map((test, i) => {
-    const input = test.input;
-    const expected = test.expectedOutput;
+      // ${testCases
+      //   .map((test, i) => {
+      //     const input = test.input;
+      //     const expected = test.expectedOutput;
 
-    let numsArray = "new int[]{}";
-    let target = 0;
+      //     let numsArray = "new int[]{}";
+      //     let target = 0;
 
-    if (
-      typeof input === "object" &&
-      input !== null &&
-      Array.isArray(input.nums)
-    ) {
-      numsArray = `new int[]{${input.nums.join(",")}}`;
-      target = input.target;
-    }
+      //     if (
+      //       typeof input === "object" &&
+      //       input !== null &&
+      //       Array.isArray(input.nums)
+      //     ) {
+      //       numsArray = `new int[]{${input.nums.join(",")}}`;
+      //       target = input.target;
+      //     }
 
-    return `
-    try {
-      int[] nums = ${numsArray};
-      int target = ${target};
-      int[] result = solution.${functionName}(nums, target);
-      int[] expected = new int[]{${expected.join(",")}};
+      //     return `
+      //     try {
+      //       int[] nums = ${numsArray};
+      //       int target = ${target};
+      //       int[] result = solution.${functionName}(nums, target);
+      //       int[] expected = new int[]{${expected.join(",")}};
 
-      boolean passed = java.util.Arrays.equals(result, expected);
+      //       boolean passed = java.util.Arrays.equals(result, expected);
 
-      if (passed) {
-        System.out.println("✅ Test Case ${i + 1}: Passed");
-      } else {
-        System.out.println("❌ Test Case ${i + 1}: Failed");
-        System.out.println("Expected: " + java.util.Arrays.toString(expected));
-        System.out.println("Got: " + java.util.Arrays.toString(result));
-        allPassed = false;
-      }
-    } catch (Exception e) {
-      System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
-      allPassed = false;
-    }`;
-  })
-  .join("\n")}
-    if (allPassed) {
-      System.out.println("FINAL_STATUS: solved");
-    } else {
-      System.out.println("FINAL_STATUS: attempted");
-    }
-  }
-}
-`;
+      //       if (passed) {
+      //         System.out.println("✅ Test Case ${i + 1}: Passed");
+      //       } else {
+      //         System.out.println("❌ Test Case ${i + 1}: Failed");
+      //         System.out.println("Expected: " + java.util.Arrays.toString(expected));
+      //         System.out.println("Got: " + java.util.Arrays.toString(result));
+      //         allPassed = false;
+      //       }
+      //     } catch (Exception e) {
+      //       System.out.println("❌ Test Case ${i + 1}: Crashed - " + e.getMessage());
+      //       allPassed = false;
+      //     }`;
+      //   })
+      //   .join("\n")}
+      //     if (allPassed) {
+      //       System.out.println("FINAL_STATUS: solved");
+      //     } else {
+      //       System.out.println("FINAL_STATUS: attempted");
+      //     }
+      //   }
+      // }
+      // `;
 
       switch (languageId) {
         case 54:
