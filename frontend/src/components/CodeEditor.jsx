@@ -5,14 +5,18 @@ import "../index.css"
 import "ace-builds/src-noconflict/mode-javascript"; // or mode-cpp, mode-java etc
 import "ace-builds/src-noconflict/theme-xcode"; // choose a theme
 
-const CodeEditor = ({ code, setCode, languageMode = "javascript" }) => {
+const CodeEditor = ({ code, setCode, onCodeChange, languageMode = "javascript" }) => {
+  // console.log(code)
   return (
     <AceEditor
       mode={languageMode} // change mode dynamically based on question language later
       theme="xcode"
       name="code_editor"
       value={code}
-      onChange={setCode}
+     onChange={(value) => {
+        setCode(value);
+        onCodeChange?.(value); // ✅ Pass string directly
+      }}
       fontSize={14}
       width="100%"
       height="300px"

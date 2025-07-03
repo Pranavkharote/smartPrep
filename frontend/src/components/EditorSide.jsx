@@ -6,11 +6,12 @@ import { runCodeWithPiston } from "../api/Piston";
 import "../index.css";
 import { motion, AnimatePresence } from "framer-motion";
 import CodeEditor from "./CodeEditor";
-// import RunCode from "../utils/RunCode";
 
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/ext-language_tools";
+import MarkdownRenderer from "../utils/MarkdownRenderer";
+// import { ErrorBoundary } from "../context/ErrorBoundry";
 
 const EditorSide = ({ question }) => {
   // const [status, setStatus] = useState("attempted");
@@ -27,6 +28,7 @@ const EditorSide = ({ question }) => {
   const [aiChatInput, setAiChatInput] = useState("");
   const { questionId } = useParams();
   const [aiChatHistory, setAiChatHistory] = useState([]);
+  const [currentCode, setCurrentCode] = useState("");
 
   const [formattedTime, setFormattedTime] = useState("00:00");
   const [timerRunning, setTimerRunning] = useState(false);
@@ -79,10 +81,10 @@ public:
 };`;
     }
     if (functionName === "twoSum" && langId === 71) {
-      return `class Solution:
+      return `from typing import List
+class Solution:
     def ${functionName}(self, nums: List[int], target: int) -> List[int]:
-        
-        `;
+    `;
     }
     if (functionName === "isValid" && langId === 54) {
       //js
@@ -105,12 +107,9 @@ var ${functionName} = function(s){
     }
     if (functionName === "isValid" && langId === 71) {
       //py
-      return `class Solution(object):
-    def ${functionName}(self, s):
-        """
-        :type s: str
-        :rtype: bool
-        """
+      return `class Solution:
+    def ${functionName}(self, s: str) -> bool:
+        
         `;
     }
     if (functionName === "isValid" && langId === 63) {
@@ -151,14 +150,11 @@ var ${functionName} = function(nums) {
 }`;
     }
     if (functionName === "maximumSubarray" && langId === 71) {
-      //js
-      return `class Solution(object):
-    def ${functionName}(self, nums):
-        """
-        :type nums: List[int]
-        :rtype: int
-        """
-        `;
+      //py
+      return `from typing import List
+class Solution:
+    def ${functionName}(self, nums: List[int]) -> int:   
+     `;
     }
     if (functionName === "mergeTwoSortedLists" && langId === 71) {
       //js
@@ -257,13 +253,10 @@ var ${functionName} = function(prices) {
 };`;
     }
     if (functionName === "bestTimeToBuyAndSellStock" && langId === 71) {
-      return `class Solution(object):
-    def ${functionName}(self, prices):
-        """
-        :type prices: List[int]
-        :rtype: int
-        """
-        `;
+      return `from typing import List
+class Solution:
+    def ${functionName}(self, prices: List[int]) -> int: 
+     `;
     }
     if (functionName === "removeDuplicatesFromSortedArray" && langId === 63) {
       return `class Solution {
@@ -342,17 +335,7 @@ public:
     71: { piston: "python3", ace: "python", filename: "main.py" },
     63: { piston: "cpp", ace: "c_cpp", filename: "main.cpp" },
   };
-
-  const handleSuccess = (msg) => {
-    toast.success(msg, {
-      position: "top-center",
-    });
-  };
-  const handleSuccessRight = (msg) => {
-    toast.dark(msg, {
-      position: "bottom-right",
-    });
-  };
+console.log(timerRunning)
   const handleError = (msg) => {
     toast.error(msg, {
       position: "bottom-right",
@@ -458,52 +441,161 @@ if (typeof ${functionName} !== "function") {
 }
 `;
 
-const pythonWrapper = `
+      //       const pythonWrapper = `
+      // ${submittedCode}
+
+      // def run_tests():
+      //     all_passed = True
+      //     test_cases = ${JSON.stringify(testCases)}
+      //     solution = Solution()
+
+      //   def normalize(x):
+      //     if isinstance(x, str) and x.isdigit():
+      //         return int(x)
+      //     if isinstance(x, str):
+      //         x = x.lower()
+      //         if x == "true":
+      //             return True
+      //         if x == "false":
+      //             return False
+      //         return x
+      //     if isinstance(x, (bool, int, float)):
+      //         return x
+      //     if isinstance(x, list):
+      //         return [normalize(i) for i in x]
+      //     return x
+
+      // def print_result(i, result, expected):
+      //     if normalize(result) == normalize(expected):
+      //         print(f"✅ Test Case {i+1}: Passed\\nExpected: {expected}\\nGot: {result}")
+      //         return True
+      //     else:
+      //         print(f"❌ Test Case {i+1}: Failed\\nExpected: {expected}\\nGot: {result}")
+      //         return False
+
+      //     for i, test in enumerate(test_cases):
+      //         try:
+      //             input_data = test["input"]
+      //             expected = test["expectedOutput"]
+
+      //             # Custom logic for each function
+      //             if "${functionName}" == "maximumSubarray":
+      //                 result = solution.maximumSubarray(input_data)
+      //                 if not print_result(i, result, expected):
+      //                     all_passed = False
+
+      //             elif "${functionName}" == "twoSum":
+      //                 nums = input_data.get("nums", [])
+      //                 target = input_data.get("target", 0)
+      //                 result = solution.twoSum(nums, target)
+      //                 if not print_result(i, result, test["expectedOutput"]):
+      //                     all_passed = False
+
+      //             elif "${functionName}" == "isValid":
+      //                 s = input_data
+      //                 result = solution.isValid(s)
+      //                 if not print_result(i, result, expected):
+      //                     all_passed = False
+
+      //             elif "${functionName}" == "climbStairs":
+      //                 n = input_data
+      //                 result = solution.climbStairs(n)
+      //                 if not print_result(i, result, expected):
+      //                     all_passed = False
+
+      //             elif "${functionName}" == "bestTimeToBuyAndSellStock":
+      //                 prices = input_data
+      //                 result = solution.bestTimeToBuyAndSellStock(prices)
+      //                 if not print_result(i, result, expected):
+      //                     all_passed = False
+
+      //             else:
+      //                 print(f"⚠️ Unsupported functionName: ${functionName}")
+      //                 all_passed = False
+
+      //         except Exception as e:
+      //             print(f"❌ Test Case {i+1}: Crashed - {str(e)}")
+      //             all_passed = False
+
+      //     if all_passed:
+      //         print("FINAL_STATUS: solved")
+      //     else:
+      //         print("FINAL_STATUS: attempted")
+
+      // run_tests()
+      // `;
+
+      const pythonWrapper = `
 ${submittedCode}
 
 def run_tests():
-    import json
-    import ast
-    import inspect
     all_passed = True
     test_cases = ${JSON.stringify(testCases)}
     solution = Solution()
 
-    def safe_parse(value):
-        if isinstance(value, str):
-            try:
-                return ast.literal_eval(value)
-            except:
-                return value
-        return value
+    def normalize(x):
+        if isinstance(x, str) and x.isdigit():
+            return int(x)
+        if isinstance(x, str):
+            x = x.lower()
+            if x == "true":
+                return True
+            if x == "false":
+                return False
+            return x
+        if isinstance(x, (bool, int, float)):
+            return x
+        if isinstance(x, list):
+            return [normalize(i) for i in x]
+        return x
 
-    # Get function signature
-    func = getattr(solution, "${functionName}")
-    sig = inspect.signature(func)
-    param_count = len(sig.parameters) - 1  # subtract 'self'
+    def print_result(i, result, expected):
+        if normalize(result) == normalize(expected):
+            print(f"✅ Test Case {i+1}: Passed\\nExpected: {expected}\\nGot: {result}")
+            return True
+        else:
+            print(f"❌ Test Case {i+1}: Failed\\nExpected: {expected}\\nGot: {result}")
+            return False
 
     for i, test in enumerate(test_cases):
         try:
-            args = test["input"]
+            input_data = test["input"]
             expected = test["expectedOutput"]
 
-            if isinstance(args, dict):
-                args = {k: safe_parse(v) for k, v in args.items()}
-                result = func(**args)
-            elif isinstance(args, list):
-                args = [safe_parse(a) for a in args]
-                if param_count == 1:
-                    result = func(args[0])  # ✅ pass the list itself
-                else:
-                    result = func(*args)
-            else:
-                result = func(args)
+            if "${functionName}" == "maximumSubarray":
+                result = solution.maximumSubarray(input_data)
+                if not print_result(i, result, expected):
+                    all_passed = False
 
-            if result == expected:
-                print(f"✅ Test Case {i+1}: Passed\\nExpected: {expected}\\nGot: {result}")
+            elif "${functionName}" == "twoSum":
+                nums = input_data.get("nums", [])
+                target = input_data.get("target", 0)
+                result = solution.twoSum(nums, target)
+                if not print_result(i, result, expected):
+                    all_passed = False
+
+            elif "${functionName}" == "isValid":
+                s = input_data
+                result = solution.isValid(s)
+                if not print_result(i, result, expected):
+                    all_passed = False
+
+            elif "${functionName}" == "climbStairs":
+                n = input_data
+                result = solution.climbStairs(n)
+                if not print_result(i, result, expected):
+                    all_passed = False
+
+            elif "${functionName}" == "bestTimeToBuyAndSellStock":
+                prices = input_data
+                result = solution.bestTimeToBuyAndSellStock(prices)
+                if not print_result(i, result, expected):
+                    all_passed = False
+
             else:
-                print(f"❌ Test Case {i+1}: Failed\\nExpected: {expected}\\nGot: {result}")
+                print(f"⚠️ Unsupported functionName: ${functionName}")
                 all_passed = False
+
         except Exception as e:
             print(f"❌ Test Case {i+1}: Crashed - {str(e)}")
             all_passed = False
@@ -515,77 +607,6 @@ def run_tests():
 
 run_tests()
 `;
-
-
-      // const formatArray = (arr) =>
-      // //   Array.isArray(arr) ? `vector<int>{${arr.join(", ")}}` : "vector<int>{}";
-
-      // // const cppWrapper = `
-      // // #include <iostream>
-      // // #include <vector>
-      // // #include <unordered_map>
-      // // using namespace std;
-
-      // // ${submittedCode}  // 👈 User's function (must define class Solution and function)
-
-      // // void printVector(const vector<int>& vec) {
-      // //     cout << "[";
-      // //     for (size_t i = 0; i < vec.size(); ++i) {
-      // //         cout << vec[i];
-      // //         if (i != vec.size() - 1) cout << ", ";
-      // //     }
-      // //     cout << "]";
-      // // }
-
-      // // bool areEqual(const vector<int>& a, const vector<int>& b) {
-      // //     if (a.size() != b.size()) return false;
-      // //     for (size_t i = 0; i < a.size(); ++i) {
-      // //         if (a[i] != b[i]) return false;
-      // //     }
-      // //     return true;
-      // // }
-
-      // // int main() {
-      // //     bool allPassed = true;
-      // //     Solution solution;  // ✅ instantiate user class
-
-      // // ${testCases
-      // //   .map((test, i) => {
-      // //     const input = test.input || {};
-      // //     const expectedStr = formatArray(test.expectedOutput || []);
-      // //     const nums = formatArray(input.nums || []);
-      // //     const target = input.target ?? 0;
-
-      // //     return `
-      // //     {
-      // //         vector<int> nums = ${nums};
-      // //         int target = ${target};
-      // //         vector<int> result = solution.${functionName}(nums, target);
-      // //         vector<int> expected = ${expectedStr};
-
-      // //         if (areEqual(result, expected)) {
-      // //             cout << "✅ Test Case ${i + 1}: Passed\\n";
-      // //             cout << "Expected: "; printVector(expected); cout << "\\n";
-      // //             cout << "Got: "; printVector(result); cout << "\\n";
-      // //         } else {
-      // //             cout << "❌ Test Case ${i + 1}: Failed\\n";
-      // //             cout << "Expected: "; printVector(expected); cout << "\\n";
-      // //             cout << "Got: "; printVector(result); cout << "\\n";
-      // //             allPassed = false;
-      // //         }
-      // //     }`;
-      // //   })
-      // //   .join("\n")}
-
-      // //     if (allPassed) {
-      // //         cout << "FINAL_STATUS: solved\\n";
-      // //     } else {
-      // //         cout << "FINAL_STATUS: attempted\\n";
-      // //     }
-
-      // //     return 0;
-      // // }
-      // // `;
 
       const formatArray = (arr) =>
         Array.isArray(arr) ? `vector<int>{${arr.join(", ")}}` : "vector<int>{}";
@@ -766,12 +787,6 @@ ${testCases
 }
 `;
 
-      // const safeCode = submittedCode
-      //   .replace(/\bpublic\s+class\s+Solution\b/, "class Solution")
-      //   .replace(/\bpublic\s+class\s+Main\b/, "class Main"); // in case user writes 'Main'
-      // console.log(safeCode);
-
-      // ✅ Regular dynamic case
       //       const javaWrapper = `
       // ${safeCode}
       // public class Main {
@@ -827,6 +842,220 @@ ${testCases
       //   }
       // }
       // `;
+
+      const formatArrayForJava = (arr) =>
+        Array.isArray(arr) ? `{${arr.join(", ")}}` : "{}";
+
+      //       const javaWrapper = `
+      // import java.util.*;
+
+      // public class Main {
+
+      //     public static void main(String[] args) {
+      //         boolean allPassed = true;
+      //         Solution solution = new Solution();
+
+      // ${testCases
+      //   .map((test, i) => {
+      //     const input = test.input || {};
+      //     const expected = test.expectedOutput;
+
+      //     if (functionName === "twoSum") {
+      //       const nums = formatArrayForJava(input.nums || []);
+      //       const target = input.target ?? 0;
+      //       return `
+      //         {
+      //             int[] nums = ${nums};
+      //             int target = ${target};
+      //             int[] result = solution.twoSum(nums, target);
+      //             int[] expected = ${formatArrayForJava(expected)};
+      //             if (Arrays.equals(result, expected)) {
+      //                 System.out.println("✅ Test Case ${i + 1}: Passed");
+      //                 System.out.println("Expected: " + Arrays.toString(expected));
+      //                 System.out.println("Got: " + Arrays.toString(result));
+      //             } else {
+      //                 System.out.println("❌ Test Case ${i + 1}: Failed");
+      //                 System.out.println("Expected: " + Arrays.toString(expected));
+      //                 System.out.println("Got: " + Arrays.toString(result));
+      //                 allPassed = false;
+      //             }
+      //         }
+      //       `;
+      //     }
+
+      //     if (functionName === "maximumSubarray") {
+      //       const nums = formatArrayForJava(input || []);
+      //       return `
+      //         {
+      //             int[] nums = ${nums};
+      //             int result = solution.maximumSubarray(nums);
+      //             int expected = ${expected};
+      //             if (result == expected) {
+      //                 System.out.println("✅ Test Case ${i + 1}: Passed");
+      //                 System.out.println("Expected: " + expected);
+      //                 System.out.println("Got: " + result);
+      //             } else {
+      //                 System.out.println("❌ Test Case ${i + 1}: Failed");
+      //                 System.out.println("Expected: " + expected);
+      //                 System.out.println("Got: " + result);
+      //                 allPassed = false;
+      //             }
+      //         }
+      //       `;
+      //     }
+
+      //     if (functionName === "climbStairs") {
+      //       const n = input;
+      //       return `
+      //         {
+      //             int n = ${n};
+      //             int result = solution.climbStairs(n);
+      //             int expected = ${expected};
+      //             if (result == expected) {
+      //                 System.out.println("✅ Test Case ${i + 1}: Passed");
+      //             } else {
+      //                 System.out.println("❌ Test Case ${i + 1}: Failed");
+      //                 System.out.println("Expected: " + expected);
+      //                 System.out.println("Got: " + result);
+      //                 allPassed = false;
+      //             }
+      //         }
+      //       `;
+      //     }
+
+      //     if (functionName === "isValid") {
+      //       const s = input;
+      //       return `
+      //         {
+      //             String s = "${s}";
+      //             boolean result = solution.isValid(s);
+      //             boolean expected = ${expected};
+      //             if (result == expected) {
+      //                 System.out.println("✅ Test Case ${i + 1}: Passed");
+      //             } else {
+      //                 System.out.println("❌ Test Case ${i + 1}: Failed");
+      //                 System.out.println("Expected: " + expected);
+      //                 System.out.println("Got: " + result);
+      //                 allPassed = false;
+      //             }
+      //         }
+      //       `;
+      //     }
+
+      //     if (functionName === "bestTimeToBuyAndSellStock") {
+      //       const prices = formatArrayForJava(input || []);
+      //       return `
+      //         {
+      //             int[] prices = ${prices};
+      //             int result = solution.bestTimeToBuyAndSellStock(prices);
+      //             int expected = ${expected};
+      //             if (result == expected) {
+      //                 System.out.println("✅ Test Case ${i + 1}: Passed");
+      //             } else {
+      //                 System.out.println("❌ Test Case ${i + 1}: Failed");
+      //                 System.out.println("Expected: " + expected);
+      //                 System.out.println("Got: " + result);
+      //                 allPassed = false;
+      //             }
+      //         }
+      //       `;
+      //     }
+
+      //     return `
+      //         {
+      //             System.out.println("⚠️ Unsupported function: ${functionName}");
+      //             allPassed = false;
+      //         }
+      //     `;
+      //   })
+      //   .join("\n")}
+
+      //         if (allPassed) {
+      //             System.out.println("FINAL_STATUS: solved");
+      //         } else {
+      //             System.out.println("FINAL_STATUS: attempted");
+      //         }
+      //     }
+      // }
+      // `;
+
+      const javaWrapper = `
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        boolean allPassed = true;
+        Solution solution = new Solution();
+
+${testCases
+  .map((test, i) => {
+    const input = test.input || {};
+    const expected = test.expectedOutput;
+
+    if (functionName === "twoSum") {
+      const nums = formatArrayForJava(input.nums || []);
+      const target = input.target ?? 0;
+      return `
+        {
+            int[] nums = ${nums};
+            int target = ${target};
+            int[] result = solution.twoSum(nums, target);
+            int[] expected = ${formatArrayForJava(expected)};
+            
+            boolean passed = result != null && expected != null 
+                             && result.length == expected.length 
+                             && Arrays.equals(result, expected);
+
+            if (passed) {
+                System.out.println("✅ Test Case ${i + 1}: Passed");
+                System.out.println("Expected: " + Arrays.toString(expected));
+                System.out.println("Got: " + Arrays.toString(result));
+            } else {
+                System.out.println("❌ Test Case ${i + 1}: Failed");
+                System.out.println("Expected: " + Arrays.toString(expected));
+                System.out.println("Got: " + Arrays.toString(result));
+                allPassed = false;
+            }
+        }
+      `;
+    }
+
+    return `
+        {
+            System.out.println("⚠️ Unsupported function: ${functionName}");
+            allPassed = false;
+        }
+    `;
+  })
+  .join("\n")}
+
+        if (allPassed) {
+            System.out.println("FINAL_STATUS: solved");
+        } else {
+            System.out.println("FINAL_STATUS: attempted");
+        }
+    }
+}
+
+// 👇 Java Solution class must be included for successful compilation
+
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[] { map.get(complement), i };
+            }
+            map.put(nums[i], i);
+        }
+
+        return new int[0];
+    }
+}
+`;
 
       switch (languageId) {
         case 54:
@@ -901,11 +1130,6 @@ ${testCases
           const { success, message } = data;
           console.log(data);
           if (success === true || success === "true") {
-            // handleSuccessRight(
-            //   submissionStatus === "solved"
-            //     ? "✅ All test cases passed!"
-            //     : "⚠️ Some failed test cases."
-            // );
             if (submissionStatus === "solved")
               //  setSubmittedCode("");
               setTimeStart(Date.now());
@@ -939,16 +1163,54 @@ ${testCases
     setLoadingAI(true);
     setShowAI(true);
     try {
+      const languageLabelMap = {
+        javascript: "js",
+        python: "python",
+        cpp: "cpp",
+        java: "java",
+      };
+
+      const selectedLang = languageLabelMap[languageId] || "txt";
+      console.log(promptToSend);
+      // if (promptToSend === "Explain My Code" &&
+      //   !currentCode || currentCode.trim().length < 5) {
+      //   alert("Editor is empty! Please write some code.");
+      //   return;
+      // }
+      const fullPrompt = `
+You are a helpful AI coding assistant.
+
+The user is working on a programming question titled:
+**${question.title}**
+
+**Description:**
+${question.description}
+
+---
+
+Here is the user's code:
+
+\`\`\`${selectedLang}
+${currentCode}
+\`\`\`
+
+---
+
+Now answer the following question based on the above code and problem:
+${promptToSend}
+`;
+      console.log("🧪 Prompt sent to AI:\n", fullPrompt);
+
       const response = await axios.post("http://localhost:8080/ask", {
-        prompt: promptToSend,
+        prompt: fullPrompt,
+        userprompt: promptToSend,
         questionTitle: question.title,
         questionDescription: question.description,
         userCode: submittedCode,
       });
+      console.log("currentCode : ", currentCode);
 
       const aiAnswer = response.data.answer || "AI didn't respond";
-      console.log("🧪 PromptToSend:", promptToSend, typeof promptToSend);
-      console.log("🧪 AI Answer:", aiAnswer, typeof aiAnswer);
 
       setAiChatHistory((prev) => [
         ...prev,
@@ -959,18 +1221,23 @@ ${testCases
         ...prev,
         { user: promptToSend, ai: "Error to AI" },
       ]);
+
       console.log("AI error: ", err);
     } finally {
       setLoadingAI(false);
     }
   };
-
   const handleQuickAsk = (textPrompt) => {
     if (typeof textPrompt === "string") {
       setAiChatInput(textPrompt);
       handleAskAI(textPrompt);
     }
   };
+
+  useEffect(() => {
+    // Clear AI chat history whenever a new question is loaded
+    setAiChatHistory([]);
+  }, [question.id]);
 
   useEffect(() => {
     if (!timerRunning) return;
@@ -984,6 +1251,15 @@ ${testCases
 
     return () => clearInterval(interval);
   }, [timeStart, timerRunning]);
+  // console.log("🧪 Raw msg.ai:", msg.ai);
+  // console.log("🧪 Type:", typeof msg.ai);
+
+  const [aiAsked, setAiAsked] = useState(false);
+  useEffect(() => {
+    if (aiChatInput) {
+      setAiAsked(false);
+    }
+  }, [aiChatInput]);
 
   return (
     <div className="w-1/2 py-2 editorSide">
@@ -1002,7 +1278,14 @@ ${testCases
         </select>
       </div>
       <form onSubmit={handleSubmit}>
-        <CodeEditor code={submittedCode} setCode={setSubmittedCode} />
+        <CodeEditor
+          code={submittedCode}
+          setCode={setSubmittedCode}
+          onCodeChange={(updatedCode) => {
+            setCurrentCode(updatedCode);
+            console.log("🔥 Code in EditorSide:", updatedCode);
+          }}
+        />
         <div className="flex gap-2 mt-2">
           <button
             type="button"
@@ -1013,19 +1296,17 @@ ${testCases
             {running ? "Running..." : "Run Code"}
           </button>
           <button
-            // onClick={() => handleSuccess("Code Submitted")}
             type="submit"
             className="py-2 px-4 bg-blue-700 text-white rounded hover:bg-blue-800"
           >
             Submit Code
           </button>
-          <button
+          <div
             onClick={() => setShowAI(!showAI)}
-            type="button"
-            className="fixed bottom-5 right-5 bg-[#00d1b2] text-white px-5 py-2 rounded-full shadow-2xl hover:bg-cyan-800 z-50"
+            className="fixed bottom-5 cursor-pointer right-5 bg-[#00d1b2] text-white px-5 py-2 rounded-full shadow-2xl hover:bg-cyan-800 z-50"
           >
             🧠 Ask AI
-          </button>
+          </div>
 
           <AnimatePresence />
           {showAI && (
@@ -1034,9 +1315,9 @@ ${testCases
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 100, opacity: 0 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="fixed bottom-15 right-4 w-[350px] bg-gray-700 text-white shadow-xl rounded-xl overflow-hidden z-50 flex flex-col"
+              className="fixed w-[400px] bottom-15 right-4 bg-gray-900 text-white shadow-xl rounded-xl overflow-hidden z-50 flex flex-col"
             >
-              <div className="p-4 border-b border-zinc-800 font-semibold flex justify-between items-center">
+              <div className="p-4 border-b w-[400px] border-zinc-800 font-semibold flex justify-between items-center">
                 <span>🧠 SmartPrep AI</span>
                 <button
                   onClick={() => setShowAI(false)}
@@ -1046,36 +1327,54 @@ ${testCases
                 </button>
               </div>
 
-              <div className="py-2 px-4 space-y-3 text-sm">
-                <button
-                  onClick={() =>
-                    handleQuickAsk("Can you explain the problem statement?")
-                  }
-                  className="w-full bg-yellow-500 text-black py-2 px-4 rounded-md hover:bg-yellow-400 transition"
-                >
-                  ✨ Need help understanding the problem
-                </button>
+              <div className="px-2 py-2 h-[360px] overflow-y-auto border-t border-zinc-800">
+                <div className="space-y-2 text-sm font-semibold">
+                  <div
+                    onClick={() =>
+                      handleQuickAsk("Can you explain the problem statement?")
+                    }
+                    className="w-full cursor-pointer bg-yellow-500 text-black py-2 px-3 rounded-md hover:bg-yellow-400 shadow-sm flex items-center gap-2 transition"
+                    title="AI will help you understand the problem"
+                  >
+                    ✨ Need help understanding the problem
+                  </div>
 
-                <button
-                  onClick={() =>
-                    handleQuickAsk(
-                      "What is the logic or approach to solve this problem?"
-                    )
-                  }
-                  className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-500 transition"
-                >
-                  🧠 Need help with logic / approach
-                </button>
-              </div>
+                  <div
+                    onClick={() => handleQuickAsk("Explain My Code")}
+                    className="w-full cursor-pointer bg-pink-500 text-white py-2 px-3 rounded-md hover:bg-pink-400 shadow-sm flex items-center gap-2 transition"
+                    title="AI will analyze and explain your written code"
+                  >
+                    🤖 Ask AI to Explain Code
+                  </div>
 
-              <div className="px-4 py-2 h-[266px] overflow-y-auto border-t border-zinc-800">
+                  <div
+                    onClick={() =>
+                      handleQuickAsk(
+                        "What is the logic or approach to solve this problem?"
+                      )
+                    }
+                    className="w-full cursor-pointer bg-red-600 text-white py-2 px-3 rounded-md hover:bg-red-500 shadow-sm flex items-center gap-1 transition"
+                    title="AI will guide you with logic or solving approach"
+                  >
+                    🧠 Need help with logic / approach
+                  </div>
+                </div>
+
                 {aiChatHistory.map((msg, index) => (
-                  <div key={index} className="mb-3">
+                  <div key={index} className="mb-3 ">
                     <p className="text-cyan-400 font-medium">
-                      You: <span className="text-white">{msg.user}</span>
+                      You:{" "}
+                      <span className="text-white text-sm">{msg.user}</span>
                     </p>
-                    <p className="text-green-400">
-                      AI: <span className="text-white">{msg.ai}</span>
+                    <p className="text-white text-sm">
+                      <span className="text-green-400 font-bold">AI:</span>
+                      {typeof msg.ai === "string" ? (
+                        <MarkdownRenderer markdownText={msg.ai} />
+                      ) : (
+                        <p className="text-red-500">
+                          ⚠️ Invalid AI response format
+                        </p>
+                      )}
                     </p>
                   </div>
                 ))}

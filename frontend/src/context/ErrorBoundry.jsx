@@ -1,29 +1,25 @@
 // ErrorBoundary.jsx
-import React from 'react';
+import React from "react";
 
-class ErrorBoundary extends React.Component {
+export class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error) {
-    // Update state so fallback UI is rendered
+  static getDerivedStateFromError(_) {
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
-    // You can log error to an error reporting service here
+    console.error("Markdown crash:", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      return <h2>Something went wrong in the Dashboard.</h2>;
+      return <p className="text-red-500">⚠️ Something went wrong rendering AI response.</p>;
     }
 
     return this.props.children;
   }
 }
-
-export default ErrorBoundary;
