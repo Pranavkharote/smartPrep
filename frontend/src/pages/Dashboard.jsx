@@ -38,25 +38,33 @@ const Dashboard = () => {
       </div>
     );
   }
-  const totalTime = history.reduce(
+  const totalTime = (history || []).reduce(
     (sum, item) => sum + (typeof item.timeTaken === "number" ? item.timeTaken: 0),
     0
   );
   
-  const formatTime = (seconds) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
+  const formatTime = (ms) => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const hrs = Math.floor(totalSeconds / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
     return `${hrs}h ${mins}m ${secs}s`;
   };
-  const solvedCount = history.filter((item) => item.status == "solved").length;
+  const formatedTime = (ms) => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const hrs = Math.floor(totalSeconds / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
+    return `${mins}m ${secs}s`;
+  };
+  const solvedCount = (history || []).filter((item) => item.status == "solved").length;
   console.log(history);
   // Inspect the first few items
-history.slice(0, 5).forEach((item, i) => {
+(history || []).slice(0, 5).forEach((item, i) => {
   console.log(`Item ${i}: timeTaken =`, item.timeTaken);
 });
 // What is the average timeTaken?
-const averageTime = history.reduce((sum, i) => sum + (i.timeTaken || 0), 0) / history.length;
+const averageTime = (history || []).reduce((sum, i) => sum + (i.timeTaken || 0), 0) / history.length;
 console.log('Average timeTaken =', averageTime);
 // Check how many items
 console.log('history length:', history.length);
@@ -163,7 +171,7 @@ console.log('history length:', history.length);
                       >
                         {sub.status}
                       </span>{" "}
-                      | Time: {sub.timeTaken}
+                      | Time: {formatedTime(sub.timeTaken)}
                     </p>
                     <p className="text-sm opacity-70 ">
                       Time: {new Date(sub.submittedAt).toLocaleString()}

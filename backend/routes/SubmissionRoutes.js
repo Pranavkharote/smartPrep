@@ -31,8 +31,16 @@ router.post("/submit", authenticateUser, async (req, res) => {
 router.post("/submission", authenticateUser, async (req, res) => {
   try {
     const userId = req.user._id;
-    const { questionId, status, timeTaken, submittedCode, languageId } =
-      req.body;
+    const {
+      questionId,
+      status,
+      submittedCode,
+      languageId,
+      startedAt,
+    } = req.body;
+
+    const timeTaken = submittedAt - startedAt;
+    const submittedAt = Date.now();
 
     const newSubmission = new UserProgress({
       userId,
@@ -41,7 +49,7 @@ router.post("/submission", authenticateUser, async (req, res) => {
       timeTaken,
       submittedCode,
       status,
-      submittedAt: new Date(),
+      submittedAt,
     });
     await newSubmission.save();
     return res.json({
@@ -110,7 +118,7 @@ router.get("/questions", async (req, res) => {
 });
 router.get("/questions/:questionId", async (req, res) => {
   try {
-      const questionId = req.params.questionId;
+    const questionId = req.params.questionId;
     const allQuestion = await Question.findById(questionId);
     return res.json(allQuestion);
   } catch (error) {
