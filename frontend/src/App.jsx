@@ -15,14 +15,14 @@ import ProtectedRoute from "./context/ProtectedRoute";
 const App = () => {
   return (
     <Routes>
-      <Route element={<PublicRoute />}>
+      {/* <Route element={<PublicRoute />}> */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-      </Route>
+      {/* </Route> */}
 
-      <Route element={<ProtectedRoute />}>
+      {/* <Route element={<ProtectedRoute />}> */}
         <Route path="/" element={<Dashboard />} />
-      </Route>
+      {/* </Route> */}
       <Route path="/questions" element={<QuestionList />} />
       <Route
         path="/questions/:questionId"

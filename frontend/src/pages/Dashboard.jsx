@@ -38,11 +38,12 @@ const Dashboard = () => {
       </div>
     );
   }
-  const totalTime = (history || []).reduce(
-    (sum, item) =>
-      sum + (typeof item.timeTaken === "number" ? item.timeTaken : 0),
-    0
-  );
+const totalTime = Array.isArray(history)
+  ? history.reduce(
+      (sum, item) => sum + (typeof item.timeTaken === "number" ? item.timeTaken : 0),
+      0
+    )
+  : 0;
 
  const formatTimeFromSeconds = (seconds) => {
   const hrs = Math.floor(seconds / 3600);
@@ -57,9 +58,9 @@ const Dashboard = () => {
     return `${mins}m ${secs}s`;
   };
 
-  const solvedCount = (history || []).filter(
-    (item) => item.status == "solved"
-  ).length;
+const solvedCount = Array.isArray(history)
+  ? history.filter(item => item.status === "solved").length
+  : 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br p-6">
@@ -99,7 +100,8 @@ const Dashboard = () => {
             },
             {
               title: "Submissions",
-              value: history.length || 0,
+              //value: history.length || 0,
+              value: Array.isArray(history) ? history.length : 0,
               color: "text-blue-600",
             },
             {
@@ -134,9 +136,10 @@ const Dashboard = () => {
         {/* Recent Submissions */}
         <div className="mb-10">
           <h2 className="text-2xl  mb-4">📝 Recent Submissions</h2>
-          {history.length === 0 ? (
+          { history.length === 0 ? (
             <p className="">No submissions yet. Start solving!</p>
           ) : (
+            
             <div className="space-y-4 ">
               {history.map((sub, idx) => (
                 <motion.div
