@@ -35,6 +35,11 @@ const Submission = () => {
   fetchSubmissions();
 }, [questionId]);
 
+const formatTime = (seconds) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}m ${secs}s`;
+};
 
   return (
     <div className="w-full lg:w-1/2 overflow-y-auto ps-3 my-10 " >
@@ -65,8 +70,9 @@ const Submission = () => {
 
                 <div className="text-gray-700 space-y-1 mb-4 mainNav">
                   <p>
-                    ⏱ <strong>Time Taken:</strong> {sub.timeTaken} sec
+                    ⏱ <strong>Time Taken:</strong> {formatTime(sub.timeTaken)}
                   </p>
+                  <p>Language Used : {sub.language}</p>
                   <p>
                     📅 <strong>Submitted At:</strong>{" "}
                     {new Date(sub.submittedAt).toLocaleString()}

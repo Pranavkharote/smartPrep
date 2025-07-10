@@ -1,12 +1,21 @@
-// components/PublicRoute.jsx
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const PublicRoute = () => {
-  const token = localStorage.getItem("token");
-  const location = useLocation();
-  const isLoginOrSignup = location.pathname === "/login" || location.pathname === "/signup";
+  const [checking, setChecking] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  return token && isLoginOrSignup ? <Navigate to="/" /> : <Outlet />;
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/", { withCredentials: true })
+      .then(() => setIsAuthenticated(true))
+      .catch(() => setIsAuthenticated(false))
+      .finally(() => setChecking(false));
+  }, []);
+
+  if (checking) return <p>Checking...</p>;
+  return isAuthenticated ? <Navigate to="/" /> : <Outlet />;
 };
 
 export default PublicRoute;

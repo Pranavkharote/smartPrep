@@ -4,14 +4,14 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import Loader from "../assets/Loader";
 import DarkModeToggle from "../components/ThemeToggle";
-import "../index.css"
-import "@theme-toggles/react/css/Expand.css"
-import { Expand } from "@theme-toggles/react"
+import "../index.css";
+import "@theme-toggles/react/css/Expand.css";
+import { Expand } from "@theme-toggles/react";
 
 const Dashboard = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
-  const name = localStorage.getItem("name")
+  const name = localStorage.getItem("name");
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -39,40 +39,32 @@ const Dashboard = () => {
     );
   }
   const totalTime = (history || []).reduce(
-    (sum, item) => sum + (typeof item.timeTaken === "number" ? item.timeTaken: 0),
+    (sum, item) =>
+      sum + (typeof item.timeTaken === "number" ? item.timeTaken : 0),
     0
   );
-  
-  const formatTime = (ms) => {
-    const totalSeconds = Math.floor(ms / 1000);
-    const hrs = Math.floor(totalSeconds / 3600);
-    const mins = Math.floor((totalSeconds % 3600) / 60);
-    const secs = totalSeconds % 60;
-    return `${hrs}h ${mins}m ${secs}s`;
-  };
-  const formatedTime = (ms) => {
-    const totalSeconds = Math.floor(ms / 1000);
-    const hrs = Math.floor(totalSeconds / 3600);
-    const mins = Math.floor((totalSeconds % 3600) / 60);
-    const secs = totalSeconds % 60;
+
+ const formatTimeFromSeconds = (seconds) => {
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+  return `${hrs}h ${mins}m ${secs}s`;
+};
+
+  const formatTimeInSeconds = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
     return `${mins}m ${secs}s`;
   };
-  const solvedCount = (history || []).filter((item) => item.status == "solved").length;
-  console.log(history);
-  // Inspect the first few items
-(history || []).slice(0, 5).forEach((item, i) => {
-  console.log(`Item ${i}: timeTaken =`, item.timeTaken);
-});
-// What is the average timeTaken?
-const averageTime = (history || []).reduce((sum, i) => sum + (i.timeTaken || 0), 0) / history.length;
-console.log('Average timeTaken =', averageTime);
-// Check how many items
-console.log('history length:', history.length);
+
+  const solvedCount = (history || []).filter(
+    (item) => item.status == "solved"
+  ).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br p-6">
-{/* <Expand duration={750}  /> */}
-    <DarkModeToggle/>
+      {/* <Expand duration={750}  /> */}
+      <DarkModeToggle />
       <motion.div
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -112,7 +104,7 @@ console.log('history length:', history.length);
             },
             {
               title: "Time Spent (mins)",
-              value: formatTime(totalTime) || 0,
+              value: formatTimeFromSeconds(totalTime) || 0,
               color: "text-purple-600",
             },
           ].map((item, index) => (
@@ -141,9 +133,7 @@ console.log('history length:', history.length);
 
         {/* Recent Submissions */}
         <div className="mb-10">
-          <h2 className="text-2xl  mb-4">
-            📝 Recent Submissions
-          </h2>
+          <h2 className="text-2xl  mb-4">📝 Recent Submissions</h2>
           {history.length === 0 ? (
             <p className="">No submissions yet. Start solving!</p>
           ) : (
@@ -171,7 +161,7 @@ console.log('history length:', history.length);
                       >
                         {sub.status}
                       </span>{" "}
-                      | Time: {formatedTime(sub.timeTaken)}
+                      | Time: {formatTimeInSeconds(sub.timeTaken)}
                     </p>
                     <p className="text-sm opacity-70 ">
                       Time: {new Date(sub.submittedAt).toLocaleString()}

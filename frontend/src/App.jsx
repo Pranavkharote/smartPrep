@@ -2,25 +2,27 @@ import QuestionList from "./components/QuestionList";
 import Login from "./pages/Login";
 import MainQuestionEditorComponent from "./components/MainQuestionEditorComponent";
 import Signup from "./pages/Signup";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Router } from "react-router-dom";
 import "./index.css";
 import Dashboard from "./pages/Dashboard";
 import SubmissionHistory from "./components/SubmissionHistory";
 import Submission from "./components/Submission";
 import QuestionComponent from "./components/QuestionDetails";
 import Solution from "./components/Solution";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import PublicRoute from "./context/PublicRoute";
 import ProtectedRoute from "./context/ProtectedRoute";
-// import AuthRedirector from "./utils/AuthDirector";
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route element={<PublicRoute />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Route>
+
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Dashboard />} />
+      </Route>
       <Route path="/questions" element={<QuestionList />} />
       <Route
         path="/questions/:questionId"

@@ -22,7 +22,6 @@ const EditorSide = ({ question }) => {
 
   //AI
   const [showAI, setShowAI] = useState(false);
-  // const [aiResponse, setAiResponce] = useState("");
   const [loadingAI, setLoadingAI] = useState(false);
   const [aiChatInput, setAiChatInput] = useState("");
   const { questionId } = useParams();
@@ -76,7 +75,6 @@ const EditorSide = ({ question }) => {
     e.preventDefault();
     const userCode = submittedCode; // User's current code
     const starterCode = generateStarterCode(question.functionName, languageId);
-    console.log(starterCode); // Starter template
 
     if (!userCode || !starterCode) {
       toast.error("Code or starter template is missing.");
@@ -94,12 +92,10 @@ const EditorSide = ({ question }) => {
     }
 
     runCode(userCode);
-    console.log(userCode);
     toast.success("Code Submitted.!");
   };
 
   const runCode = async () => {
-    // setSubmittedCode(submittedCode);
     const finalSubmittedCode = submittedCode.trim();
 
     if (!languageId) {
@@ -140,8 +136,6 @@ const EditorSide = ({ question }) => {
         filename: langInfo.filename,
       });
 
-      // console.log("🚀 Piston Result:", result);
-
       const output =
         result?.run?.stdout?.trim() ||
         result?.run?.stderr?.trim() ||
@@ -154,6 +148,7 @@ const EditorSide = ({ question }) => {
         const submissionStatus = isSolved ? "solved" : "attempted";
 
         const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
+        console.log("user took :", timeTaken)
         const payload = {
           questionId: questionId,
           languageId: languageId,
@@ -175,11 +170,8 @@ const EditorSide = ({ question }) => {
           );
 
           const { success, message } = data;
-          console.log(data);
           if (success === true || success === "true") {
-            if (submissionStatus === "solved")
-              //  setSubmittedCode("");
-              setTimeStart(Date.now());
+            if (submissionStatus === "solved") setTimeStart(Date.now());
             console.log(timeTaken);
           } else {
             handleError(message);
@@ -219,8 +211,6 @@ const EditorSide = ({ question }) => {
       };
 
       const selectedLang = languageLabelMap[languageId] || "txt";
-      console.log(promptToSend);
-
       const fullPrompt = `
 You are a helpful AI coding assistant.
 
@@ -243,8 +233,6 @@ ${currentCode}
 Now answer the following question based on the above code and problem:
 ${promptToSend}
 `;
-      console.log("🧪 Prompt sent to AI:\n", fullPrompt);
-
       const response = await axios.post("http://localhost:8080/ask", {
         prompt: fullPrompt,
         userprompt: promptToSend,
@@ -252,10 +240,7 @@ ${promptToSend}
         questionDescription: question.description,
         userCode: submittedCode,
       });
-      console.log("currentCode : ", currentCode);
-
       const aiAnswer = response.data.answer || "AI didn't respond";
-
       setAiChatHistory((prev) => [
         ...prev,
         { user: String(promptToSend), ai: aiAnswer },
@@ -279,7 +264,6 @@ ${promptToSend}
   };
 
   useEffect(() => {
-    // Clear AI chat history whenever a new question is loaded
     setAiChatHistory([]);
   }, [question.id]);
 
@@ -295,8 +279,6 @@ ${promptToSend}
 
     return () => clearInterval(interval);
   }, [timeStart, timerRunning]);
-  // console.log("🧪 Raw msg.ai:", msg.ai);
-  // console.log("🧪 Type:", typeof msg.ai);
 
   const [aiAsked, setAiAsked] = useState(false);
   useEffect(() => {
@@ -316,9 +298,15 @@ ${promptToSend}
           <option value={54} default>
             JavaScript
           </option>
-          <option value={62}>Java</option>
           <option value={63}>C++</option>
           <option value={71}>Python</option>
+          <option
+            value={62}
+            disabled
+            title="Coming Soon🚧 (I am working on it)"
+          >
+            Java
+          </option>
         </select>
       </div>
       <form onSubmit={handleSubmit}>
@@ -327,7 +315,6 @@ ${promptToSend}
           setCode={setSubmittedCode}
           onCodeChange={(updatedCode) => {
             setCurrentCode(updatedCode);
-            console.log("🔥 Code in EditorSide:", updatedCode);
           }}
         />
         <div className="flex gap-2 mt-2">
@@ -335,17 +322,20 @@ ${promptToSend}
             type="button"
             onClick={runCode}
             disabled={running}
+            title="Run Code"
             className="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700"
           >
             {running ? "Running..." : "Run Code"}
           </button>
           <button
             type="submit"
+            title="Submit Code"
             className="py-2 px-4 bg-blue-700 text-white rounded hover:bg-blue-800"
           >
             Submit Code
           </button>
           <div
+            title="Ask Any Query to AI"
             onClick={() => setShowAI(!showAI)}
             className="fixed bottom-5 cursor-pointer right-5 bg-[#00d1b2] text-white px-5 py-2 rounded-full shadow-2xl hover:bg-cyan-800 z-50"
           >

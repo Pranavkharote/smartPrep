@@ -72,7 +72,10 @@ export default function MainNavbar() {
             <div className="text-[#e1e1e1 ] mx-5 text-3xl ps-3 c">
               {prevQuestion ? (
                 <Link to={`/questions/${prevQuestion._id}`}>
-                  <i class="fa-solid fa-angle-left mr-3 "></i>
+                  <i
+                    class="fa-solid fa-angle-left mr-3 "
+                    title="Previous Question"
+                  ></i>
                 </Link>
               ) : (
                 <span className="">
@@ -81,14 +84,16 @@ export default function MainNavbar() {
               )}
               {nextQuestion ? (
                 <Link to={`/questions/${nextQuestion._id}`}>
-                  <i className="fa-solid fa-angle-right mr-3 "></i>
+                  <i
+                    className="fa-solid fa-angle-right mr-3 "
+                    title="Next Question"
+                  ></i>
                 </Link>
               ) : (
                 <span className="cursor-not-allowed">
                   <i className="fa-solid fa-angle-right mr-3"></i>
                 </span>
               )}
-              
             </div>
             <div className=" h-[20px] text-[12px] ms-4 font-medium">
               <p>See all the Questions List</p>
@@ -99,12 +104,10 @@ export default function MainNavbar() {
                 All Problems
               </a>
             </div>
-
           </div>
-            <DarkModeToggle  />
+          <DarkModeToggle />
         </div>
       </div>
-
-         </Disclosure>
+    </Disclosure>
   );
 }
