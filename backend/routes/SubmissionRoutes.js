@@ -13,6 +13,11 @@ router.post("/newquestion", async (req, res) => {
   res.status(201).json({ message: "Question Added" });
 });
 
+router.delete("/delete/:qId", async (req, res) => {
+  const questionId = req.params.qId;
+  
+})
+
 router.post("/submit", authenticateUser, async (req, res) => {
   const { questionId, status, timeTaken, submittedAt } = req.body;
   const newProgress = new UserProgress({
@@ -22,9 +27,9 @@ router.post("/submit", authenticateUser, async (req, res) => {
     timeTaken,
     submittedAt: Date.now(),
   });
-
   await newProgress.save();
-
+  console.log("time taken :", timeTaken)
+  
   res.status(201).json(newProgress);
 });
 
@@ -36,12 +41,12 @@ router.post("/submission", authenticateUser, async (req, res) => {
       status,
       submittedCode,
       languageId,
-      startedAt,
+      // startedAt,
+      timeTaken,
     } = req.body;
-
-    const timeTaken = submittedAt - startedAt;
-    const submittedAt = Date.now();
-
+    
+    console.log("time taken :", timeTaken)
+    console.log("submitted")
     const newSubmission = new UserProgress({
       userId,
       questionId,
@@ -49,7 +54,7 @@ router.post("/submission", authenticateUser, async (req, res) => {
       timeTaken,
       submittedCode,
       status,
-      submittedAt,
+      
     });
     await newSubmission.save();
     return res.json({
@@ -68,7 +73,8 @@ router.post("/submission", authenticateUser, async (req, res) => {
 router.get("/submission/:questionId", authenticateUser, async (req, res) => {
   try {
     const questionId = req.params.questionId;
-    const userSubmission = await UserProgress.find({ questionId });
+    const userId = req.user._id;
+    const userSubmission = await UserProgress.find({ questionId, userId });
     if (!userSubmission) {
       return res.json({ message: "submission not found" }).status(404);
     }
