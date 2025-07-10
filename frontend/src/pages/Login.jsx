@@ -48,7 +48,6 @@ const Login = () => {
       const { success, message, token } = data;
       console.log("token :", token);
       if (success == true || success == "true") {
-        localStorage.setItem("token", token);
         handleSuccess(message);
         setTimeout(() => { 
           navigate("/");
