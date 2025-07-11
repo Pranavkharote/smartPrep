@@ -5,8 +5,7 @@ import axios from "axios";
 import Loader from "../assets/Loader";
 import DarkModeToggle from "../components/ThemeToggle";
 import "../index.css";
-import "@theme-toggles/react/css/Expand.css";
-import { Expand } from "@theme-toggles/react";
+
 
 
 const Dashboard = () => {
