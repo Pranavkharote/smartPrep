@@ -5,7 +5,7 @@ import axios from "axios";
 import Loader from "../assets/Loader";
 import DarkModeToggle from "../components/ThemeToggle";
 import "../index.css";
-
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 const Dashboard = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ const Dashboard = () => {
     const fetchHistory = async () => {
       try {
         const res = await axios.get(
-           `${import.meta.env.VITE_API_BASE_URL}/submission-history`,
+           `${BACKEND_URL}/submission-history`,
           {
             withCredentials: true,
           }

@@ -14,7 +14,7 @@ const Login = () => {
   });
   const { email, password } = userInfo;
 
-  console.log("backend url :", BACKEND_URL)
+  console.log("backend url :", BACKEND_URL);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -40,7 +40,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-         `${import.meta.env.VITE_API_BASE_URL}/login`,
+         `${BACKEND_URL}/login`,
         {
           ...userInfo,
         },
