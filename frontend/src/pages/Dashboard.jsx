@@ -8,10 +8,14 @@ import "../index.css";
 import "@theme-toggles/react/css/Expand.css";
 import { Expand } from "@theme-toggles/react";
 
+
 const Dashboard = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const name = localStorage.getItem("name");
+
+const [showLogoutModal, setShowLogoutModal] = useState(false);
+
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -38,19 +42,20 @@ const Dashboard = () => {
       </div>
     );
   }
-const totalTime = Array.isArray(history)
-  ? history.reduce(
-      (sum, item) => sum + (typeof item.timeTaken === "number" ? item.timeTaken : 0),
-      0
-    )
-  : 0;
+  const totalTime = Array.isArray(history)
+    ? history.reduce(
+        (sum, item) =>
+          sum + (typeof item.timeTaken === "number" ? item.timeTaken : 0),
+        0
+      )
+    : 0;
 
- const formatTimeFromSeconds = (seconds) => {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  return `${hrs}h ${mins}m ${secs}s`;
-};
+  const formatTimeFromSeconds = (seconds) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hrs}h ${mins}m ${secs}s`;
+  };
 
   const formatTimeInSeconds = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -58,14 +63,28 @@ const totalTime = Array.isArray(history)
     return `${mins}m ${secs}s`;
   };
 
-const solvedCount = Array.isArray(history)
-  ? history.filter(item => item.status === "solved").length
-  : 0;
+  const solvedCount = Array.isArray(history)
+    ? history.filter((item) => item.status === "solved").length
+    : 0;
+
+  const handleConfirmLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  window.location.href = "/login";
+};
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br p-6">
       {/* <Expand duration={750}  /> */}
       <DarkModeToggle />
+      <button
+  onClick={() => setShowLogoutModal(true)}
+  className="ml-4 bg-transparent border-1 px-4 py-1 rounded-md"
+>
+  Logout
+</button>
       <motion.div
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -136,10 +155,9 @@ const solvedCount = Array.isArray(history)
         {/* Recent Submissions */}
         <div className="mb-10">
           <h2 className="text-2xl  mb-4">📝 Recent Submissions</h2>
-          { history.length === 0 ? (
+          {history.length === 0 ? (
             <p className="">No submissions yet. Start solving!</p>
           ) : (
-            
             <div className="space-y-4 ">
               {history.map((sub, idx) => (
                 <motion.div
@@ -180,8 +198,31 @@ const solvedCount = Array.isArray(history)
         </div>
 
         {/* CTA */}
+        {showLogoutModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white dark:bg-gray-900 text-black dark:text-white p-6 rounded-lg shadow-xl w-80">
+      <h2 className="text-lg font-semibold mb-4">Are you sure you want to logout?</h2>
+      <div className="flex justify-end space-x-4">
+        <button
+          onClick={() => setShowLogoutModal(false)}
+          className="bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 px-4 py-2 rounded"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleConfirmLogout}
+          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
       </motion.div>
     </div>
+    
   );
 };
 

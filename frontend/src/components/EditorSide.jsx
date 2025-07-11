@@ -337,7 +337,7 @@ ${promptToSend}
           <div
             title="Ask Any Query to AI"
             onClick={() => setShowAI(!showAI)}
-            className="fixed bottom-5 cursor-pointer right-5 bg-[#00d1b2] text-white px-5 py-2 rounded-full shadow-2xl hover:bg-cyan-800 z-50"
+            className="fixed bottom-5 cursor-pointer right-5 bg-[#0069f2] px-5 py-2 rounded-full shadow-2xl hover:bg-cyan-800 z-50"
           >
             🧠 Ask AI
           </div>
