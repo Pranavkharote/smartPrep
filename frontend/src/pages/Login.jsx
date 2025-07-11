@@ -36,15 +36,15 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:8080/login",
+         `${import.meta.env.VITE_API_BASE_URL}/login`,
         {
           ...userInfo,
         },
         { withCredentials: true }
       );
       
-      // console.log("data :", data);
-      // localStorage.setItem('username', data.name); 
+      localStorage.setItem("token", data.data.token);
+
       const { success, message, token } = data;
       console.log("token :", token);
       if (success == true || success == "true") {

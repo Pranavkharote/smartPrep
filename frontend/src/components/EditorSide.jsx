@@ -233,7 +233,7 @@ ${currentCode}
 Now answer the following question based on the above code and problem:
 ${promptToSend}
 `;
-      const response = await axios.post("http://localhost:8080/ask", {
+      const response = await axios.post( `${import.meta.env.VITE_API_BASE_URL}/ask`, {
         prompt: fullPrompt,
         userprompt: promptToSend,
         questionTitle: question.title,
