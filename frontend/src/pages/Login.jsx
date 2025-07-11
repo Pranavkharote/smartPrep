@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import DarkModeToggle from "../components/ThemeToggle";
+import BACKEND_URL from process.env.VITE_API_BASE_URL;
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,6 +13,8 @@ const Login = () => {
     password: "",
   });
   const { email, password } = userInfo;
+
+  console.log("backend url :", BACKEND_URL)
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +34,7 @@ const Login = () => {
       position: "bottom-left",
     });
   };
+  console.log()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
