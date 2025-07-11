@@ -3,7 +3,7 @@ const { UserModel } = require("../models/UserModel");
 
 const authenticateUser = async (req, res, next) => {
   const token = req.cookies.token;
-  console.log("token is: ", token);
+  console.log("token is: ", token); 
   if (!token) {
     return res.json({ status: false, message: "token not founding" });
   }
