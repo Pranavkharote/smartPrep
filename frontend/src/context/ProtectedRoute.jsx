@@ -17,7 +17,7 @@ const ProtectedRoute = () => {
       .finally(() => setChecking(false));
   }, []);
 
-  // if (checking) return <p className="text-center mt-10">Checking authentication...</p>;
+  if (checking) return <p className="text-center mt-10">Checking authentication...</p>;
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
