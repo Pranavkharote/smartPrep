@@ -30,39 +30,85 @@ const Signup = async (req, res) => {
   }
 };
 
+// const Login = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+//     // console.log("email:", email, "pass:", password);
+//     if (!email || !password) {
+//       return res.status(401).json({ message: "All fields are required." });
+//     }
+//     const user = await UserModel.findOne({ email });
+//     console.log(user);
+//     if (!user) {
+//       return res.status(401).json({ message: "Incorrect email or password" });
+//     }
+//     const auth = await bcrypt.compare(password, user.password);
+//     if (!auth) {
+//       return res.status(401).json({ message: "Incorrect email or password" });
+//     }
+//     const token = createSecretToken(user._id);
+//     res.cookie("token", token, {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production", // use secure cookies in production
+//       sameSite: "Lax", // or "None" if using cross-site cookies with HTTPS
+//       maxAge: 7 * 24 * 60 * 60 * 1000, // optional: 7 days
+//     });
+
+//     // const username = await UserModel.fin/dOne({})
+//     // console.log("username :", username)
+
+//     res
+//       .status(201)
+//       .json({ message: "LoggedIn successfully", success: true, token: token });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    // console.log("email:", email, "pass:", password);
+    console.log("📩 Login request received with:", email);
+
     if (!email || !password) {
-      return res.status(401).json({ message: "All fields are required." });
+      return res.status(400).json({ message: "All fields are required." });
     }
+
     const user = await UserModel.findOne({ email });
-    console.log(user);
+
     if (!user) {
+      console.log("❌ User not found");
       return res.status(401).json({ message: "Incorrect email or password" });
     }
+
     const auth = await bcrypt.compare(password, user.password);
+
     if (!auth) {
+      console.log("❌ Password mismatch");
       return res.status(401).json({ message: "Incorrect email or password" });
     }
+
     const token = createSecretToken(user._id);
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // use secure cookies in production
-      sameSite: "Lax", // or "None" if using cross-site cookies with HTTPS
-      maxAge: 7 * 24 * 60 * 60 * 1000, // optional: 7 days
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None", // ← this is important for frontend <-> backend cookie with different domains
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    // const username = await UserModel.fin/dOne({})
-    // console.log("username :", username)
+    console.log("✅ Login successful for user:", user.email);
 
-    res
-      .status(201)
-      .json({ message: "LoggedIn successfully", success: true, token: token });
+    return res.status(200).json({
+      message: "Logged in successfully",
+      success: true,
+      token,
+    });
   } catch (error) {
-    console.log(error);
+    console.error("🔥 Login error:", error);
+    return res.status(500).json({ message: "Server error during login" });
   }
 };
+
 
 module.exports = { Login, Signup };
