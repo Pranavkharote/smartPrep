@@ -40,7 +40,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-         `${BACKEND_URL}/login`,
+        //  `${BACKEND_URL}/login`,
         //  "http://localhost:8080/login",
         {
           ...userInfo,
@@ -83,9 +83,9 @@ const Login = () => {
     {/* Logo / Icon */}
     <div className="flex justify-center mb-6">
       <img
-        src="src/assets/ChatGPT Image Jun 13, 2025, 02_34_46 PM.png" // replace with your logo or icon // replace with your logo or icon
+        src="/ChatGPT Image Jul 12, 2025, 01_36_46 PM.png" // replace with your logo or icon // replace with your logo or icon
         alt="SmartPrep Logo"
-        className="w-16 h-16"
+        className="w-30 h-30"
       />
     </div>
 

@@ -72,16 +72,16 @@ function Signup() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 login">
     <DarkModeToggle />
-      <div className="bg-white  shadow-xl rounded-xl w-full max-w-md p-7 inlogin">
-        <div className="flex justify-center mb-6">
+      <div className="bg-white  shadow-xl rounded-xl w-full max-w-md px-7 h-140 inlogin">
+        <div className="flex justify-center ">
             <img
-              src="/src/assets/ChatGPT Image Jul 12, 2025, 01_36_46 PM.png" // replace with your logo or icon
+              src="/ChatGPT Image Jul 12, 2025, 01_36_46 PM.png" // replace with your logo or icon
               alt="SmartPrep Logo"
               className="w-30 h-30 rounded-full "
             />
         </div>
         <h2 className="text-center mb-4 text-3xl font-bold tracking-tight text-green-600">
-          {/* SmartPrep Signup */}
+         Signup
         </h2>
         <p className="text-center opacity-50 mb-6 text-sm">
           Practice coding questions, track your progress & grow!
