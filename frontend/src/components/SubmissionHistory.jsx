@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
+import DarkModeToggle from "../components/ThemeToggle";
 
 const SubmissionHistory = () => {
   const [history, setHistory] = useState([]);
@@ -37,7 +38,8 @@ const SubmissionHistory = () => {
   }
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6  min-h-screen">
+    <DarkModeToggle />
       <h1 className="text-3xl font-bold mb-6 text-center">
         📜 Submission History
       </h1>
@@ -49,7 +51,7 @@ const SubmissionHistory = () => {
           history.map((sub, index) => (
             <div
               key={index}
-              className="bg-white shadow-lg rounded-xl p-6 border border-gray-200"
+              className=" shadow-lg rounded-xl p-6 border border-gray-200"
             >
               <div className="flex flex-wrap justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold text-blue-600">
@@ -66,7 +68,7 @@ const SubmissionHistory = () => {
                 </span>
               </div>
 
-              <div className="text-gray-700 space-y-1 mb-4">
+              <div className=" space-y-1 mb-4">
                 <p>
                   ⏱ <strong>Time Taken:</strong> {sub.timeTaken} sec
                 </p>
