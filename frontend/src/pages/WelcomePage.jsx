@@ -111,7 +111,7 @@ const WelcomePage = () => {
         >
           Ready to start your coding journey?
         </motion.h3>
-        <Link to="/login">
+        <Link to="/dashboard">
           <motion.button
             className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg text-lg mt-4 hover:bg-green-700"
             whileHover={{ scale: 1.05 }}

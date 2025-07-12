@@ -6,6 +6,10 @@ import Loader from "../assets/Loader";
 import DarkModeToggle from "../components/ThemeToggle";
 import "../index.css";
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
+import { Link } from "react-router-dom";
+import { FaHome } from "react-icons/fa";
+import { FaSignOutAlt } from "react-icons/fa";
+
 const Dashboard = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,11 +82,14 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br p-6">
       {/* <Expand duration={750}  /> */}
       <DarkModeToggle />
+      
+
+      <button className="ml-4 bg-transparent border-1 px-4 py-1 rounded-md"><Link to="/"><FaHome className="text-xl cursor-pointer hover:text-green-400" title="Home" /></Link></button>
       <button
         onClick={() => setShowLogoutModal(true)}
         className="ml-4 bg-transparent border-1 px-4 py-1 rounded-md"
       >
-        Logout
+        <FaSignOutAlt className="text-xl cursor-pointer hover:text-red-400" title="Logout" />
       </button>
       <motion.div
         initial={{ opacity: 0, y: -40 }}
@@ -157,7 +164,7 @@ const Dashboard = () => {
           {history.length === 0 ? (
             <p className="">No submissions yet. Start solving!</p>
           ) : (
-            <div className="space-y-4 ">
+            <div className="space-y-4 max-h-100 overflow-y-auto  ">
               {history.map((sub, idx) => (
                 <motion.div
                   key={idx}
