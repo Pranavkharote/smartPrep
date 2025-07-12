@@ -56,7 +56,7 @@ const Login = () => {
       if (success == true || success == "true") {
         handleSuccess(message);
         setTimeout(() => { 
-          navigate("/");
+          navigate("/dashboard");
           console.log("navigating");
 
         }, 500);

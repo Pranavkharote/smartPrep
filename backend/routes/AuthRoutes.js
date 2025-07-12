@@ -10,15 +10,14 @@ router.post("/signup", Signup);
 router.post("/", authenticateUser);
 
 router.get("/", authenticateUser, async (req, res) => {
-  const question = await Question.find();
-  res.json(question);
-  // console.log(question)
+  return res
+    .status(200)
+    .json({ status: true, message: "Authenticated", user: req.user });
 });
 
-router.get("/user", async (req ,res) => {
+router.get("/user", async (req, res) => {
   const username = await UserModel.find({}).select("name -_id");
   return res.json(username);
-})
-
+});
 
 module.exports = router;

@@ -52,7 +52,7 @@ function Signup() {
         handleSuccess(message);
         setTimeout(() => {
           console.log("navigating to the route");
-          navigate("/");
+          navigate("/dashboard");
         }, 500);
       } else {
         handleError(message || "something wrong");
