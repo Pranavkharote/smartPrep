@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
 const SubmissionHistory = () => {
   const [history, setHistory] = useState([]);
@@ -11,7 +12,8 @@ const SubmissionHistory = () => {
     const fetchHistory = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8080/submission-history",
+          // "http://localhost:8080/submission-history",
+          `${BACKEND_URL}/submission-history`,
           {
             withCredentials: true,
           }

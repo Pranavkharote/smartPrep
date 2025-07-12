@@ -3,8 +3,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import Example from "./LeftNavbar";
-import LeftNavbar from "./LeftNavbar";
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
 const QuestionComponent = () => {
   const [question, setQuestion] = useState({});
@@ -15,7 +14,7 @@ const QuestionComponent = () => {
     const fetchQuestionDetail = async () => {
       try {
         const questionDetails = await axios.get(
-          `http://localhost:8080/questions/${questionId}`,
+          `${BACKEND_URL}/questions/${questionId}`,
           { withCredentials: true }
         );
         setQuestion(questionDetails.data);

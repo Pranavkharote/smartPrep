@@ -8,6 +8,7 @@ import Example from "./MainNavbar";
 import MainNavbar from "./MainNavbar";
 import LeftNavbar from "./LeftNavbar";
 import { Outlet } from "react-router-dom";
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
 const MainQuestionEditorComponent = () => {
   const [question, setQuestion] = useState({});
@@ -17,7 +18,8 @@ const MainQuestionEditorComponent = () => {
     const fetchQuestionDetail = async () => {
       try {
         const questionDetails = await axios.get(
-          `http://localhost:8080/questions/${questionId}`,
+          // `http://localhost:8080/questions/${questionId}`,
+          `${BACKEND_URL}/questions/${questionId}`,
           { withCredentials: true }
         );
         setQuestion(questionDetails.data);

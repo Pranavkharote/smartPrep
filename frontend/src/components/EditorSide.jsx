@@ -12,6 +12,7 @@ import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/ext-language_tools";
 import MarkdownRenderer from "../utils/MarkdownRenderer";
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
 const EditorSide = ({ question }) => {
   const [timeStart, setTimeStart] = useState(Date.now());
@@ -164,7 +165,8 @@ const EditorSide = ({ question }) => {
 
         try {
           const { data } = await axios.post(
-            "http://localhost:8080/submission",
+            // "http://localhost:8080/submission",
+            `${BACKEND_URL}/submission`,
             payload,
             { withCredentials: true }
           );

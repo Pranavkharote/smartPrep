@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import NavbarFilter from "./NavbarFilter"; // the new UI version of NavbarFilter
 import DarkModeToggle from "./ThemeToggle";
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
 const difficultyColors = {
   Easy: "bg-green-100 text-green-800",
@@ -23,7 +24,10 @@ const QuestionList = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/questions", {
+        const res = await axios.get(
+          // "http://localhost:8080/questions",
+          `${BACKEND_URL}/questions`,
+           {
           withCredentials: true,
         });
         setQuestions(res.data || []);

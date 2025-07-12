@@ -3,29 +3,16 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import CopyCode from "./CopyCode";
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Submission = () => {
   const [history, setHistory] = useState([]);
   // const navigate = useNavigate();
 
   let { questionId } = useParams();
-  // useEffect(() => {
-  //   const submission = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:8080/submission/${questionId}`,
-  //         { withCredentials: true }
-  //       );
-  //       setHistory(response.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   submission();
-  // }, [questionId]);
   useEffect(() => {
   const fetchSubmissions = async () => {
-    const res = await axios.get(`http://localhost:8080/submission/${questionId}`,
+    const res = await axios.get(`${BACKEND_URL}/submission/${questionId}`,
       { withCredentials: true}
     );
     const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

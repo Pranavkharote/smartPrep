@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import DarkModeToggle from "./ThemeToggle";
 const navigation = [{ name: "Dashboard", href: "/", current: true }];
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -18,7 +20,10 @@ export default function MainNavbar() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/questions", {
+        const res = await axios.get(
+          // "http://localhost:8080/questions",
+          `${BACKEND_URL}/questions`,
+         {
           withCredentials: true,
         });
         setQuestions(res.data || []);
