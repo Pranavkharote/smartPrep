@@ -145,7 +145,7 @@ const EditorSide = ({ question }) => {
         "No output returned.";
       setOutput(output);
 
-      if (output.includes("FINAL_STATUS:")) {
+      if (submit && output.includes("FINAL_STATUS:")) {
         const isSolved = output.includes("FINAL_STATUS: solved");
         const submissionStatus = isSolved ? "solved" : "attempted";
 
