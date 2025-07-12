@@ -93,107 +93,186 @@ const EditorSide = ({ question }) => {
     }
 
     // runCode(userCode);
-    runCode(true);
+    await runCode(true);
     toast.success("Code Submitted.!");
   };
 
-  const runCode = async (submit = false) => {
-    const finalSubmittedCode = submittedCode.trim();
+  // const runCode = async (submit = false) => {
+  
+  //   const finalSubmittedCode = submittedCode.trim();
 
-    if (!languageId) {
-      toast.error("Please select a programming language.");
-      return;
-    }
-    if (!submittedCode.trim()) {
-      toast.error("Please enter code to run.");
-      return;
-    }
-    if (!question) {
-      toast.error("Question not loaded yet.");
-      return;
-    }
-    setRunning(true);
-    setOutput("Running...");
+  //   if (!languageId) {
+  //     toast.error("Please select a programming language.");
+  //     return;
+  //   }
+  //   if (!submittedCode.trim()) {
+  //     toast.error("Please enter code to run.");
+  //     return;
+  //   }
+  //   if (!question) {
+  //     toast.error("Question not loaded yet.");
+  //     return;
+  //   }
+  //   setRunning(true);
+  //   setOutput("Running...");
 
-    const testCases = question.testCases || [];
-    if (testCases.length === 0) {
-      setOutput("No test cases available.");
-      setRunning(false);
-      return;
-    }
+  //   const testCases = question.testCases || [];
+  //   if (testCases.length === 0) {
+  //     setOutput("No test cases available.");
+  //     setRunning(false);
+  //     return;
+  //   }
 
-    const wrappedCode = wrapCodeWithTests(submittedCode, question, languageId);
-    try {
-      const langInfo = languageMap[languageId];
-      const codeToRun =
-        langInfo.piston === "javascript" ||
-        langInfo.piston === "python3" ||
-        langInfo.piston === "cpp" ||
-        langInfo.piston === "java"
-          ? wrappedCode
-          : submittedCode;
-      const result = await runCodeWithPiston({
-        language: langInfo.piston,
-        code: codeToRun,
-        filename: langInfo.filename,
-      });
+  //   const wrappedCode = wrapCodeWithTests(submittedCode, question, languageId);
+  //   try {
+  //     const langInfo = languageMap[languageId];
+  //     const codeToRun =
+  //       langInfo.piston === "javascript" ||
+  //       langInfo.piston === "python3" ||
+  //       langInfo.piston === "cpp" ||
+  //       langInfo.piston === "java"
+  //         ? wrappedCode
+  //         : submittedCode;
+  //     const result = await runCodeWithPiston({
+  //       language: langInfo.piston,
+  //       code: codeToRun,
+  //       filename: langInfo.filename,
+  //     });
 
-      const output =
-        result?.run?.stdout?.trim() ||
-        result?.run?.stderr?.trim() ||
-        result?.run?.output?.trim() ||
-        "No output returned.";
-      setOutput(output);
+  //     const output =
+  //       result?.run?.stdout?.trim() ||
+  //       result?.run?.stderr?.trim() ||
+  //       result?.run?.output?.trim() ||
+  //       "No output returned.";
+  //     setOutput(output);
 
-      if (submit && output.includes("FINAL_STATUS:")) {
-        const isSolved = output.includes("FINAL_STATUS: solved");
-        const submissionStatus = isSolved ? "solved" : "attempted";
+  //     if (submit && output.includes("FINAL_STATUS:")) {
+  //       const isSolved = output.includes("FINAL_STATUS: solved");
+  //       const submissionStatus = isSolved ? "solved" : "attempted";
 
-        const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
-        console.log("user took :", timeTaken);
+  //       const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
+  //       console.log("user took :", timeTaken);
 
-        if (submit) {
-          const payload = {
-            questionId: questionId,
-            languageId: languageId,
-            status: submissionStatus,
-            timeTaken: timeTaken,
-            submittedCode: finalSubmittedCode,
-          };
-          console.log("💾 Submitting code:", {
-            languageId,
-            submittedCode: finalSubmittedCode,
-            output,
-          });
+  //       if (submit) {
+  //         const payload = {
+  //           questionId: questionId,
+  //           languageId: languageId,
+  //           status: submissionStatus,
+  //           timeTaken: timeTaken,
+  //           submittedCode: finalSubmittedCode,
+  //         };
+  //         console.log("💾 Submitting code:", {
+  //           languageId,
+  //           submittedCode: finalSubmittedCode,
+  //           output,
+  //         });
 
-          try {
-            const { data } = await axios.post(
-              // "http://localhost:8080/submission",
-              `${BACKEND_URL}/submission`,
-              payload,
-              { withCredentials: true }
-            );
+  //         try {
+  //           const { data } = await axios.post(
+  //             // "http://localhost:8080/submission",
+  //             `${BACKEND_URL}/submission`,
+  //             payload,
+  //             { withCredentials: true }
+  //           );
 
-            const { success, message } = data;
-            if (success === true || success === "true") {
-              if (submissionStatus === "solved") setTimeStart(Date.now());
-              console.log(timeTaken);
-            } else {
-              handleError(message);
-            }
-          } catch (err) {
-            handleError(err.response?.data?.message || err.message);
-          }
-        }
-      }
-    } catch (error) {
-      setOutput("❌ Error running code: " + (error.message || "Unknown error"));
-    }
+  //           const { success, message } = data;
+  //           if (success === true || success === "true") {
+  //             if (submissionStatus === "solved") setTimeStart(Date.now());
+  //             console.log(timeTaken);
+  //           } else {
+  //             handleError(message);
+  //           }
+  //         } catch (err) {
+  //           handleError(err.response?.data?.message || err.message);
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     setOutput("❌ Error running code: " + (error.message || "Unknown error"));
+  //   }
 
-    setRunning(false);
-  };
+  //   setRunning(false);
+  // };
 
   //ai
+ 
+  const runCode = async (submit = false) => {
+  const finalSubmittedCode = submittedCode.trim();
+
+  if (!languageId || !question || !finalSubmittedCode) {
+    toast.error("Missing code, question, or language.");
+    return;
+  }
+
+  setRunning(true);
+  setOutput("Running...");
+
+  const testCases = question.testCases || [];
+  if (testCases.length === 0) {
+    setOutput("No test cases available.");
+    setRunning(false);
+    return;
+  }
+
+  const wrappedCode = wrapCodeWithTests(finalSubmittedCode, question, languageId);
+  const langInfo = languageMap[languageId];
+  const codeToRun = ["javascript", "python3", "cpp", "java"].includes(langInfo.piston)
+    ? wrappedCode
+    : finalSubmittedCode;
+
+  try {
+    const result = await runCodeWithPiston({
+      language: langInfo.piston,
+      code: codeToRun,
+      filename: langInfo.filename,
+    });
+
+    const output =
+      result?.run?.stdout?.trim() ||
+      result?.run?.stderr?.trim() ||
+      result?.run?.output?.trim() ||
+      "No output returned.";
+    setOutput(output);
+
+    // ✅ Only submit if explicitly called for AND output contains final status
+    if (submit && output.includes("FINAL_STATUS:")) {
+      const isSolved = output.includes("FINAL_STATUS: solved");
+      const submissionStatus = isSolved ? "solved" : "attempted";
+      const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
+
+      const payload = {
+        questionId,
+        languageId,
+        status: submissionStatus,
+        timeTaken,
+        submittedCode: finalSubmittedCode,
+      };
+
+      try {
+        const { data } = await axios.post(
+          `${BACKEND_URL}/submission`,
+          payload,
+          { withCredentials: true }
+        );
+
+        if (data.success === true || data.success === "true") {
+          toast.success("✅ Code Submitted!");
+          if (submissionStatus === "solved") setTimeStart(Date.now());
+        } else {
+          handleError(data.message || "Submission failed.");
+        }
+      } catch (err) {
+        handleError(err.response?.data?.message || err.message);
+      }
+    }
+  } catch (error) {
+    setOutput("❌ Error running code: " + (error.message || "Unknown error"));
+  }
+
+  setRunning(false);
+};
+
+
   const handleAskAI = async (forcedPrompt = null) => {
     let rawPrompt = forcedPrompt || aiChatInput;
 
