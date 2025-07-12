@@ -11,7 +11,7 @@ const ProtectedRoute = () => {
 
   useEffect(() => {
     axios
-      .get(`${BACKEND_URL}/dashboard`, { withCredentials: true })
+      .get(`${BACKEND_URL}`, { withCredentials: true })
       .then(() => setIsAuthenticated(true))
       .catch(() => setIsAuthenticated(false))
       .finally(() => setChecking(false));
