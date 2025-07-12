@@ -8,7 +8,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import DarkModeToggle from "./ThemeToggle";
-const navigation = [{ name: "Dashboard", href: "/", current: true }];
+const navigation = [{ name: "Dashboard", href: "/dashboard", current: true }];
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
 function classNames(...classes) {
