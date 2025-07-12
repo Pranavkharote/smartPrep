@@ -75,13 +75,13 @@ function Signup() {
       <div className="bg-white  shadow-xl rounded-xl w-full max-w-md p-7 inlogin">
         <div className="flex justify-center mb-6">
             <img
-              src="/src/assets/ChatGPT Image Jul 12, 2025, 01_22_22 PM.png" // replace with your logo or icon
+              src="/src/assets/ChatGPT Image Jul 12, 2025, 01_36_46 PM.png" // replace with your logo or icon
               alt="SmartPrep Logo"
-              className="w-20 h-20 rounded-full bg-transparent object-contain"
+              className="w-30 h-30 rounded-full "
             />
         </div>
         <h2 className="text-center mb-4 text-3xl font-bold tracking-tight text-green-600">
-          SmartPrep Signup
+          {/* SmartPrep Signup */}
         </h2>
         <p className="text-center opacity-50 mb-6 text-sm">
           Practice coding questions, track your progress & grow!
@@ -128,9 +128,9 @@ function Signup() {
             Sign Up
           </button>
         </form>
-        <p className="mt-4 text-sm text-center">
+        <p className="mt-4 text-sm text-center opacity-85">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
+          <Link to="/login" className="text-blue-600   hover:underline">
             Login
           </Link>
         </p>
