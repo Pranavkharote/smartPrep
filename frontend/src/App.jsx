@@ -9,18 +9,24 @@ import SubmissionHistory from "./components/SubmissionHistory";
 import Submission from "./components/Submission";
 import QuestionComponent from "./components/QuestionDetails";
 import Solution from "./components/Solution";
+import ErrorBoundary from "./context/ErrorBoundaryforDashboard";
 
 const App = () => {
   return (
     <Routes>
       {/* <Route element={<PublicRoute />}> */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
       {/* </Route> */}
 
-      {/* <Route element={<ProtectedRoute />}> */}
-        <Route path="/" element={<Dashboard />} />
-      {/* </Route> */}
+      <Route
+        path="/"
+        element={
+          <ErrorBoundary>
+            <Dashboard />
+          </ErrorBoundary>
+        }
+      />
       <Route path="/questions" element={<QuestionList />} />
       <Route
         path="/questions/:questionId"

@@ -14,7 +14,7 @@ const Login = () => {
   });
   const { email, password } = userInfo;
 
-  console.log("backend url :", BACKEND_URL);
+  // console.log("backend url :", BACKEND_URL);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -41,13 +41,15 @@ const Login = () => {
     try {
       const { data } = await axios.post(
          `${BACKEND_URL}/login`,
+        //  "http://localhost:8080/login",
         {
           ...userInfo,
         },
         { withCredentials: true }
       );
       
-      localStorage.setItem("token", data.data.token);
+      localStorage.setItem("token", data.token);
+      console.log("data : ",data)
 
       const { success, message, token } = data;
       console.log("token :", token);

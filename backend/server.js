@@ -30,7 +30,7 @@ const allowedOrigins = [
 // );
 app.use(
   cors({
-    origin: true, // 🔓 Allows all origins temporarily
+    origin: allowedOrigins, // 🔓 Allows all origins temporarily
     credentials: true,
   })
 );

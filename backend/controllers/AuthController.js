@@ -20,7 +20,11 @@ const Signup = async (req, res) => {
     });
     res
       .status(201)
-      .json({ message: "User Registered Successfully!", success: true, name: name });
+      .json({
+        message: "User Registered Successfully!",
+        success: true,
+        name: name,
+      });
   } catch (error) {
     console.error(error);
   }
@@ -44,13 +48,18 @@ const Login = async (req, res) => {
     }
     const token = createSecretToken(user._id);
     res.cookie("token", token, {
-      withCredentials: true,
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // use secure cookies in production
+      sameSite: "Lax", // or "None" if using cross-site cookies with HTTPS
+      maxAge: 7 * 24 * 60 * 60 * 1000, // optional: 7 days
     });
+
     // const username = await UserModel.fin/dOne({})
     // console.log("username :", username)
-    
-    res.status(201).json({ message: "LoggedIn successfully", success: true, token: token });
+
+    res
+      .status(201)
+      .json({ message: "LoggedIn successfully", success: true, token: token });
   } catch (error) {
     console.log(error);
   }

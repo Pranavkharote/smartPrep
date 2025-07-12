@@ -17,12 +17,17 @@ const Dashboard = () => {
     const fetchHistory = async () => {
       try {
         const res = await axios.get(
-           `${BACKEND_URL}/submission-history`,
-          {
-            withCredentials: true,
-          }
+          `${BACKEND_URL}/submission-history`
+          // "http://localhost:8080/submission-history"
+          , {
+          withCredentials: true,
+        });
+        // setHistory(res.data.submission);
+        setHistory(
+          Array.isArray(res.data.submission) ? res.data.submission : []
         );
-        setHistory(res.data.submission);
+        console.log("Fetched history:", res.data);
+
         setLoading(false);
       } catch (err) {
         console.error("Error fetching submission history:", err);
