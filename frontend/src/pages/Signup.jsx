@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
+import DarkModeToggle from "../components/ThemeToggle";
 
 function Signup() {
   const navigate = useNavigate();
@@ -34,7 +36,8 @@ function Signup() {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:8080/signup",
+        // "http://localhost:8080/signup",
+         `${BACKEND_URL}/signup`,
         {
           ...userInfo,
         },
@@ -68,13 +71,14 @@ function Signup() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 login">
+    <DarkModeToggle />
       <div className="bg-white  shadow-xl rounded-xl w-full max-w-md p-7 inlogin">
         <div className="flex justify-center mb-6">
-          <img
-            src="src/assets/ChatGPT Image Jun 13, 2025, 02_34_46 PM.png" // replace with your logo or icon
-            alt="SmartPrep Logo"
-            className="w-20 h-20"
-          />
+            <img
+              src="/src/assets/ChatGPT Image Jul 12, 2025, 01_22_22 PM.png" // replace with your logo or icon
+              alt="SmartPrep Logo"
+              className="w-20 h-20 rounded-full bg-transparent object-contain"
+            />
         </div>
         <h2 className="text-center mb-4 text-3xl font-bold tracking-tight text-green-600">
           SmartPrep Signup
