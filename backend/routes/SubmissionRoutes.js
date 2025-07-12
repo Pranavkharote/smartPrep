@@ -160,7 +160,6 @@ router.get("/questions/:questionId", async (req, res) => {
 router.get("/submission-history", authenticateUser, async (req, res) => {
   try {
     const userId = req.user._id;
-
     const submission = await UserProgress.find({ userId })
       .populate("questionId", "title")
       .sort({ createdAt: -1 });

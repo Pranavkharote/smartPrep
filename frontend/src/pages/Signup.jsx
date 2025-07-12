@@ -49,6 +49,8 @@ function Signup() {
       console.log(data);
       console.log(success);
       if (success == true || success == "true") {
+        const name = localStorage.setItem("name", data.name);
+        console.log("name :", name)
         handleSuccess(message);
         setTimeout(() => {
           console.log("navigating to the route");
