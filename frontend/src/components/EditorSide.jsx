@@ -92,11 +92,12 @@ const EditorSide = ({ question }) => {
       return;
     }
 
-    runCode(userCode);
+    // runCode(userCode);
+    runCode(true);
     toast.success("Code Submitted.!");
   };
 
-  const runCode = async () => {
+  const runCode = async (submit = false) => {
     const finalSubmittedCode = submittedCode.trim();
 
     if (!languageId) {
@@ -149,37 +150,40 @@ const EditorSide = ({ question }) => {
         const submissionStatus = isSolved ? "solved" : "attempted";
 
         const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
-        console.log("user took :", timeTaken)
-        const payload = {
-          questionId: questionId,
-          languageId: languageId,
-          status: submissionStatus,
-          timeTaken: timeTaken,
-          submittedCode: finalSubmittedCode,
-        };
-        console.log("💾 Submitting code:", {
-          languageId,
-          submittedCode: finalSubmittedCode,
-          output,
-        });
+        console.log("user took :", timeTaken);
 
-        try {
-          const { data } = await axios.post(
-            // "http://localhost:8080/submission",
-            `${BACKEND_URL}/submission`,
-            payload,
-            { withCredentials: true }
-          );
+        if (submit) {
+          const payload = {
+            questionId: questionId,
+            languageId: languageId,
+            status: submissionStatus,
+            timeTaken: timeTaken,
+            submittedCode: finalSubmittedCode,
+          };
+          console.log("💾 Submitting code:", {
+            languageId,
+            submittedCode: finalSubmittedCode,
+            output,
+          });
 
-          const { success, message } = data;
-          if (success === true || success === "true") {
-            if (submissionStatus === "solved") setTimeStart(Date.now());
-            console.log(timeTaken);
-          } else {
-            handleError(message);
+          try {
+            const { data } = await axios.post(
+              // "http://localhost:8080/submission",
+              `${BACKEND_URL}/submission`,
+              payload,
+              { withCredentials: true }
+            );
+
+            const { success, message } = data;
+            if (success === true || success === "true") {
+              if (submissionStatus === "solved") setTimeStart(Date.now());
+              console.log(timeTaken);
+            } else {
+              handleError(message);
+            }
+          } catch (err) {
+            handleError(err.response?.data?.message || err.message);
           }
-        } catch (err) {
-          handleError(err.response?.data?.message || err.message);
         }
       }
     } catch (error) {
@@ -235,13 +239,16 @@ ${currentCode}
 Now answer the following question based on the above code and problem:
 ${promptToSend}
 `;
-      const response = await axios.post( `${import.meta.env.VITE_API_BASE_URL}/ask`, {
-        prompt: fullPrompt,
-        userprompt: promptToSend,
-        questionTitle: question.title,
-        questionDescription: question.description,
-        userCode: submittedCode,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/ask`,
+        {
+          prompt: fullPrompt,
+          userprompt: promptToSend,
+          questionTitle: question.title,
+          questionDescription: question.description,
+          userCode: submittedCode,
+        }
+      );
       const aiAnswer = response.data.answer || "AI didn't respond";
       setAiChatHistory((prev) => [
         ...prev,
