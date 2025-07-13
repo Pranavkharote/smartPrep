@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { runCodeWithPiston } from "../api/Piston";
 import "../index.css";
@@ -20,6 +20,8 @@ const EditorSide = ({ question }) => {
   const [output, setOutput] = useState("");
   const [running, setRunning] = useState(false);
   const [startedAt, setStartedAt] = useState(null);
+
+  const navigate = useNavigate();
 
   //AI
   const [showAI, setShowAI] = useState(false);
@@ -198,121 +200,136 @@ const EditorSide = ({ question }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-  const userCode = submittedCode;
-  const starterCode = generateStarterCode(question.functionName, languageId);
+    const userCode = submittedCode;
+    const starterCode = generateStarterCode(question.functionName, languageId);
 
-  const normalize = (code) =>
-    code.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, "").replace(/\s/g, "");
+    const normalize = (code) =>
+      code.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, "").replace(/\s/g, "");
 
-  if (!userCode || !starterCode || normalize(userCode) === normalize(starterCode)) {
-    toast.error("⚠️ Please write your solution before submitting.");
-    return;
-  }
+    if (
+      !userCode ||
+      !starterCode ||
+      normalize(userCode) === normalize(starterCode)
+    ) {
+      toast.error("⚠️ Please write your solution before submitting.");
+      return;
+    }
 
-  const testCases = question.testCases || [];
-  if (testCases.length === 0) {
-    toast.error("No test cases available.");
-    return;
-  }
+    const testCases = question.testCases || [];
+    if (testCases.length === 0) {
+      toast.error("No test cases available.");
+      return;
+    }
 
-  setRunning(true);
-  setOutput("Running...");
+    setRunning(true);
+    setOutput("Running...");
 
-  const finalSubmittedCode = submittedCode.trim();
-  const langInfo = languageMap[languageId];
-  const wrappedCode = wrapCodeWithTests(finalSubmittedCode, question, languageId);
-  const codeToRun = ["javascript", "python3", "cpp", "java"].includes(langInfo.piston)
-    ? wrappedCode
-    : finalSubmittedCode;
+    const finalSubmittedCode = submittedCode.trim();
+    const langInfo = languageMap[languageId];
+    const wrappedCode = wrapCodeWithTests(
+      finalSubmittedCode,
+      question,
+      languageId
+    );
+    const codeToRun = ["javascript", "python3", "cpp", "java"].includes(
+      langInfo.piston
+    )
+      ? wrappedCode
+      : finalSubmittedCode;
 
-  try {
-    const result = await runCodeWithPiston({
-      language: langInfo.piston,
-      code: codeToRun,
-      filename: langInfo.filename,
-    });
-
-    const output =
-      result?.run?.stdout?.trim() ||
-      result?.run?.stderr?.trim() ||
-      result?.run?.output?.trim() ||
-      "No output returned.";
-    setOutput(output);
-
-    if (output.includes("FINAL_STATUS:")) {
-      const isSolved = output.includes("FINAL_STATUS: solved");
-      const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
-      const payload = {
-        questionId: questionId,
-        languageId: languageId,
-        status: isSolved ? "solved" : "attempted",
-        timeTaken: timeTaken,
-        submittedCode: finalSubmittedCode,
-      };
-
-      const { data } = await axios.post(`${BACKEND_URL}/submission`, payload, {
-        withCredentials: true,
+    try {
+      const result = await runCodeWithPiston({
+        language: langInfo.piston,
+        code: codeToRun,
+        filename: langInfo.filename,
       });
 
-      if (data.success) {
-        toast.success("✅ Code submitted successfully!");
-        if (isSolved) setTimeStart(Date.now());
+      const output =
+        result?.run?.stdout?.trim() ||
+        result?.run?.stderr?.trim() ||
+        result?.run?.output?.trim() ||
+        "No output returned.";
+      setOutput(output);
+
+      if (output.includes("FINAL_STATUS:")) {
+        const isSolved = output.includes("FINAL_STATUS: solved");
+        const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
+        const payload = {
+          questionId: questionId,
+          languageId: languageId,
+          status: isSolved ? "solved" : "attempted",
+          timeTaken: timeTaken,
+          submittedCode: finalSubmittedCode,
+        };
+
+        const { data } = await axios.post(
+          `${BACKEND_URL}/submission`,
+          payload,
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (data.success) {
+          toast.success("Code submitted successfully!");
+
+          if (isSolved) setTimeStart(Date.now());
+        } else {
+          handleError(data.message || "Submission failed.");
+        }
       } else {
-        handleError(data.message || "Submission failed.");
+        toast.error("❌ Tests did not pass. Submission not saved.");
       }
-    } else {
-      toast.error("❌ Tests did not pass. Submission not saved.");
+    } catch (err) {
+      handleError(err.response?.data?.message || err.message);
     }
-  } catch (err) {
-    handleError(err.response?.data?.message || err.message);
-  }
 
-  setRunning(false);
-};
-
+    setRunning(false);
+  };
 
   const runCode = async () => {
-  if (!languageId || !submittedCode.trim() || !question) {
-    toast.error("Language, code, or question is missing.");
-    return;
-  }
+    if (!languageId || !submittedCode.trim() || !question) {
+      toast.error("Language, code, or question is missing.");
+      return;
+    }
 
-  setRunning(true);
-  setOutput("Running...");
+    setRunning(true);
+    setOutput("Running...");
 
-  const testCases = question.testCases || [];
-  if (testCases.length === 0) {
-    setOutput("No test cases available.");
+    const testCases = question.testCases || [];
+    if (testCases.length === 0) {
+      setOutput("No test cases available.");
+      setRunning(false);
+      return;
+    }
+
+    const wrappedCode = wrapCodeWithTests(submittedCode, question, languageId);
+    const langInfo = languageMap[languageId];
+    const codeToRun = ["javascript", "python3", "cpp", "java"].includes(
+      langInfo.piston
+    )
+      ? wrappedCode
+      : submittedCode;
+
+    try {
+      const result = await runCodeWithPiston({
+        language: langInfo.piston,
+        code: codeToRun,
+        filename: langInfo.filename,
+      });
+
+      const output =
+        result?.run?.stdout?.trim() ||
+        result?.run?.stderr?.trim() ||
+        result?.run?.output?.trim() ||
+        "No output returned.";
+      setOutput(output);
+    } catch (error) {
+      setOutput("❌ Error running code: " + (error.message || "Unknown error"));
+    }
+
     setRunning(false);
-    return;
-  }
-
-  const wrappedCode = wrapCodeWithTests(submittedCode, question, languageId);
-  const langInfo = languageMap[languageId];
-  const codeToRun = ["javascript", "python3", "cpp", "java"].includes(langInfo.piston)
-    ? wrappedCode
-    : submittedCode;
-
-  try {
-    const result = await runCodeWithPiston({
-      language: langInfo.piston,
-      code: codeToRun,
-      filename: langInfo.filename,
-    });
-
-    const output =
-      result?.run?.stdout?.trim() ||
-      result?.run?.stderr?.trim() ||
-      result?.run?.output?.trim() ||
-      "No output returned.";
-    setOutput(output);
-  } catch (error) {
-    setOutput("❌ Error running code: " + (error.message || "Unknown error"));
-  }
-
-  setRunning(false);
-};
-
+  };
 
   const handleAskAI = async (forcedPrompt = null) => {
     let rawPrompt = forcedPrompt || aiChatInput;
