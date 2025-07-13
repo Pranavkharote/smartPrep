@@ -72,33 +72,32 @@ const EditorSide = ({ question }) => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const userCode = submittedCode; // User's current code
-    const starterCode = generateStarterCode(question.functionName, languageId);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const userCode = submittedCode; // User's current code
+  //   const starterCode = generateStarterCode(question.functionName, languageId);
 
-    if (!userCode || !starterCode) {
-      toast.error("Code or starter template is missing.");
-      return;
-    }
+  //   if (!userCode || !starterCode) {
+  //     toast.error("Code or starter template is missing.");
+  //     return;
+  //   }
 
-    const normalize = (code) =>
-      code
-        .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, "") // remove comments
-        .replace(/\s/g, ""); // remove whitespace
+  //   const normalize = (code) =>
+  //     code
+  //       .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, "") // remove comments
+  //       .replace(/\s/g, ""); // remove whitespace
 
-    if (normalize(userCode) === normalize(starterCode)) {
-      toast.error("⚠️ Please write your solution before submitting.");
-      return;
-    }
+  //   if (normalize(userCode) === normalize(starterCode)) {
+  //     toast.error("⚠️ Please write your solution before submitting.");
+  //     return;
+  //   }
 
-    // runCode(userCode);
-    await runCode(true);
-    toast.success("Code Submitted.!");
-  };
+  //   // runCode(userCode);
+  //   await runCode(true);
+  //   toast.success("Code Submitted.!");
+  // };
 
   // const runCode = async (submit = false) => {
-  
   //   const finalSubmittedCode = submittedCode.trim();
 
   //   if (!languageId) {
@@ -194,28 +193,32 @@ const EditorSide = ({ question }) => {
   //   setRunning(false);
   // };
 
-  //ai
- 
-  const runCode = async (submit = false) => {
-  const finalSubmittedCode = submittedCode.trim();
+  //ai;
 
-  if (!languageId || !question || !finalSubmittedCode) {
-    toast.error("Missing code, question, or language.");
+  const handleSubmit = async () => {
+  const userCode = submittedCode;
+  const starterCode = generateStarterCode(question.functionName, languageId);
+
+  const normalize = (code) =>
+    code.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, "").replace(/\s/g, "");
+
+  if (!userCode || !starterCode || normalize(userCode) === normalize(starterCode)) {
+    toast.error("⚠️ Please write your solution before submitting.");
+    return;
+  }
+
+  const testCases = question.testCases || [];
+  if (testCases.length === 0) {
+    toast.error("No test cases available.");
     return;
   }
 
   setRunning(true);
   setOutput("Running...");
 
-  const testCases = question.testCases || [];
-  if (testCases.length === 0) {
-    setOutput("No test cases available.");
-    setRunning(false);
-    return;
-  }
-
-  const wrappedCode = wrapCodeWithTests(finalSubmittedCode, question, languageId);
+  const finalSubmittedCode = submittedCode.trim();
   const langInfo = languageMap[languageId];
+  const wrappedCode = wrapCodeWithTests(finalSubmittedCode, question, languageId);
   const codeToRun = ["javascript", "python3", "cpp", "java"].includes(langInfo.piston)
     ? wrappedCode
     : finalSubmittedCode;
@@ -234,37 +237,73 @@ const EditorSide = ({ question }) => {
       "No output returned.";
     setOutput(output);
 
-    // ✅ Only submit if explicitly called for AND output contains final status
-    if (submit && output.includes("FINAL_STATUS:")) {
+    if (output.includes("FINAL_STATUS:")) {
       const isSolved = output.includes("FINAL_STATUS: solved");
-      const submissionStatus = isSolved ? "solved" : "attempted";
       const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
-
       const payload = {
-        questionId,
-        languageId,
-        status: submissionStatus,
-        timeTaken,
+        questionId: questionId,
+        languageId: languageId,
+        status: isSolved ? "solved" : "attempted",
+        timeTaken: timeTaken,
         submittedCode: finalSubmittedCode,
       };
 
-      try {
-        const { data } = await axios.post(
-          `${BACKEND_URL}/submission`,
-          payload,
-          { withCredentials: true }
-        );
+      const { data } = await axios.post(`${BACKEND_URL}/submission`, payload, {
+        withCredentials: true,
+      });
 
-        if (data.success === true || data.success === "true") {
-          toast.success("✅ Code Submitted!");
-          if (submissionStatus === "solved") setTimeStart(Date.now());
-        } else {
-          handleError(data.message || "Submission failed.");
-        }
-      } catch (err) {
-        handleError(err.response?.data?.message || err.message);
+      if (data.success) {
+        toast.success("✅ Code submitted successfully!");
+        if (isSolved) setTimeStart(Date.now());
+      } else {
+        handleError(data.message || "Submission failed.");
       }
+    } else {
+      toast.error("❌ Tests did not pass. Submission not saved.");
     }
+  } catch (err) {
+    handleError(err.response?.data?.message || err.message);
+  }
+
+  setRunning(false);
+};
+
+
+  const runCode = async () => {
+  if (!languageId || !submittedCode.trim() || !question) {
+    toast.error("Language, code, or question is missing.");
+    return;
+  }
+
+  setRunning(true);
+  setOutput("Running...");
+
+  const testCases = question.testCases || [];
+  if (testCases.length === 0) {
+    setOutput("No test cases available.");
+    setRunning(false);
+    return;
+  }
+
+  const wrappedCode = wrapCodeWithTests(submittedCode, question, languageId);
+  const langInfo = languageMap[languageId];
+  const codeToRun = ["javascript", "python3", "cpp", "java"].includes(langInfo.piston)
+    ? wrappedCode
+    : submittedCode;
+
+  try {
+    const result = await runCodeWithPiston({
+      language: langInfo.piston,
+      code: codeToRun,
+      filename: langInfo.filename,
+    });
+
+    const output =
+      result?.run?.stdout?.trim() ||
+      result?.run?.stderr?.trim() ||
+      result?.run?.output?.trim() ||
+      "No output returned.";
+    setOutput(output);
   } catch (error) {
     setOutput("❌ Error running code: " + (error.message || "Unknown error"));
   }
