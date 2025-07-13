@@ -110,7 +110,7 @@ const formatTimeFromSeconds = (seconds) => {
           animate={{ scale: 1 }}
           transition={{ duration: 0.6 }}
         >
-          👋 Welcome back, {name || "Coder"}!
+          👋 Welcome, {name || "Coder"}!
         </motion.h1>
 
         <motion.p
