@@ -3,17 +3,17 @@ import { motion } from "framer-motion";
 import { FaReact, FaNodeJs, FaDatabase } from "react-icons/fa";
 import { SiTailwindcss, SiMongodb, SiExpress } from "react-icons/si";
 import DarkModeToggle from "../components/ThemeToggle";
-import GithubCorner from 'react-github-corner';
-
-
+import GithubCorner from "react-github-corner";
+import { FaGithub } from "react-icons/fa";
+import { FaLinkedin } from "react-icons/fa";
 
 const WelcomePage = () => {
   return (
     <div className="  min-h-screen  ">
-    <div className="absolute top-0 w-3.5 p-1 h left-20">
-      <DarkModeToggle />
-    </div>
-<GithubCorner href="https://github.com/pranavkharote/smartPrep" />
+      <div className="absolute top-0 w-3.5 p-1 h left-20">
+        <DarkModeToggle />
+      </div>
+      <GithubCorner href="https://github.com/pranavkharote/smartPrep" />
 
       {/* HERO SECTION */}
       <section className="flex flex-col items-center justify-center text-center py-20 px-6">
@@ -31,7 +31,8 @@ const WelcomePage = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          Practice coding challenges, get real-time feedback, and track your progress with our AI-powered smart preparation platform.
+          Practice coding challenges, get real-time feedback, and track your
+          progress with our AI-powered smart preparation platform.
         </motion.p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4">
           <Link to="/login">
@@ -94,7 +95,9 @@ const WelcomePage = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.2 }}
             >
-              <h3 className="text-xl font-semibold mb-2 bg-opacity-60   text-green-600">{feature.title}</h3>
+              <h3 className="text-xl font-semibold mb-2 bg-opacity-60   text-green-600">
+                {feature.title}
+              </h3>
               <p className="opacity-70">{feature.desc}</p>
             </motion.div>
           ))}
@@ -121,6 +124,31 @@ const WelcomePage = () => {
           </motion.button>
         </Link>
       </section>
+
+      <footer className="text-center py-4 text-sm text-gray-500 dark:text-gray-400">
+        — 🚀 Built with love by{" "}
+        <span className="text-indigo-600 font-semibold">Pranav</span> —
+        <div className="mt-2 flex justify-center gap-4 text-xl">
+          <a
+            href="https://github.com/pranavkharote"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:text-black"
+            title="GitHub"
+          >
+            <FaGithub />
+          </a>
+          <a
+            href="https://linkedin.com/in/pranavkharote"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:text-blue-700"
+            title="LinkedIn"
+          >
+            <FaLinkedin />
+          </a>
+        </div>
+      </footer>
     </div>
   );
 };
