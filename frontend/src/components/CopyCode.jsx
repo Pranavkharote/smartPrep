@@ -15,7 +15,7 @@ const CopyCode = ({ code }) => {
 
   return (
     <div className="relative">
-      {/* <p className="font-medium mb-1">🧠 Submitted Code:</p> */}
+     
 
       <button
         onClick={handleCopy}

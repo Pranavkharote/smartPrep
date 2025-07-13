@@ -55,12 +55,19 @@ const Dashboard = () => {
       )
     : 0;
 
-  const formatTimeFromSeconds = (seconds) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hrs}h ${mins}m ${secs}s`;
-  };
+const formatTimeFromSeconds = (seconds) => {
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  let result = [];
+  if (hrs > 0) result.push(`${hrs}h`);
+  if (mins > 0 || hrs > 0) result.push(`${mins}m`); // include mins if hours exist
+  result.push(`${secs}s`);
+
+  return result.join(" ");
+};
+
 
   const formatTimeInSeconds = (seconds) => {
     const mins = Math.floor(seconds / 60);

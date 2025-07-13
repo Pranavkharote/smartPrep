@@ -15,7 +15,7 @@ const CodeEditor = ({ code, setCode, onCodeChange, languageMode = "javascript" }
       value={code}
      onChange={(value) => {
         setCode(value);
-        onCodeChange?.(value); // ✅ Pass string directly
+        onCodeChange?.(value); 
       }}
       fontSize={14}
       width="100%"

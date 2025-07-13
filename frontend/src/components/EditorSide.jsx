@@ -162,11 +162,7 @@ const EditorSide = ({ question }) => {
   //           timeTaken: timeTaken,
   //           submittedCode: finalSubmittedCode,
   //         };
-  //         console.log("💾 Submitting code:", {
-  //           languageId,
-  //           submittedCode: finalSubmittedCode,
-  //           output,
-  //         });
+  //       
 
   //         try {
   //           const { data } = await axios.post(
@@ -189,7 +185,7 @@ const EditorSide = ({ question }) => {
   //       }
   //     }
   //   } catch (error) {
-  //     setOutput("❌ Error running code: " + (error.message || "Unknown error"));
+  //     setOutput("Error running code: " + (error.message || "Unknown error"));
   //   }
 
   //   setRunning(false);

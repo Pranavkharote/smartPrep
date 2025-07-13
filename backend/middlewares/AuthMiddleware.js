@@ -4,8 +4,7 @@ const { UserModel } = require("../models/UserModel");
 const authenticateUser = async (req, res, next) => {
   try {
     const token = req.cookies.token;
-    console.log("Token is:", token);
-    // console.log("Logged-in User ID:", req.user._id);
+
 
     if (!token) {
       return res.status(401).json({ status: false, message: "Token not found" });
