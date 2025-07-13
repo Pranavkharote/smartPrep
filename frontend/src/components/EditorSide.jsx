@@ -195,7 +195,9 @@ const EditorSide = ({ question }) => {
 
   //ai;
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
   const userCode = submittedCode;
   const starterCode = generateStarterCode(question.functionName, languageId);
 
