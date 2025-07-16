@@ -4,8 +4,7 @@ const difficulties = ["Easy", "Medium", "Hard"];
 const topics = [
   "Array",
   "String",
-  "Tree",
-  "Graph",
+  "Math",
   "Dynamic Programming",
   "Hash Table",
   "Stack",
@@ -53,9 +52,7 @@ export default function NavbarFilter({ onFilterChange }) {
     <nav className="bg-gradient-to-r from-white to-slate-50 shadow-md p-4 rounded-xl border border-slate-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between transition-all duration-200 navFilter">
       {/* Difficulty */}
       <div className="flex items-center space-x-2">
-        <span className="text-sm font-semibold ">
-          Difficulty:
-        </span>
+        <span className="text-sm font-semibold ">Difficulty:</span>
         <select
           className="rounded-md border border-slate-300 bg-white text-slate-700 px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           value={selectedDifficulty}
@@ -82,7 +79,7 @@ export default function NavbarFilter({ onFilterChange }) {
       </div>
       {/* Topics */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm font-semibold text-slate-700">Topics:</span>
+        <span className="text-sm font-semibold">Topics:</span>
         {topics.map((topic) => {
           const active = selectedTags.includes(topic);
           return (
@@ -101,7 +98,6 @@ export default function NavbarFilter({ onFilterChange }) {
           );
         })}
       </div>
-  
     </nav>
   );
 }
