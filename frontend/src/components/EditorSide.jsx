@@ -405,7 +405,7 @@ ${promptToSend}
                   </div>
                   <div
                     onClick={() => handleQuickAsk("Summarize my Code")}
-                    className="w-full cursor-pointer bg-pink-300 text-white py-2 px-3 rounded-md hover:bg-pink-400 shadow-sm flex items-center gap-2 transition"
+                    className="w-full cursor-pointer bg-pink-500 text-white py-2 px-3 rounded-md hover:bg-pink-400 shadow-sm flex items-center gap-2 transition"
                     title="AI will analyze and summarize your written code"
                   >
                     🧾Summarize Code
