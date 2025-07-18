@@ -74,125 +74,6 @@ const EditorSide = ({ question }) => {
     });
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const userCode = submittedCode; // User's current code
-  //   const starterCode = generateStarterCode(question.functionName, languageId);
-
-  //   if (!userCode || !starterCode) {
-  //     toast.error("Code or starter template is missing.");
-  //     return;
-  //   }
-
-  //   const normalize = (code) =>
-  //     code
-  //       .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, "") // remove comments
-  //       .replace(/\s/g, ""); // remove whitespace
-
-  //   if (normalize(userCode) === normalize(starterCode)) {
-  //     toast.error("⚠️ Please write your solution before submitting.");
-  //     return;
-  //   }
-
-  //   // runCode(userCode);
-  //   await runCode(true);
-  //   toast.success("Code Submitted.!");
-  // };
-
-  // const runCode = async (submit = false) => {
-  //   const finalSubmittedCode = submittedCode.trim();
-
-  //   if (!languageId) {
-  //     toast.error("Please select a programming language.");
-  //     return;
-  //   }
-  //   if (!submittedCode.trim()) {
-  //     toast.error("Please enter code to run.");
-  //     return;
-  //   }
-  //   if (!question) {
-  //     toast.error("Question not loaded yet.");
-  //     return;
-  //   }
-  //   setRunning(true);
-  //   setOutput("Running...");
-
-  //   const testCases = question.testCases || [];
-  //   if (testCases.length === 0) {
-  //     setOutput("No test cases available.");
-  //     setRunning(false);
-  //     return;
-  //   }
-
-  //   const wrappedCode = wrapCodeWithTests(submittedCode, question, languageId);
-  //   try {
-  //     const langInfo = languageMap[languageId];
-  //     const codeToRun =
-  //       langInfo.piston === "javascript" ||
-  //       langInfo.piston === "python3" ||
-  //       langInfo.piston === "cpp" ||
-  //       langInfo.piston === "java"
-  //         ? wrappedCode
-  //         : submittedCode;
-  //     const result = await runCodeWithPiston({
-  //       language: langInfo.piston,
-  //       code: codeToRun,
-  //       filename: langInfo.filename,
-  //     });
-
-  //     const output =
-  //       result?.run?.stdout?.trim() ||
-  //       result?.run?.stderr?.trim() ||
-  //       result?.run?.output?.trim() ||
-  //       "No output returned.";
-  //     setOutput(output);
-
-  //     if (submit && output.includes("FINAL_STATUS:")) {
-  //       const isSolved = output.includes("FINAL_STATUS: solved");
-  //       const submissionStatus = isSolved ? "solved" : "attempted";
-
-  //       const timeTaken = Math.floor((Date.now() - timeStart) / 1000);
-  //       console.log("user took :", timeTaken);
-
-  //       if (submit) {
-  //         const payload = {
-  //           questionId: questionId,
-  //           languageId: languageId,
-  //           status: submissionStatus,
-  //           timeTaken: timeTaken,
-  //           submittedCode: finalSubmittedCode,
-  //         };
-  //       
-
-  //         try {
-  //           const { data } = await axios.post(
-  //             // "http://localhost:8080/submission",
-  //             `${BACKEND_URL}/submission`,
-  //             payload,
-  //             { withCredentials: true }
-  //           );
-
-  //           const { success, message } = data;
-  //           if (success === true || success === "true") {
-  //             if (submissionStatus === "solved") setTimeStart(Date.now());
-  //             console.log(timeTaken);
-  //           } else {
-  //             handleError(message);
-  //           }
-  //         } catch (err) {
-  //           handleError(err.response?.data?.message || err.message);
-  //         }
-  //       }
-  //     }
-  //   } catch (error) {
-  //     setOutput("Error running code: " + (error.message || "Unknown error"));
-  //   }
-
-  //   setRunning(false);
-  // };
-
-  //ai;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -517,10 +398,24 @@ ${promptToSend}
 
                   <div
                     onClick={() => handleQuickAsk("Explain My Code")}
-                    className="w-full cursor-pointer bg-pink-500 text-white py-2 px-3 rounded-md hover:bg-pink-400 shadow-sm flex items-center gap-2 transition"
+                    className="w-full cursor-pointer bg-red-300 text-white py-2 px-3 rounded-md hover:bg-pink-400 shadow-sm flex items-center gap-2 transition"
                     title="AI will analyze and explain your written code"
                   >
                     🤖 Ask AI to Explain Code
+                  </div>
+                  <div
+                    onClick={() => handleQuickAsk("Summarize my Code")}
+                    className="w-full cursor-pointer bg-amber-300 text-white py-2 px-3 rounded-md hover:bg-pink-400 shadow-sm flex items-center gap-2 transition"
+                    title="AI will analyze and explain your written code"
+                  >
+                    🧾Summarize Code
+                  </div>
+                  <div
+                    onClick={() => handleQuickAsk("Review My Code")}
+                    className="w-full cursor-pointer bg-purple-500 text-white py-2 px-3 rounded-md hover:bg-pink-400 shadow-sm flex items-center gap-2 transition"
+                    title="AI will analyze and explain your written code"
+                  >
+                    🧩 Review Code
                   </div>
 
                   <div
