@@ -101,7 +101,7 @@ export default function MainNavbar() {
               )}
             </div>
             <div className=" h-[20px] text-[12px] ms-4 font-medium">
-              <p>See all the Questions List</p>
+              <p>See all the Questions</p>
               <a
                 href="/questions"
                 className="text-center text-blue-400 font-bold hover:underline"
