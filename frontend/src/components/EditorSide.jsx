@@ -398,7 +398,7 @@ ${promptToSend}
 
                   <div
                     onClick={() => handleQuickAsk("Explain My Code")}
-                    className="w-full cursor-pointer bg-red-300 text-white py-2 px-3 rounded-md hover:bg-red-400 shadow-sm flex items-center gap-2 transition"
+                    className="w-full cursor-pointer bg-green-300 text-white py-2 px-3 rounded-md hover:bg-green-400 shadow-sm flex items-center gap-2 transition"
                     title="AI will analyze and explain your written code"
                   >
                     🤖 Ask AI to Explain Code
@@ -406,14 +406,14 @@ ${promptToSend}
                   <div
                     onClick={() => handleQuickAsk("Summarize my Code")}
                     className="w-full cursor-pointer bg-pink-300 text-white py-2 px-3 rounded-md hover:bg-pink-400 shadow-sm flex items-center gap-2 transition"
-                    title="AI will analyze and explain your written code"
+                    title="AI will analyze and summarize your written code"
                   >
                     🧾Summarize Code
                   </div>
                   <div
                     onClick={() => handleQuickAsk("Review My Code")}
                     className="w-full cursor-pointer bg-purple-500 text-white py-2 px-3 rounded-md hover:bg-purple-600 shadow-sm flex items-center gap-2 transition"
-                    title="AI will analyze and explain your written code"
+                    title="AI will analyze and review your written code"
                   >
                     🧩 Review Code
                   </div>
