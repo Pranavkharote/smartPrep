@@ -363,7 +363,7 @@ ${promptToSend}
             className="flex items-center gap-2 px-5 py-2 rounded-full font-semibold text-white 
     bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 
     shadow-lg shadow-pink-400/40 
-    hover:scale-105 transition-transform duration-200 "
+    hover:scale-105 transition-transform duration-200 fixed bottom-5 right-5 cursor-pointer "
           >
             🤖 Ask AI
           </div>
