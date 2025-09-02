@@ -29,7 +29,7 @@ function Signup() {
   };
   const handleError = (err) => {
     toast.error(err, {
-      position: "bottom-left",
+      position: "bottom-right",
     });
   };
   const handleSubmit = async (e) => {

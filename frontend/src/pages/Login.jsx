@@ -66,7 +66,7 @@ const Login = () => {
       }
     } catch (error) {
       console.log(error);
-      handleError(error);
+      handleError("Incorrect Email or Password, Try again!");
     }
 
     setUserInfo({
