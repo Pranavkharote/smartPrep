@@ -79,9 +79,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 login">
       <DarkModeToggle />
       {/* <button className="absolute top-5 bg-red-500 px-5 py-2 rounded-xl left-5"><Link to="/dashboard">Go to Dashboard</Link></button> */}
-      <button className="absolute top-1 underline text-green-200 px-5 py-2 rounded-xl left-2">
-        <Link to="/">Go to HomePage</Link>
-      </button>
+
       <div className="bg-white  shadow-xl rounded-xl w-full max-w-md p-8 inlogin">
         {/* Logo / Icon */}
         <div className="flex justify-center mb-6">
