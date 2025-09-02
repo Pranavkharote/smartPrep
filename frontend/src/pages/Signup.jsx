@@ -57,13 +57,13 @@ function Signup() {
           navigate("/dashboard");
         }, 500);
       } else {
-        handleError(message || "something wrong");
+        handleError(message || "Something wrong");
         toast.error("something wrong with signup")
       }
     } catch (err) {
-      toast.error("something wrong with signup in catch")
+      handleError("User already exists, Please Login.")
       console.log(err);
-      handleError(err);
+  
     }
     setUserInfo({
       ...userInfo,
