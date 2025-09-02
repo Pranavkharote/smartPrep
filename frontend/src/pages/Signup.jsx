@@ -58,6 +58,7 @@ function Signup() {
         }, 500);
       } else {
         handleError(message || "something wrong");
+        toast.error("something wrong with signup")
       }
     } catch (err) {
       console.log(err);
