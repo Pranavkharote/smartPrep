@@ -61,7 +61,7 @@ function Signup() {
         toast.error("something wrong with signup")
       }
     } catch (err) {
-      toast.error("something wrong with signup")
+      toast.error("something wrong with signup in catch")
       console.log(err);
       handleError(err);
     }
