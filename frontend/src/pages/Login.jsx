@@ -31,7 +31,7 @@ const Login = () => {
   };
   const handleError = (err) => {
     toast.error(err, {
-      position: "bottom-left",
+      position: "bottom-right",
     });
   };
   console.log()
