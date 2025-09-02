@@ -65,8 +65,9 @@ const Login = () => {
         handleError(message || "something went wrong in Login");
       }
     } catch (error) {
-      console.log(error);
       handleError("Incorrect Email or Password, Try again!");
+      handleSuccess("incorrect")
+      console.log(error);
     }
 
     setUserInfo({
