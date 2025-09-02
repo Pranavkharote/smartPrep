@@ -119,7 +119,7 @@ const formatTimeFromSeconds = (seconds) => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          Keep pushing boundaries. You're doing amazing!
+         SmartPrep – Bridging learning and industry-ready coding practice.
         </motion.p>
 
         {/* Stats Section */}
