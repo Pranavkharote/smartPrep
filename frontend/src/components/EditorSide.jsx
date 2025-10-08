@@ -440,7 +440,7 @@ ${promptToSend}
                       You:{" "}
                       <span className="text-white text-sm">{msg.user}</span>
                     </p>
-                    <p className="text-white text-sm">
+                    <div className="text-white text-sm">
                       <span className="text-green-400 font-bold">AI:</span>
                       {typeof msg.ai === "string" ? (
                         <MarkdownRenderer markdownText={msg.ai} />
@@ -449,7 +449,7 @@ ${promptToSend}
                           ⚠️ Invalid AI response format
                         </p>
                       )}
-                    </p>
+                    </div>
                   </div>
                 ))}
                 {loadingAI && (
