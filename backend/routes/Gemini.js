@@ -19,7 +19,7 @@ router.post("/ask", async (req, res) => {
     });
   }
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "models/gemini-2.5-flash" });
     const finalPrompt = `You are helping a studnet solve this coding question:
     **Title**: ${questionTitle}
     **Description**: ${questionDescription}
