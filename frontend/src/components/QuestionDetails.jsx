@@ -86,26 +86,45 @@ const QuestionComponent = () => {
         </div>
        
         {/* Test Cases */}
-        {question.testCases?.length > 0 && (
-          <div className="mt-4 ">
-            <h3 className="font-semibold mb-2 ">Test Cases</h3>
-            {question.testCases?.map((testCase, index) => (
-              <div
-                key={index}
-                className="mb-3 p-3 bg-slate-50 border border-slate-200 testCases rounded-md text-sm"
-              >
-                <p className="font-medium  mb-1">Test Case {index + 1}</p>
-                <p className="">
-                  <strong>Input:</strong> {JSON.stringify(testCase.input)}
-                </p>
-                <p className="">
-                  <strong>Expected Output:</strong>{" "}
-                  {JSON.stringify(testCase.expectedOutput)}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
+       {question.testCases?.length > 0 && (
+  <div className="mt-4">
+    <h3 className="font-semibold mb-2">Test Cases</h3>
+    {question.testCases?.map((testCase, index) => (
+      <div
+        key={index}
+        className="mb-3 p-3 bg-slate-50 border border-slate-200 testCases rounded-md text-sm"
+      >
+        <p className="font-medium mb-1">Test Case {index + 1}</p>
+
+        {/* Input */}
+        <p>
+          <strong>Input:</strong>{" "}
+          {Array.isArray(testCase.input)
+            ? `[${testCase.input.join(", ")}]`
+            : typeof testCase.input === "object"
+            ? Object.entries(testCase.input)
+                .map(
+                  ([key, value]) =>
+                    `${key}: ${Array.isArray(value) ? `[${value.join(", ")}]` : value}`
+                )
+                .join(", ")
+            : testCase.input}
+        </p>
+
+        {/* Expected Output */}
+        <p>
+          <strong>Expected Output:</strong>{" "}
+          {Array.isArray(testCase.expectedOutput)
+            ? `[${testCase.expectedOutput.join(", ")}]`
+            : typeof testCase.expectedOutput === "object"
+            ? JSON.stringify(testCase.expectedOutput)
+            : testCase.expectedOutput}
+        </p>
+      </div>
+    ))}
+  </div>
+)}
+
       </div>
     </>
   );
