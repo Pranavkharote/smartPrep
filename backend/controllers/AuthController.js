@@ -12,14 +12,14 @@ const Signup = async (req, res) => {
     if (existingUser) {
       return res.status(401).json({ message: "User Already exist" });
     }
-    const user = await UserModel.create({ email, name, password });
-    const token = createSecretToken(user._id);
-    res.cookie("token", token, {
-      withCredentials: true,
-      httpOnly: true,
-      sameSite: "None",
-      secure: true,
+     const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      name: name,
+      email: email,
+      password: hashedPassword,
     });
+
+    await newUser.save();
     res
       .status(201)
       .json({
@@ -85,27 +85,21 @@ const Login = async (req, res) => {
 
     const auth = await bcrypt.compare(password, user.password);
 
-    if (!auth) {
-      console.log("❌ Password mismatch");
-      return res.status(401).json({ message: "Incorrect email or password" });
+    if (auth) {
+      let token = crypto.randomBytes(20).toString("hex");
+
+      user.token = token;
+      await user.save();
+      return res
+        .status(200)
+        .json({ token: token, message: "LoggedIn Successfully" });
+    
+    } else {
+            return res
+        .status(401)
+        .json({ message: "Invalid email or password" });
     }
-
-    const token = createSecretToken(user._id);
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "None", // ← this is important for frontend <-> backend cookie with different domains
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    console.log("✅ Login successful for user:", user.email);
-
-    return res.status(200).json({
-      message: "Logged in successfully",
-      success: true,
-      token,
-    });
+   
   } catch (error) {
     console.error("🔥 Login error:", error);
     return res.status(500).json({ message: "Server error during login" });
