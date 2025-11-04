@@ -82,7 +82,7 @@ const formatTimeFromSeconds = (seconds) => {
   const handleConfirmLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.href = "/login";
+    window.location.href = "/";
   };
 
   return (

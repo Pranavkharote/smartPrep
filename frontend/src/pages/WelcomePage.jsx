@@ -46,15 +46,15 @@ const WelcomePage = () => {
           progress with our AI-powered smart preparation platform.
         </motion.p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4">
-          <Link to="/auth">
+         
             <motion.button
+            onClick={isLoggedIn}
               className="bg-white text-green-600 border border-green-600 hover:bg-green-50 px-6 py-2 rounded-xl shadow-md font-semibold"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               Try for Free
             </motion.button>
-          </Link>
         </div>
       </section>
 
