@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaReact, FaNodeJs, FaDatabase } from "react-icons/fa";
 import { SiTailwindcss, SiMongodb, SiExpress } from "react-icons/si";
@@ -8,6 +8,16 @@ import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 
 const WelcomePage = () => {
+   const router = useNavigate();      
+  const isLoggedIn = () => {
+  const token = localStorage.getItem("token")
+
+  if(token){
+    router("/");
+  } else {
+    router("/auth");
+  }
+}
   return (
     <div className="  min-h-screen  ">
       <div className="absolute top-0 w-3.5 p-1 h left-20">
@@ -35,7 +45,7 @@ const WelcomePage = () => {
           progress with our AI-powered smart preparation platform.
         </motion.p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4">
-          <Link to="/login">
+          {/* <Link to="/login">
             <motion.button
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-xl shadow-lg font-semibold"
               whileHover={{ scale: 1.05 }}
@@ -43,14 +53,14 @@ const WelcomePage = () => {
             >
               Login
             </motion.button>
-          </Link>
-          <Link to="/signup">
+          </Link> */}
+          <Link to="/auth">
             <motion.button
               className="bg-white text-green-600 border border-green-600 hover:bg-green-50 px-6 py-2 rounded-xl shadow-md font-semibold"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Sign Up
+              Try for Free
             </motion.button>
           </Link>
         </div>
@@ -114,15 +124,16 @@ const WelcomePage = () => {
         >
           Ready to start your coding journey?
         </motion.h3>
-        <Link to="/dashboard">
+        {/* <button to="/dashboard"> */}
           <motion.button
+            onClick={isLoggedIn}
             className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg text-lg mt-4 hover:bg-green-700"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Go to Dashboard
           </motion.button>
-        </Link>
+        {/* </button> */}
       </section>
 
       <footer className="text-center py-4 text-sm text-gray-500 dark:text-gray-400">
