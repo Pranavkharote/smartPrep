@@ -1,7 +1,6 @@
 const { UserModel } = require("../models/UserModel");
-const createSecretToken = require("../utils/SecretToken");
 const bcrypt = require("bcryptjs");
-
+const crypto = require("crypto");
 const Signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -12,21 +11,19 @@ const Signup = async (req, res) => {
     if (existingUser) {
       return res.status(401).json({ message: "User Already exist" });
     }
-     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new UserModel({
       name: name,
       email: email,
       password: hashedPassword,
     });
 
     await newUser.save();
-    res
-      .status(201)
-      .json({
-        message: "User Registered Successfully!",
-        success: true,
-        name: name,
-      });
+    res.status(201).json({
+      message: "User Registered Successfully!",
+      success: true,
+      name: name,
+    });
   } catch (error) {
     console.error(error);
   }
@@ -93,18 +90,13 @@ const Login = async (req, res) => {
       return res
         .status(200)
         .json({ token: token, message: "LoggedIn Successfully" });
-    
     } else {
-            return res
-        .status(401)
-        .json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
-   
   } catch (error) {
     console.error("🔥 Login error:", error);
     return res.status(500).json({ message: "Server error during login" });
   }
 };
-
 
 module.exports = { Login, Signup };
