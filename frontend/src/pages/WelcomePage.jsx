@@ -37,7 +37,7 @@ const WelcomePage = () => {
           Welcome to SmartPrep 🚀
         </motion.h1>
         <motion.p
-          className="text-lg opacity-80 max-w-xl"
+          className="text-lg opacity-80 max-w-xl text-gray-500"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
