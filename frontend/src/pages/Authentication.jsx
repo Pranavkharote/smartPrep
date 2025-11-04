@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
+import DarkModeToggle from "../components/ThemeToggle";
 import "react-toastify/dist/ReactToastify.css";
 import { FaUserLock, FaUserPlus } from "react-icons/fa";
 
@@ -12,11 +13,11 @@ export default function Authentication() {
   const [name, setName] = useState("");
   const [formState, setFormState] = useState(0); // 0 = login, 1 = register
   const passwordRef = useRef(null);
-  const router = useNavigate();
+  const navigate = useNavigate();
   const { handleRegister, handleLogin } = useContext(AuthContext);
 
   useEffect(() => {
-    if (formState === 0 && passwordRef.current) passwordRef.current.focus();
+    if (passwordRef.current) passwordRef.current.focus();
   }, [formState]);
 
   const handleAuth = async () => {
@@ -30,7 +31,7 @@ export default function Authentication() {
       result = await handleLogin(email, password);
       if (result.success) {
         toast.success(result.message);
-        router("/dashboard");
+        navigate("/dashboard");
       } else toast.error(result.message);
     } else {
       result = await handleRegister(name, email, password);
@@ -42,25 +43,38 @@ export default function Authentication() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-green-50 to-white dark:from-gray-900 dark:to-gray-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 relative px-4 login">
+      <DarkModeToggle />
       <motion.div
-        className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 relative"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
+        className="bg-white inlogin shadow-xl rounded-2xl w-full max-w-md px-8 py-10"
       >
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-center text-green-600 mb-6">
-          {formState === 0 ? "Welcome Back 👋" : "Join SmartPrep 🚀"}
-        </h1>
+        {/* Logo */}
+        <div className="flex justify-center mb-4">
+          <img
+            src="/ChatGPT Image Jul 12, 2025, 01_36_46 PM.png"
+            alt="SmartPrep Logo"
+            className="w-24 h-24 rounded-full shadow-md"
+          />
+        </div>
 
-        {/* Toggle */}
-        <div className="flex mb-6 border border-green-200 dark:border-green-800 rounded-xl overflow-hidden">
+        {/* Title */}
+        <h2 className="text-center mb-2 text-3xl font-bold tracking-tight text-green-600">
+          {formState === 0 ? "Login" : "Signup"}
+        </h2>
+        <p className="text-center text-sm opacity-70 mb-6">
+          Practice coding questions, track your progress & grow!
+        </p>
+
+        {/* Toggle Buttons */}
+        <div className="flex mb-6 border border-green-200 rounded-xl overflow-hidden">
           <button
             className={`flex-1 py-2 font-semibold ${
               formState === 0
                 ? "bg-green-600 text-white"
-                : "bg-transparent text-green-600 dark:text-green-400"
+                : "bg-transparent text-green-600"
             }`}
             onClick={() => setFormState(0)}
           >
@@ -71,7 +85,7 @@ export default function Authentication() {
             className={`flex-1 py-2 font-semibold ${
               formState === 1
                 ? "bg-green-600 text-white"
-                : "bg-transparent text-green-600 dark:text-green-400"
+                : "bg-transparent text-green-600"
             }`}
             onClick={() => setFormState(1)}
           >
@@ -82,75 +96,62 @@ export default function Authentication() {
 
         {/* Form */}
         <form
-          className="flex flex-col gap-4"
+          className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
             handleAuth();
           }}
         >
           {formState === 1 && (
-            <input
-              type="text"
-              placeholder="Full Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
+            <>
+              <label className="block text-sm mb-1 opacity-80">
+                Enter your Full Name:
+              </label>
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-90"
+              />
+            </>
           )}
 
+          <label className="block text-sm mb-1 opacity-80">
+            Enter your Email:
+          </label>
           <input
             type="email"
-            placeholder="Email Address"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-90"
           />
 
+          <label className="block text-sm mb-1 opacity-80">
+            Enter your Password:
+          </label>
           <input
             type="password"
-            placeholder="Password"
+            placeholder="••••••••"
             value={password}
             ref={passwordRef}
             onChange={(e) => setPassword(e.target.value)}
-            className="p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-90"
           />
 
           <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
             type="submit"
-            className="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl shadow-lg"
+            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 mt-3"
           >
-            {formState === 0 ? "Login" : "Register"}
+            {formState === 0 ? "Login" : "Sign Up"}
           </motion.button>
         </form>
 
-        {/* Link */}
-        <p className="text-center mt-6 text-gray-600 dark:text-gray-400">
-          {formState === 0 ? (
-            <>
-              Don’t have an account?{" "}
-              <button
-                onClick={() => setFormState(1)}
-                className="text-green-600 hover:underline font-semibold"
-              >
-                Sign up
-              </button>
-            </>
-          ) : (
-            <>
-              Already registered?{" "}
-              <button
-                onClick={() => setFormState(0)}
-                className="text-green-600 hover:underline font-semibold"
-              >
-                Login
-              </button>
-            </>
-          )}
-        </p>
+  
 
-        {/* Back to Home */}
         <div className="text-center mt-4">
           <Link
             to="/"
@@ -161,7 +162,7 @@ export default function Authentication() {
         </div>
       </motion.div>
 
-      <ToastContainer position="bottom-right" theme="dark" autoClose={3000} />
+      <ToastContainer position="bottom-right" />
     </div>
   );
 }
