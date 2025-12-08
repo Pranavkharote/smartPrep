@@ -6,14 +6,14 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const AuthRoutes = require("./routes/AuthRoutes");
 const SubmissionRoutes = require("./routes/SubmissionRoutes");
-const Gemini = require("./routes/Gemini")
+const Gemini = require("./routes/Gemini");
 
 const app = express();
 dotenv.config();
 
 const allowedOrigins = [
-  'http://localhost:5173', // ✅ Dev
-  'https://smart-prep-azure.vercel.app', // ✅ Your deployed frontend
+  "http://localhost:5173", // ✅ Dev
+  "https://smart-prep-azure.vercel.app", // ✅ Your deployed frontend
 ];
 
 // app.use(

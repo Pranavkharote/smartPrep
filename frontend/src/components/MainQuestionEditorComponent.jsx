@@ -3,7 +3,7 @@ import QuestionComponent from "./QuestionDetails";
 import EditorSide from "./EditorSide";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../api/axiosConfig";
 import Example from "./MainNavbar";
 import MainNavbar from "./MainNavbar";
 import LeftNavbar from "./LeftNavbar";

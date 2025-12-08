@@ -5,11 +5,12 @@ const axios = require("axios");
 dotenv.config();
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const authenticateUser = require("../middlewares/AuthMiddleware");
 
 const Gemini = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(Gemini);
 
-router.post("/ask", async (req, res) => {
+router.post("/ask", authenticateUser, async (req, res) => {
   const { prompt, questionTitle, questionDescription  } = req.body;
 
   if (!prompt || !questionDescription) {

@@ -1,45 +1,52 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
+import axios from "../api/axiosConfig";
 import Loader from "../assets/Loader";
 import DarkModeToggle from "../components/ThemeToggle";
 import "../index.css";
-const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 import { Link } from "react-router-dom";
-import { FaHome } from "react-icons/fa";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaSignOutAlt } from "react-icons/fa";
+import { AuthContext } from "../context/AuthContext";
 
 const Dashboard = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
-  const name = localStorage.getItem("name");
-
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
+  const { userData, handleLogout } = useContext(AuthContext);
+
+  // ✅ Greeting based on time
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 18) return "Good Afternoon";
+    return "Good Evening";
+  };
+
+  // ✅ Avatar initials
+  const getInitials = (name = "") => {
+    if (!name) return "U";
+    const parts = name.trim().split(" ");
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  };
+
+  // ✅ Fetch submission history (JWT auto-attached)
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await axios.get(
-          `${BACKEND_URL}/submission-history`
-          // "http://localhost:8080/submission-history"
-          , {
-          withCredentials: true,
-        });
-        // setHistory(res.data.submission);
-        setHistory(
-          Array.isArray(res.data.submission) ? res.data.submission : []
-        );
-        console.log("Fetched history:", res.data);
-
+        const res = await axios.get("/submission-history");
+        setHistory(Array.isArray(res.data.submission) ? res.data.submission : []);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching submission history:", err);
         setLoading(false);
       }
     };
+
     fetchHistory();
   }, []);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -47,27 +54,24 @@ const Dashboard = () => {
       </div>
     );
   }
-  const totalTime = Array.isArray(history)
-    ? history.reduce(
-        (sum, item) =>
-          sum + (typeof item.timeTaken === "number" ? item.timeTaken : 0),
-        0
-      )
-    : 0;
 
-const formatTimeFromSeconds = (seconds) => {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
+  const totalTime = history.reduce(
+    (sum, item) => sum + (typeof item.timeTaken === "number" ? item.timeTaken : 0),
+    0
+  );
 
-  let result = [];
-  if (hrs > 0) result.push(`${hrs}h`);
-  if (mins > 0 || hrs > 0) result.push(`${mins}m`); // include mins if hours exist
-  result.push(`${secs}s`);
+  const formatTimeFromSeconds = (seconds) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
 
-  return result.join(" ");
-};
+    let result = [];
+    if (hrs > 0) result.push(`${hrs}h`);
+    if (mins > 0 || hrs > 0) result.push(`${mins}m`);
+    result.push(`${secs}s`);
 
+    return result.join(" ");
+  };
 
   const formatTimeInSeconds = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -75,70 +79,76 @@ const formatTimeFromSeconds = (seconds) => {
     return `${mins}m ${secs}s`;
   };
 
-  const solvedCount = Array.isArray(history)
-    ? history.filter((item) => item.status === "solved").length
-    : 0;
+  const solvedCount = history.filter((item) => item.status === "solved").length;
 
   const handleConfirmLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.href = "/";
+    handleLogout(); // ✅ Proper logout via AuthContext
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br p-6">
-      {/* <Expand duration={750}  /> */}
       <DarkModeToggle />
-      
 
-      <button className="ml-4 bg-transparent border-1 px-4 py-1 rounded-md"><Link to="/"><FaHome className="text-xl cursor-pointer hover:text-green-400" title="Home" /></Link></button>
+      <button className="ml-4 bg-transparent px-4 py-1 rounded-md">
+        <Link to="/">
+          <FaHome className="text-xl cursor-pointer hover:text-green-400" />
+        </Link>
+      </button>
+
       <button
         onClick={() => setShowLogoutModal(true)}
-        className="ml-4 bg-transparent border-1 px-4 py-1 rounded-md"
+        className="ml-4 bg-transparent px-4 py-1 rounded-md"
       >
-        <FaSignOutAlt className="text-xl cursor-pointer hover:text-red-400" title="Logout" />
+        <FaSignOutAlt className="text-xl cursor-pointer hover:text-red-400" />
       </button>
+
       <motion.div
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-6xl mx-auto "
+        className="max-w-6xl mx-auto"
       >
-        <motion.h1
-          className="text-4xl font-extrabold text-center text-blue-700 mb-6 colorText typing"
-          initial={{ scale: 0.8 }}
-          animate={{ scale: 1 }}
+        {/* ✅ AVATAR + GREETING */}
+        <motion.div
+          className="flex items-center justify-center gap-4 mb-6"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          👋 Welcome, {name || "Coder"}!
-        </motion.h1>
+          <div className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md">
+            {getInitials(userData?.name)}
+          </div>
 
-        <motion.p
-          className="text-center text-gray-600 mb-10 text-lg"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-         SmartPrep – Bridging learning and industry-ready coding practice.
-        </motion.p>
+          <motion.h1
+            className="text-3xl sm:text-4xl font-extrabold text-blue-700"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.4 }}
+          >
+            {getGreeting()}, {userData?.name || "Coder"} 👋
+          </motion.h1>
+        </motion.div>
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10 ">
+        <p className="text-center text-gray-600 mb-10 text-lg">
+          SmartPrep – Bridging learning and industry-ready coding practice.
+        </p>
+
+        {/* ✅ STATS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
           {[
             {
               title: "Questions Solved",
-              value: solvedCount || 0,
+              value: solvedCount,
               color: "text-green-600",
             },
             {
               title: "Submissions",
-              //value: history.length || 0,
-              value: Array.isArray(history) ? history.length : 0,
+              value: history.length,
               color: "text-blue-600",
             },
             {
-              title: "Time Spent (mins)",
-              value: formatTimeFromSeconds(totalTime) || 0,
+              title: "Time Spent",
+              value: formatTimeFromSeconds(totalTime),
               color: "text-purple-600",
             },
           ].map((item, index) => (
@@ -154,6 +164,8 @@ const formatTimeFromSeconds = (seconds) => {
             </motion.div>
           ))}
         </div>
+
+        {/* ✅ CTA */}
         <div className="text-center mt-8">
           <motion.button
             onClick={() => (window.location.href = "/questions")}
@@ -165,13 +177,14 @@ const formatTimeFromSeconds = (seconds) => {
           </motion.button>
         </div>
 
-        {/* Recent Submissions */}
-        <div className="mb-10">
-          <h2 className="text-2xl  mb-4">📝 Recent Submissions</h2>
+        {/* ✅ RECENT SUBMISSIONS */}
+        <div className="mb-10 mt-10">
+          <h2 className="text-2xl mb-4">📝 Recent Submissions</h2>
+
           {history.length === 0 ? (
-            <p className="">No submissions yet. Start solving!</p>
+            <p>No submissions yet. Start solving!</p>
           ) : (
-            <div className="space-y-4 max-h-100 overflow-y-auto  ">
+            <div className="space-y-4 max-h-100 overflow-y-auto">
               {history.map((sub, idx) => (
                 <motion.div
                   key={idx}
@@ -181,10 +194,10 @@ const formatTimeFromSeconds = (seconds) => {
                   className="dashCard p-5 rounded-xl shadow-xl flex justify-between items-center hover:shadow-md transition"
                 >
                   <div>
-                    <p className="text-lg font-semibold ">
-                      {sub?.questionId?.title || "unknown"}
+                    <p className="text-lg font-semibold">
+                      {sub?.questionId?.title || "Unknown"}
                     </p>
-                    <p className="text-sm opacity-70 ">
+                    <p className="text-sm opacity-70">
                       Status:{" "}
                       <span
                         className={`font-medium ${
@@ -197,11 +210,11 @@ const formatTimeFromSeconds = (seconds) => {
                       </span>{" "}
                       | Time: {formatTimeInSeconds(sub.timeTaken)}
                     </p>
-                    <p className="text-sm opacity-70 ">
-                      Time: {new Date(sub.submittedAt).toLocaleString()}
+                    <p className="text-sm opacity-70">
+                      {new Date(sub.submittedAt).toLocaleString()}
                     </p>
                   </div>
-                  <button className="bg-blue-600 text-white  px-4 py-1.5 rounded hover:bg-blue-700 transition text-sm font-medium">
+                  <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 transition text-sm font-medium">
                     <a href="/submission">View</a>
                   </button>
                 </motion.div>
@@ -210,7 +223,7 @@ const formatTimeFromSeconds = (seconds) => {
           )}
         </div>
 
-        {/* CTA */}
+        {/* ✅ LOGOUT MODAL */}
         {showLogoutModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white dark:bg-gray-900 text-black dark:text-white p-6 rounded-lg shadow-xl w-80">

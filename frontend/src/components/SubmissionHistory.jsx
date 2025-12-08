@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../api/axiosConfig";
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 import DarkModeToggle from "../components/ThemeToggle";
 

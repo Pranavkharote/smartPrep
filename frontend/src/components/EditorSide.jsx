@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios from "../api/axiosConfig";
+import { useRef } from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -14,6 +15,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import MarkdownRenderer from "../utils/MarkdownRenderer";
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
+
 const EditorSide = ({ question }) => {
   const [timeStart, setTimeStart] = useState(Date.now());
   const [submittedCode, setSubmittedCode] = useState("");
@@ -22,6 +24,7 @@ const EditorSide = ({ question }) => {
   const [startedAt, setStartedAt] = useState(null);
 
   const navigate = useNavigate();
+const aiBottomRef = useRef(null);
 
   //AI
   const [showAI, setShowAI] = useState(false);
@@ -35,6 +38,14 @@ const EditorSide = ({ question }) => {
   const [languageId, setLanguageId] = useState(
     () => parseInt(localStorage.getItem("languageId")) || 54 // 54 is JS as default
   );
+
+  useEffect(() => {
+  setAiChatHistory([]);     // clear old chat
+  setAiChatInput("");      // clear input
+  setLoadingAI(false);     // stop loader
+  setShowAI(false);        // close AI panel on question change
+}, [questionId]);
+
 
   useEffect(() => {
     localStorage.setItem("languageId", languageId);
@@ -60,6 +71,19 @@ const EditorSide = ({ question }) => {
       setSubmittedCode(starter);
     }
   }, [question, languageId]);
+
+  useEffect(() => {
+  aiBottomRef.current?.scrollIntoView({
+    behavior: "smooth",
+  });
+}, [aiChatHistory, loadingAI]);
+
+useEffect(() => {
+  if (aiChatInput) {
+    aiBottomRef.current?.scrollIntoView({ behavior: "auto" });
+  }
+}, [aiChatInput]);
+
 
   const languageMap = {
     54: { piston: "javascript", ace: "javascript", filename: "main.js" },
@@ -138,17 +162,19 @@ const EditorSide = ({ question }) => {
           timeTaken: timeTaken,
           submittedCode: finalSubmittedCode,
         };
+        console.table(payload)
 
         const { data } = await axios.post(
           `${BACKEND_URL}/submission`,
+          // "http://localhost:8080/submission",
           payload,
           {
             withCredentials: true,
           }
         );
-
         if (data.success) {
           toast.success("Code submitted successfully!");
+         navigate(`/questions/${questionId}/submission`);
 
           if (isSolved) setTimeStart(Date.now());
         } else {
@@ -223,14 +249,15 @@ const EditorSide = ({ question }) => {
     setLoadingAI(true);
     setShowAI(true);
     try {
-      const languageLabelMap = {
-        javascript: "js",
-        python: "python",
-        cpp: "cpp",
-        java: "java",
-      };
+     const languageLabelMap = {
+  54: "javascript",
+  71: "python",
+  63: "cpp",
+  62: "java",
+};
 
-      const selectedLang = languageLabelMap[languageId] || "txt";
+const selectedLang = languageLabelMap[languageId] || "txt";
+
       const fullPrompt = `
 You are a helpful AI coding assistant.
 
@@ -255,6 +282,7 @@ ${promptToSend}
 `;
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/ask`,
+        // `http://localhost:8080/ask`,
         {
           prompt: fullPrompt,
           userprompt: promptToSend,
@@ -387,7 +415,11 @@ ${promptToSend}
                 </button>
               </div>
 
-              <div className="px-2 py-2 h-[360px] overflow-y-auto border-t border-zinc-800">
+              <div
+  className="px-2 py-2 h-[360px] overflow-y-auto border-t border-zinc-800"
+  id="ai-chat-scroll"
+>
+
                 <div className="space-y-2 text-sm font-semibold">
                   <div
                     onClick={() =>
@@ -456,6 +488,7 @@ ${promptToSend}
                   <p className="italic text-gray-500">AI is thinking...</p>
                 )}
               </div>
+              <div ref={aiBottomRef} />
 
               <div className="flex border-t border-zinc-800">
                 <input

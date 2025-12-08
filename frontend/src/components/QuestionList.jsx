@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../api/axiosConfig";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import NavbarFilter from "./NavbarFilter"; // the new UI version of NavbarFilter

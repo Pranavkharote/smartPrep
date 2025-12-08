@@ -6,7 +6,7 @@ const Question = require("../models/QuestionModel");
 const { isQuestionId } = require("../middlewares/RouteMiddleware");
 const jwt_decode = require("jwt-decode");
 
-router.post("/newquestion", async (req, res) => {
+router.post("/newquestion",authenticateUser, async (req, res) => {
   console.log(req.body);
   const newQuestion = new Question(req.body);
   await newQuestion.save();
@@ -85,7 +85,7 @@ router.get("/submission/:questionId", authenticateUser, async (req, res) => {
   }
 });
 
-router.get("/submission", authenticateUser, async (req, res) => {
+router.get("/submission", async (req, res) => {
   try {
     // console.log(req.user);
     const userId = req.user._id;
@@ -122,7 +122,7 @@ router.get("/questions", async (req, res) => {
     return res.status(404).json("something error in question");
   }
 });
-router.get("/questions/:questionId", async (req, res) => {
+router.get("/questions/:questionId", authenticateUser, async (req, res) => {
   try {
     const questionId = req.params.questionId;
     const allQuestion = await Question.findById(questionId);
@@ -142,7 +142,7 @@ router.get("/questiondetail", async (req, res) => {
   }
 });
 
-router.get("/questions/:questionId", async (req, res) => {
+router.get("/questions/:questionId",authenticateUser, async (req, res) => {
   try {
     let questionId = req.params.questionId;
     // console.log("Question ID:",questionId);
@@ -171,7 +171,7 @@ router.get("/submission-history", authenticateUser, async (req, res) => {
   }
 });
 
-router.get("/submission/:questionId", async (req, res) => {
+router.get("/submission/:questionId",authenticateUser, async (req, res) => {
   let questionId = req.params.questionId;
   let userId = req.user._id;
   // console.log("questionId: ", questionId, "userId: ", userId)

@@ -1,92 +1,54 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 import DarkModeToggle from "../components/ThemeToggle";
-const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Login = () => {
   const navigate = useNavigate();
+  const { handleLogin } = useContext(AuthContext);
+
   const [loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
   });
-  const { email, password } = userInfo;
 
-  // console.log("backend url :", BACKEND_URL);
+  const { email, password } = userInfo;
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo({
-      ...userInfo,
+    setUserInfo((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
-
-  const handleSuccess = (msg) => {
-    toast.success(msg, {
-      position: "bottom-right",
-    });
-  };
-  const handleError = (err) => {
-    toast.error(err, {
-      position: "bottom-right",
-    });
-  };
-  console.log();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const { data } = await axios.post(
-        `${BACKEND_URL}/login`,
-        //  "http://localhost:8080/login",
-        {
-          ...userInfo,
-        },
-        { withCredentials: true }
-      );
 
-      localStorage.setItem("token", data.token);
-      console.log("data : ", data);
+    const res = await handleLogin(email, password);
 
-      const { success, message, token } = data;
-      console.log("token :", token);
-      if (success == true || success == "true") {
-        handleSuccess(message);
-        setTimeout(() => {
-          navigate("/dashboard");
-          console.log("navigating");
-        }, 500);
-      } else {
-        console.log(message);
-        handleError(message || "something went wrong in Login");
-      }
-    } catch (error) {
-      handleError("Incorrect Email or Password, Try again!");
-      console.log(error);
+    if (res.success) {
+      toast.success(res.message);
+      navigate("/dashboard");
+    } else {
+      toast.error(res.message);
     }
 
-    setUserInfo({
-      ...userInfo,
-      email: "",
-      password: "",
-    });
+    setLoading(false);
+    setUserInfo({ email: "", password: "" });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 login">
       <DarkModeToggle />
-      {/* <button className="absolute top-5 bg-red-500 px-5 py-2 rounded-xl left-5"><Link to="/dashboard">Go to Dashboard</Link></button> */}
 
-      <div className="bg-white  shadow-xl rounded-xl w-full max-w-md p-8 inlogin">
-        {/* Logo / Icon */}
+      <div className="bg-white shadow-xl rounded-xl w-full max-w-md p-8 inlogin">
         <div className="flex justify-center mb-6">
           <img
-            src="/ChatGPT Image Jul 12, 2025, 01_36_46 PM.png" // replace with your logo or icon // replace with your logo or icon
+            src="/ChatGPT Image Jul 12, 2025, 01_36_46 PM.png"
             alt="SmartPrep Logo"
             className="w-30 h-30"
           />
@@ -95,6 +57,7 @@ const Login = () => {
         <h2 className="text-center mb-4 text-3xl font-bold tracking-tight text-green-600">
           SmartPrep Login
         </h2>
+
         <p className="text-center opacity-50 mb-6 text-sm">
           Practice coding questions, track your progress & grow!
         </p>
@@ -112,6 +75,7 @@ const Login = () => {
               required
             />
           </div>
+
           <div>
             <label className="block text-sm mb-1 opacity-80">Password</label>
             <input
@@ -124,9 +88,9 @@ const Login = () => {
               required
             />
           </div>
+
           <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-md transition-colors duration-200">
-        
-            {loading? "Logging In..." : "Login"}
+            {loading ? "Logging In..." : "Login"}
           </button>
         </form>
 
@@ -137,6 +101,7 @@ const Login = () => {
           </Link>
         </p>
       </div>
+
       <ToastContainer />
     </div>
   );

@@ -3,29 +3,27 @@ const { UserModel } = require("../models/UserModel");
 
 const authenticateUser = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    const authHeader = req.headers.authorization;
 
-
-    if (!token) {
-      return res.status(401).json({ status: false, message: "Token not found" });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ success: false, message: "Token not found" });
     }
 
-    jwt.verify(token, process.env.JWT_TOKEN, async (err, decoded) => {
-      if (err) {
-        return res.status(401).json({ status: false, message: "Invalid token" });
-      }
+    const token = authHeader.split(" ")[1];
 
-      const user = await UserModel.findById(decoded.id);
-      if (!user) {
-        return res.status(401).json({ status: false, message: "User not found" });
-      }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      req.user = user; // You can access user details in your route via req.user
-      next();
-    });
+    const user = await UserModel.findById(decoded.id).select("-password");
+    if (!user) {
+      return res.status(401).json({ success: false, message: "User not found" });
+    }
+
+    req.user = user;
+    next();
+
   } catch (error) {
-    console.error("Auth middleware error:", error);
-    return res.status(500).json({ status: false, message: "Internal Server Error" });
+    console.error("JWT error:", error);
+    return res.status(401).json({ success: false, message: "Invalid or expired token" });
   }
 };
 
