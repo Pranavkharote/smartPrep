@@ -122,7 +122,7 @@ router.get("/questions", async (req, res) => {
     return res.status(404).json("something error in question");
   }
 });
-router.get("/questions/:questionId", authenticateUser, async (req, res) => {
+router.get("/questions/:questionId", async (req, res) => {
   try {
     const questionId = req.params.questionId;
     const allQuestion = await Question.findById(questionId);
@@ -142,20 +142,20 @@ router.get("/questiondetail", async (req, res) => {
   }
 });
 
-router.get("/questions/:questionId",authenticateUser, async (req, res) => {
-  try {
-    let questionId = req.params.questionId;
-    // console.log("Question ID:",questionId);
-    const questionDetails = await Question.findById(req.params.questionId);
-    // console.log(questionDetails)/
-    return res.json(questionDetails);
-  } catch (error) {
-    console.log(error);
-    return res
-      .json({ message: "something problem in /q/id route" })
-      .status(404);
-  }
-});
+// router.get("/questions/:questionId",authenticateUser, async (req, res) => {
+//   try {
+//     let questionId = req.params.questionId;
+//     // console.log("Question ID:",questionId);
+//     const questionDetails = await Question.findById(req.params.questionId);
+//     // console.log(questionDetails)/
+//     return res.json(questionDetails);
+//   } catch (error) {
+//     console.log(error);
+//     return res
+//       .json({ message: "something problem in /q/id route" })
+//       .status(404);
+//   }
+// });
 
 router.get("/submission-history", authenticateUser, async (req, res) => {
   try {
