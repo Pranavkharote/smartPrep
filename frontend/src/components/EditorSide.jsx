@@ -15,7 +15,6 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import MarkdownRenderer from "../utils/MarkdownRenderer";
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
-
 const EditorSide = ({ question }) => {
   const [timeStart, setTimeStart] = useState(Date.now());
   const [submittedCode, setSubmittedCode] = useState("");
@@ -24,7 +23,7 @@ const EditorSide = ({ question }) => {
   const [startedAt, setStartedAt] = useState(null);
 
   const navigate = useNavigate();
-const aiBottomRef = useRef(null);
+  const aiBottomRef = useRef(null);
 
   //AI
   const [showAI, setShowAI] = useState(false);
@@ -36,16 +35,15 @@ const aiBottomRef = useRef(null);
   const [formattedTime, setFormattedTime] = useState("00:00");
   const [timerRunning, setTimerRunning] = useState(false);
   const [languageId, setLanguageId] = useState(
-    () => parseInt(localStorage.getItem("languageId")) || 54 // 54 is JS as default
+    () => parseInt(localStorage.getItem("languageId")) || 54
   );
 
   useEffect(() => {
-  setAiChatHistory([]);     // clear old chat
-  setAiChatInput("");      // clear input
-  setLoadingAI(false);     // stop loader
-  setShowAI(false);        // close AI panel on question change
-}, [questionId]);
-
+    setAiChatHistory([]);
+    setAiChatInput("");
+    setLoadingAI(false);
+    setShowAI(false);
+  }, [questionId]);
 
   useEffect(() => {
     localStorage.setItem("languageId", languageId);
@@ -73,17 +71,16 @@ const aiBottomRef = useRef(null);
   }, [question, languageId]);
 
   useEffect(() => {
-  aiBottomRef.current?.scrollIntoView({
-    behavior: "smooth",
-  });
-}, [aiChatHistory, loadingAI]);
+    aiBottomRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [aiChatHistory, loadingAI]);
 
-useEffect(() => {
-  if (aiChatInput) {
-    aiBottomRef.current?.scrollIntoView({ behavior: "auto" });
-  }
-}, [aiChatInput]);
-
+  useEffect(() => {
+    if (aiChatInput) {
+      aiBottomRef.current?.scrollIntoView({ behavior: "auto" });
+    }
+  }, [aiChatInput]);
 
   const languageMap = {
     54: { piston: "javascript", ace: "javascript", filename: "main.js" },
@@ -162,7 +159,7 @@ useEffect(() => {
           timeTaken: timeTaken,
           submittedCode: finalSubmittedCode,
         };
-        console.table(payload)
+        console.table(payload);
 
         const { data } = await axios.post(
           `${BACKEND_URL}/submission`,
@@ -174,7 +171,7 @@ useEffect(() => {
         );
         if (data.success) {
           toast.success("Code submitted successfully!");
-         navigate(`/questions/${questionId}/submission`);
+          navigate(`/questions/${questionId}/submission`);
 
           if (isSolved) setTimeStart(Date.now());
         } else {
@@ -249,14 +246,14 @@ useEffect(() => {
     setLoadingAI(true);
     setShowAI(true);
     try {
-     const languageLabelMap = {
-  54: "javascript",
-  71: "python",
-  63: "cpp",
-  62: "java",
-};
+      const languageLabelMap = {
+        54: "javascript",
+        71: "python",
+        63: "cpp",
+        62: "java",
+      };
 
-const selectedLang = languageLabelMap[languageId] || "txt";
+      const selectedLang = languageLabelMap[languageId] || "txt";
 
       const fullPrompt = `
 You are a helpful AI coding assistant.
@@ -339,193 +336,156 @@ ${promptToSend}
   }, [aiChatInput]);
 
   return (
-    <div className="w-1/2 py-2 editorSide">
-      <div className="flex absolute top-4 right-35">
-        <select
-          value={languageId}
-          onChange={(e) => setLanguageId(parseInt(e.target.value))}
-          className="mb-2 p-2 border rounded h-9 mr-5  "
-        >
-          <option value={54} default>
-            JavaScript
-          </option>
-          <option value={63}>C++</option>
-          <option value={71}>Python</option>
-          <option
-            value={62}
-            disabled
-            title="Coming Soon🚧 (I am working on it)"
-          >
-            Java
-          </option>
-        </select>
-      </div>
+    <div className="w-full lg:w-1/2 p-3 bg-gradient-to-b from-[#0f0f1a] to-[#05050d] text-white border border-white/10 flex flex-col relative rounded-xl shadow-2xl">
       <form onSubmit={handleSubmit}>
-        <CodeEditor
-          code={submittedCode}
-          setCode={setSubmittedCode}
-          onCodeChange={(updatedCode) => {
-            setCurrentCode(updatedCode);
-          }}
-        />
-        <div className="flex gap-2 mt-2">
-          <button
-            type="button"
-            onClick={runCode}
-            disabled={running}
-            title="Run Code"
-            className="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700"
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-3 bg-white/5 border border-white/10 rounded-lg px-3 py-2 backdrop-blur-xl">
+          <select
+            value={languageId}
+            onChange={(e) => setLanguageId(parseInt(e.target.value))}
+            className="px-3 py-2 rounded bg-black/40 border border-white/20 text-sm focus:outline-none"
           >
-            {running ? "Running..." : "Run Code"}
-          </button>
-          <button
-            type="submit"
-            title="Submit Code"
-            className="py-2 px-4 bg-blue-700 text-white rounded hover:bg-blue-800"
-          >
-            Submit Code
-          </button>
-          <div
-            title="Ask Any Query to AI"
-            onClick={() => setShowAI(!showAI)}
-            className="flex items-center gap-2 px-5 py-2 rounded-full font-semibold text-white 
-    bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 
-    shadow-lg shadow-pink-400/40 
-    hover:scale-105 transition-transform duration-200 fixed bottom-5 right-5 cursor-pointer "
-          >
-            🤖 Ask AI
-          </div>
+            <option value={54}>JavaScript</option>
+            <option value={63}>C++</option>
+            <option value={71}>Python</option>
+            <option value={62} disabled>
+              Java (Coming Soon)
+            </option>
+          </select>
 
-          <AnimatePresence />
-          {showAI && (
-            <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 100, opacity: 0 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="fixed w-[400px] bottom-15 right-4 bg-gray-900 text-white shadow-xl rounded-xl overflow-hidden z-50 flex flex-col"
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={runCode}
+              disabled={running}
+              className="px-5 py-2 rounded-md font-semibold text-black bg-gradient-to-r from-green-400 to-emerald-500 hover:scale-105 transition shadow-lg disabled:opacity-50"
             >
-              <div className="p-4 border-b w-[400px] border-zinc-800 font-semibold flex justify-between items-center">
-                <span>🧠 SmartPrep AI</span>
-                <button
-                  onClick={() => setShowAI(false)}
-                  className="text-gray-400 hover:text-red-400"
-                >
-                  <i class="fa-solid fa-x"></i>
-                </button>
-              </div>
+              {running ? "Running..." : "▶ Run"}
+            </button>
 
-              <div
-  className="px-2 py-2 h-[360px] overflow-y-auto border-t border-zinc-800"
-  id="ai-chat-scroll"
->
-
-                <div className="space-y-2 text-sm font-semibold">
-                  <div
-                    onClick={() =>
-                      handleQuickAsk("Can you explain the problem statement?")
-                    }
-                    className="w-full cursor-pointer bg-yellow-500 text-white py-2 px-3 rounded-md hover:bg-yellow-400 shadow-sm flex items-center gap-2 transition"
-                    title="AI will help you understand the problem"
-                  >
-                    ✨ Need help understanding the problem
-                  </div>
-
-                  <div
-                    onClick={() => handleQuickAsk("Explain My Code")}
-                    className="w-full cursor-pointer bg-emerald-500 text-white py-2 px-3 rounded-md hover:bg-emerald-400 shadow-sm flex items-center gap-2 transition"
-                    title="AI will analyze and explain your written code"
-                  >
-                    🤖 Ask AI to Explain Code
-                  </div>
-                  <div
-                    onClick={() => handleQuickAsk("Summarize my Code")}
-                    className="w-full cursor-pointer bg-pink-500 text-white py-2 px-3 rounded-md hover:bg-pink-400 shadow-sm flex items-center gap-2 transition"
-                    title="AI will analyze and summarize your written code"
-                  >
-                    🧾Summarize Code
-                  </div>
-                  <div
-                    onClick={() => handleQuickAsk("Review My Code")}
-                    className="w-full cursor-pointer bg-purple-500 text-white py-2 px-3 rounded-md hover:bg-purple-600 shadow-sm flex items-center gap-2 transition"
-                    title="AI will analyze and review your written code"
-                  >
-                    🧩 Review Code
-                  </div>
-
-                  <div
-                    onClick={() =>
-                      handleQuickAsk(
-                        "What is the logic or approach to solve this problem?"
-                      )
-                    }
-                    className="w-full cursor-pointer bg-red-600 text-white py-2 px-3 rounded-md hover:bg-red-500 shadow-sm flex items-center gap-1 transition"
-                    title="AI will guide you with logic or solving approach"
-                  >
-                    🧠 Need help with logic / approach
-                  </div>
-                </div>
-
-                {aiChatHistory.map((msg, index) => (
-                  <div key={index} className="mb-3 ">
-                    <p className="text-cyan-400 font-medium">
-                      You:{" "}
-                      <span className="text-white text-sm">{msg.user}</span>
-                    </p>
-                    <div className="text-white text-sm">
-                      <span className="text-green-400 font-bold">AI:</span>
-                      {typeof msg.ai === "string" ? (
-                        <MarkdownRenderer markdownText={msg.ai} />
-                      ) : (
-                        <p className="text-red-500">
-                          ⚠️ Invalid AI response format
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                {loadingAI && (
-                  <p className="italic text-gray-500">AI is thinking...</p>
-                )}
-              </div>
-              <div ref={aiBottomRef} />
-
-              <div className="flex border-t border-zinc-800">
-                <input
-                  type="text"
-                  value={aiChatInput}
-                  onChange={(e) => setAiChatInput(e.target.value)}
-                  placeholder="Ask your doubt"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleAskAI(aiChatInput);
-                    }
-                  }}
-                  className="flex-grow px-3 py-2 bg-zinc-800 text-white text-sm outline-none"
-                />
-                <button
-                  type="button"
-                  className="bg-blue-600 px-4 text-white text-sm hover:bg-blue-500"
-                  disabled={loadingAI}
-                  onClick={() => handleAskAI(aiChatInput)}
-                >
-                  ↑
-                </button>
-              </div>
-            </motion.div>
-          )}
+            <button
+              type="submit"
+              className="px-5 py-2 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:scale-105 transition shadow-lg"
+            >
+              ⬆ Submit
+            </button>
+          </div>
         </div>
 
-        {output && (
-          <pre
-            className="mt-4 p-4 rounded text-sm whitespace-pre-wrap pb-30"
-            style={{ maxHeight: "200px", overflowY: "auto" }}
-          >
-            {output}
-          </pre>
-        )}
+        <div onSubmit={handleSubmit} className="flex flex-col flex-grow">
+          <div className="rounded-xl overflow-hidden border border-white/10 shadow-inner bg-black/40">
+            <CodeEditor
+              code={submittedCode}
+              setCode={setSubmittedCode}
+              onCodeChange={(updatedCode) => setCurrentCode(updatedCode)}
+            />
+          </div>
+
+          {output && (
+            <pre className="mt-4 p-4 rounded-lg text-sm bg-black border border-green-500/30 text-green-400 max-h-[200px] overflow-y-auto font-mono shadow-inner">
+              {output}
+            </pre>
+          )}
+        </div>
       </form>
+
+      <div
+        onClick={() => setShowAI(!showAI)}
+        className="fixed bottom-5 right-5 z-50 flex items-center gap-2 px-6 py-3 rounded-full font-bold text-white 
+    bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 
+    shadow-[0_0_25px_rgba(236,72,153,0.8)] 
+    hover:scale-110 transition cursor-pointer"
+      >
+        🤖 Ask AI
+      </div>
+
+      <AnimatePresence />
+      {showAI && (
+        <motion.div
+          initial={{ y: 120, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 120, opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          className="fixed bottom-20 right-4 w-[94%] sm:w-[420px] bg-gradient-to-b from-[#0b0b15] to-[#020208] border border-white/10 shadow-2xl rounded-xl overflow-hidden z-50 flex flex-col"
+        >
+          <div className="p-4 border-b border-white/10 flex justify-between items-center font-bold tracking-wide bg-black/40">
+            <span>🧠 SmartPrep AI</span>
+            <button
+              onClick={() => setShowAI(false)}
+              className="text-gray-400 hover:text-red-400"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="px-3 py-2 h-[350px] overflow-y-auto border-t border-white/10">
+            <div className="space-y-2 text-sm font-semibold mb-3">
+              {[
+                [
+                  "✨ Understand Problem",
+                  "Can you explain the problem statement?",
+                  "bg-yellow-500",
+                ],
+                ["🤖 Explain My Code", "Explain My Code", "bg-emerald-500"],
+                ["🧾 Summarize Code", "Summarize my Code", "bg-pink-500"],
+                ["🧩 Review Code", "Review My Code", "bg-purple-500"],
+                [
+                  "🧠 Logic Help",
+                  "What is the logic or approach to solve this problem?",
+                  "bg-red-600",
+                ],
+              ].map(([label, prompt, color], i) => (
+                <div
+                  key={i}
+                  onClick={() => handleQuickAsk(prompt)}
+                  className={`${color} text-white py-2 px-3 rounded-md cursor-pointer hover:scale-[1.02] transition shadow`}
+                >
+                  {label}
+                </div>
+              ))}
+            </div>
+
+            {aiChatHistory.map((msg, index) => (
+              <div key={index} className="mb-3 text-sm">
+                <p className="text-cyan-400 font-semibold">
+                  You: <span className="text-white">{msg.user}</span>
+                </p>
+                <div className="text-green-400 mt-1">
+                  AI:
+                  {typeof msg.ai === "string" ? (
+                    <MarkdownRenderer markdownText={msg.ai} />
+                  ) : (
+                    <p className="text-red-500">Invalid AI response</p>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {loadingAI && (
+              <p className="italic text-gray-500">AI is thinking...</p>
+            )}
+            <div ref={aiBottomRef} />
+          </div>
+
+          <div className="flex border-t border-white/10 bg-black/50">
+            <input
+              type="text"
+              value={aiChatInput}
+              onChange={(e) => setAiChatInput(e.target.value)}
+              placeholder="Ask your doubt"
+              className="flex-grow px-3 py-2 bg-transparent text-white text-sm outline-none"
+            />
+            <button
+              type="button"
+              disabled={loadingAI}
+              onClick={() => handleAskAI(aiChatInput)}
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 px-5 text-white hover:brightness-110"
+            >
+              ↑
+            </button>
+          </div>
+        </motion.div>
+      )}
+
       <ToastContainer />
     </div>
   );

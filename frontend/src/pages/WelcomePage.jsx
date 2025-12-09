@@ -20,226 +20,250 @@ const WelcomePage = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="absolute top-0 w-3.5 p-1 h left-20">
-        <DarkModeToggle />
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0f1a] via-[#080812] to-[#05050d] text-white">
+      <div className="absolute top-4 left-6 flex items-center gap-3 z-50">
+        {/* <DarkModeToggle /> */}
       </div>
+
       <GithubCorner href="https://github.com/pranavkharote/smartPrep" />
 
-      {/* HERO SECTION */}
-      <section className="flex flex-col items-center justify-center text-center py-20 px-6">
+      <section className="flex flex-col items-center justify-center text-center py-28 px-6">
         <motion.h1
-          className="text-5xl font-bold mb-4 text-green-600 dark:text-green-400"
+          className="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight 
+                 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 
+                 bg-clip-text text-transparent"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          Welcome to SmartPrep 🚀
+          SmartPrep
         </motion.h1>
+
         <motion.p
-          className="text-lg opacity-80 max-w-xl text-gray-500"
+          className="text-lg opacity-80 max-w-xl text-gray-300"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          Practice coding challenges, get real-time feedback, and track your
-          progress with our AI-powered smart preparation platform.
+          Practice real coding problems, get AI-powered feedback, and track your
+          growth — all in one modern preparation platform.
         </motion.p>
-        <div className="mt-8 flex flex-col sm:flex-row gap-4">
-         
-            <motion.button
+
+        <div className="mt-10 flex flex-col sm:flex-row gap-4">
+          <motion.button
             onClick={isLoggedIn}
-              className="bg-white text-green-600 border border-green-600 hover:bg-green-50 px-6 py-2 rounded-xl shadow-md font-semibold"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Try for Free
-            </motion.button>
+            className="bg-gradient-to-r from-purple-500 to-pink-600 
+                   px-7 py-3 rounded-full font-bold text-white 
+                   shadow-[0_0_30px_rgba(236,72,153,0.6)]
+                   hover:scale-110 transition"
+            whileTap={{ scale: 0.95 }}
+          >
+            🚀 Try for Free
+          </motion.button>
         </div>
       </section>
 
-      {/* TECH STACK */}
-{/* BUILT WITH */}
-<section className="py-24 px-6  ">
-  <motion.h2
-    className="text-4xl font-extrabold text-center mb-6 text-green-700 dark:text-green-400 tracking-tight"
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-  >
-    ⚙️ Built With Modern Technologies
-  </motion.h2>
-  <p className="text-center text-gray-600 max-w-2xl mx-auto mb-14 text-lg opacity-90">
-    SmartPrep is powered by cutting-edge web technologies designed for speed, scalability, and seamless user experience.
-  </p>
+      <section className="py-24 px-6">
+        <motion.h2
+          className="text-4xl font-extrabold text-center mb-6 text-cyan-400 tracking-tight"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          ⚙️ Built With Modern Technologies
+        </motion.h2>
 
-  <div className=" text-gray-700 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-10 justify-items-center max-w-6xl mx-auto text-green-600">
-    {[
-      { icon: <FaReact className="text-6xl" />, name: "React" },
-      { icon: <SiTailwindcss className="text-6xl" />, name: "TailwindCSS" },
-      { icon: <FaNodeJs className="text-6xl" />, name: "Node.js" },
-      { icon: <SiExpress className="text-6xl" />, name: "Express.js" },
-      { icon: <SiMongodb className="text-6xl" />, name: "MongoDB" },
-      { icon: <FaDatabase className="text-6xl" />, name: "Mongoose" },
-      // extended extras
-      {/* { icon: <i className="devicon-javascript-plain text-6xl"></i>, name: "JavaScript" },
-      { icon: <i className="devicon-github-original text-6xl"></i>, name: "GitHub" },
-      { icon: <i className="devicon-restapi-plain text-6xl"></i>, name: "REST API" }, */}
-    ].map((tech, i) => (
-      <motion.div
-        key={i}
-        className="flex flex-col items-center group cursor-pointer"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: i * 0.1, duration: 0.4 }}
-        viewport={{ once: true }}
-      >
-        <div className="relative">
-          <div className="absolute inset-0 rounded-full bg-green-200/30 blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-          <div className="transition-transform transform group-hover:scale-110 duration-300">
-            {tech.icon}
-          </div>
-        </div>
-        <p className="mt-3 text-base font-medium text-gray-900 dark:text-gray-400">
-          {tech.name}
+        <p className="text-center text-gray-400 max-w-2xl mx-auto mb-14 text-lg">
+          SmartPrep is engineered with scalable, production-ready technologies.
         </p>
-      </motion.div>
-    ))}
-  </div>
-</section>
 
-
-{/* FEATURES */}
-<section className="py-16 px-6">
-  <h2 className="text-3xl font-bold text-center mb-8">✨ Features</h2>
-  <div className="grid md:grid-cols-3 gap-8">
-    {[
-      {
-        title: "Live Code Execution",
-        desc: "Submit and run code in multiple languages with test cases.",
-      },
-      {
-        title: "Smart AI Feedback",
-        desc: "Get instant suggestions and explanations powered by AI.",
-      },
-      {
-        title: "Progress Tracking",
-        desc: "Monitor your journey with solved count, time, and stats.",
-      },
-      {
-        title: "Multi-Language Support",
-        desc: "Write code in C++, Java, Python, and JavaScript — all inside one unified editor.",
-      },
-      {
-        title: "In-Browser Editor",
-        desc: "A fast and modern editor with syntax highlighting and real-time code validation.",
-      },
-      
-      {
-        title: "AI-Powered Hints",
-        desc: "Get dynamic hints and step-by-step guidance without revealing full solutions.",
-      },
-     
-    ].map((feature, i) => (
-      <motion.div
-        key={i}
-        className="p-6 dash-sec bg-opacity-20 shadow-xl rounded-2xl"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: i * 0.2 }}
-      >
-        <h3 className="text-xl font-semibold mb-2 bg-opacity-60 text-green-600">
-          {feature.title}
-        </h3>
-        <p className="opacity-70">{feature.desc}</p>
-      </motion.div>
-    ))}
-  </div>
-</section>
-
-
-      {/* HOW IT WORKS */}
-      <section className="py-20 px-6 ">
-        <h2 className="text-3xl font-bold text-center mb-10 text-green-700 dark:text-green-400">
-          🧠 How SmartPrep Works
-        </h2>
-        <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-10 justify-items-center max-w-6xl mx-auto text-cyan-400">
           {[
+            { icon: <FaReact className="text-6xl" />, name: "React" },
             {
-              step: "1️⃣",
-              title: "Pick a Problem",
-              desc: "Choose from curated DSA questions categorized by difficulty and topic.",
+              icon: <SiTailwindcss className="text-6xl" />,
+              name: "TailwindCSS",
             },
-            {
-              step: "2️⃣",
-              title: "Code in Real-Time",
-              desc: "Write and execute code instantly in multiple languages with test case validation.",
-            },
-            {
-              step: "3️⃣",
-              title: "Get AI Insights",
-              desc: "Receive AI-powered explanations, feedback, and optimization tips to improve faster.",
-            },
-          ].map((item, i) => (
+            { icon: <FaNodeJs className="text-6xl" />, name: "Node.js" },
+            { icon: <SiExpress className="text-6xl" />, name: "Express.js" },
+            { icon: <SiMongodb className="text-6xl" />, name: "MongoDB" },
+            { icon: <FaDatabase className="text-6xl" />, name: "Mongoose" },
+          ].map((tech, i) => (
             <motion.div
               key={i}
-              className=" shadow-lg rounded-2xl p-6 text-center"
+              className="flex flex-col items-center group"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.2 }}
-              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
             >
-              <div className="text-4xl mb-3">{item.step}</div>
-              <h3 className="text-xl font-semibold text-green-600 mb-2">
-                {item.title}
-              </h3>
-              <p className="opacity-70">{item.desc}</p>
+              <div className="group-hover:scale-110 transition">
+                {tech.icon}
+              </div>
+              <p className="mt-3 text-base font-medium text-gray-300">
+                {tech.name}
+              </p>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="text-center py-16 px-6 bg-green-100 dark:bg-green-900">
-        <motion.h3
-          className="text-2xl font-bold mb-4"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
+      <section className="py-20 px-6">
+        <h2 className="text-3xl font-bold text-center mb-10 text-purple-400">
+          ✨ Features
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {[
+            ["Live Code Execution", "Run & submit code with real test cases."],
+            ["Smart AI Feedback", "Instant code explanations and suggestions."],
+            ["Progress Tracking", "Track solved problems and time spent."],
+            ["Multi-Language Support", "C++, Java, Python & JavaScript."],
+            ["In-Browser Editor", "Fast syntax-highlighted IDE."],
+            ["AI-Powered Hints", "Step-by-step guidance without spoilers."],
+          ].map(([title, desc], i) => (
+            <motion.div
+              key={i}
+              className="bg-black/40 border border-white/10 shadow-xl rounded-2xl p-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.15 }}
+            >
+              <h3 className="text-xl font-semibold mb-2 text-cyan-400">
+                {title}
+              </h3>
+              <p className="text-gray-400">{desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <section className="py-20 px-6">
+        <h2 className="text-3xl font-bold text-center mb-12 text-pink-400">
+          🧠 How SmartPrep Works
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+          {[
+            ["1️⃣", "Pick a Problem", "Choose from curated DSA questions."],
+            ["2️⃣", "Code in Real-Time", "Run and validate instantly."],
+            ["3️⃣", "Get AI Insights", "Learn faster with smart feedback."],
+          ].map(([step, title, desc], i) => (
+            <motion.div
+              key={i}
+              className="bg-black/40 border border-white/10 shadow-xl rounded-2xl p-6 text-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.2 }}
+            >
+              <div className="text-4xl mb-3">{step}</div>
+              <h3 className="text-xl font-semibold text-cyan-400 mb-2">
+                {title}
+              </h3>
+              <p className="text-gray-400">{desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <section className="py-24 px-6">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2
+            className="text-3xl md:text-4xl font-extrabold mb-6 
+                   bg-gradient-to-r from-purple-400 to-pink-500 
+                   bg-clip-text text-transparent"
+          >
+            🧠 SmartPrep AI — Built Around Your Code
+          </h2>
+
+          <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
+            SmartPrep doesn’t use AI as a chatbot on the side. The AI here works
+            directly with your{" "}
+            <span className="text-white font-semibold">
+              problem, your code, and your intent
+            </span>
+            . Every suggestion is generated using your live editor state and the
+            current question context.
+          </p>
+
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-12 max-w-4xl mx-auto">
+            {[
+              {
+                label: "✨ Understand Problem",
+                desc: "Explains the problem in simple language",
+              },
+              {
+                label: "🤖 Explain My Code",
+                desc: "Breaks down what your solution is doing line-by-line",
+              },
+              {
+                label: "🧾 Summarize Code",
+                desc: "Gives a high-level overview in seconds",
+              },
+              {
+                label: "🧩 Review Code",
+                desc: "Finds issues and suggests improvements",
+              },
+              {
+                label: "🧠 Logic Help",
+                desc: "Guides you toward the right approach",
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="
+            bg-black/40 border border-white/10 
+            rounded-2xl px-5 py-4 
+            shadow-lg backdrop-blur
+            text-left
+          "
+              >
+                <p className="text-sm font-semibold text-cyan-400">
+                  {item.label}
+                </p>
+                <p className="text-xs mt-1 text-gray-400">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-gray-500 text-sm mt-12 max-w-3xl mx-auto leading-relaxed">
+            Unlike generic AI tools, SmartPrep’s AI is always aware of the
+            current problem statement, your written solution, and your execution
+            output — making the feedback specific, not generic.
+          </p>
+        </div>
+      </section>
+
+      <section className="text-center py-24 px-6">
+        <motion.h3 className="text-3xl font-bold mb-6 text-white">
           Ready to start your coding journey?
         </motion.h3>
+
         <motion.button
           onClick={isLoggedIn}
-          className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg text-lg mt-4 hover:bg-green-700"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          className="bg-gradient-to-r from-purple-500 to-pink-600 
+                 px-8 py-3 rounded-full font-bold text-white 
+                 shadow-[0_0_30px_rgba(236,72,153,0.6)]
+                 hover:scale-110 transition"
         >
           Go to Dashboard
         </motion.button>
       </section>
 
-      {/* FOOTER */}
-      <footer className="text-center py-4 text-sm text-gray-500 dark:text-gray-400">
-        — 🚀 Built with love by{" "}
-        <span className="text-indigo-600 font-semibold">Pranav</span> —
-        <div className="mt-2 flex justify-center gap-4 text-xl">
+      <footer className="text-center py-6 text-sm text-gray-400 border-t border-white/10">
+        — 🚀 Built by{" "}
+        <span className="text-cyan-400 font-semibold">Pranav</span> —
+        <div className="mt-3 flex justify-center gap-6 text-xl">
           <a
             href="https://github.com/pranavkharote"
             target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:text-blue-700"
-            title="GitHub"
+            className="hover:text-white"
           >
             <FaGithub />
           </a>
           <a
             href="https://linkedin.com/in/pranavkharote"
             target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:text-blue-700"
-            title="LinkedIn"
+            className="hover:text-white"
           >
             <FaLinkedin />
           </a>

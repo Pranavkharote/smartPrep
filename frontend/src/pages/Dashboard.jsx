@@ -5,7 +5,7 @@ import Loader from "../assets/Loader";
 import DarkModeToggle from "../components/ThemeToggle";
 import "../index.css";
 import { Link } from "react-router-dom";
-import { FaHome, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaFire, FaSignOutAlt } from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
 
 const Dashboard = () => {
@@ -36,7 +36,9 @@ const Dashboard = () => {
     const fetchHistory = async () => {
       try {
         const res = await axios.get("/submission-history");
-        setHistory(Array.isArray(res.data.submission) ? res.data.submission : []);
+        setHistory(
+          Array.isArray(res.data.submission) ? res.data.submission : []
+        );
         setLoading(false);
       } catch (err) {
         console.error("Error fetching submission history:", err);
@@ -56,7 +58,8 @@ const Dashboard = () => {
   }
 
   const totalTime = history.reduce(
-    (sum, item) => sum + (typeof item.timeTaken === "number" ? item.timeTaken : 0),
+    (sum, item) =>
+      sum + (typeof item.timeTaken === "number" ? item.timeTaken : 0),
     0
   );
 
@@ -82,172 +85,176 @@ const Dashboard = () => {
   const solvedCount = history.filter((item) => item.status === "solved").length;
 
   const handleConfirmLogout = () => {
-    handleLogout(); // ✅ Proper logout via AuthContext
+    handleLogout();
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br p-6">
-      <DarkModeToggle />
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 p-6 text-white">
+      <div className="max-w-7xl mx-auto flex justify-between items-center mb-10">
+        <h1 className="text-2xl font-bold tracking-wide">
+          Smart<span className="text-indigo-400">Prep</span>
+        </h1>
 
-      <button className="ml-4 bg-transparent px-4 py-1 rounded-md">
-        <Link to="/">
-          <FaHome className="text-xl cursor-pointer hover:text-green-400" />
-        </Link>
-      </button>
+        <div className="flex items-center gap-4">
+          <Link
+            to="/"
+            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition"
+          >
+            <FaHome />
+          </Link>
 
-      <button
-        onClick={() => setShowLogoutModal(true)}
-        className="ml-4 bg-transparent px-4 py-1 rounded-md"
-      >
-        <FaSignOutAlt className="text-xl cursor-pointer hover:text-red-400" />
-      </button>
+          <button
+            onClick={() => setShowLogoutModal(true)}
+            className="p-2 rounded-lg bg-white/10 hover:bg-red-500/40 transition"
+          >
+            <FaSignOutAlt />
+          </button>
+        </div>
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-6xl mx-auto"
+        className="max-w-7xl mx-auto mb-10"
       >
-        {/* ✅ AVATAR + GREETING */}
-        <motion.div
-          className="flex items-center justify-center gap-4 mb-6"
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md">
+        <div className="flex items-center gap-5 bg-white/5 backdrop-blur-xl p-6 rounded-3xl border border-white/10 shadow-xl">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-xl shadow-lg">
             {getInitials(userData?.name)}
           </div>
 
-          <motion.h1
-            className="text-3xl sm:text-4xl font-extrabold text-blue-700"
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.4 }}
+          <div>
+            <h2 className="text-2xl font-bold">
+              {getGreeting()}, {userData?.name || "Coder"} 👋
+            </h2>
+            <p className="text-gray-400">
+              Your personal interview command center
+            </p>
+          </div>
+
+          <div className="ml-auto flex items-center gap-2 bg-indigo-600/20 px-4 py-2 rounded-full text-sm font-semibold">
+            <FaFire className="text-orange-400" />
+            Streak Active
+          </div>
+        </div>
+      </motion.div>
+
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+        {[
+          {
+            title: "Problems Solved",
+            value: solvedCount,
+            glow: "from-green-400 to-emerald-600",
+          },
+          {
+            title: "Total Submissions",
+            value: history.length,
+            glow: "from-blue-400 to-indigo-600",
+          },
+          {
+            title: "Time Spent",
+            value: formatTimeFromSeconds(totalTime),
+            glow: "from-purple-400 to-pink-600",
+          },
+        ].map((item, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.15 }}
+            className="relative overflow-hidden rounded-3xl p-6 border border-white/10 bg-white/5 backdrop-blur-xl shadow-xl"
           >
-            {getGreeting()}, {userData?.name || "Coder"} 👋
-          </motion.h1>
-        </motion.div>
+            <div
+              className={`absolute inset-0 bg-gradient-to-br ${item.glow} opacity-20`}
+            />
+            <p className="text-gray-400 mb-1">{item.title}</p>
+            <p className="text-4xl font-extrabold">{item.value}</p>
+          </motion.div>
+        ))}
+      </div>
+      <div className="max-w-7xl mx-auto text-center mb-14">
+        <motion.button
+          onClick={() => (window.location.href = "/questions")}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.94 }}
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 px-10 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-indigo-500/40 transition"
+        >
+          ⚡ Enter Practice Arena
+        </motion.button>
+      </div>
 
-        <p className="text-center text-gray-600 mb-10 text-lg">
-          SmartPrep – Bridging learning and industry-ready coding practice.
-        </p>
+      <div className="max-w-7xl mx-auto">
+        <h3 className="text-2xl font-bold mb-5">Recent Submissions</h3>
 
-        {/* ✅ STATS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
-          {[
-            {
-              title: "Questions Solved",
-              value: solvedCount,
-              color: "text-green-600",
-            },
-            {
-              title: "Submissions",
-              value: history.length,
-              color: "text-blue-600",
-            },
-            {
-              title: "Time Spent",
-              value: formatTimeFromSeconds(totalTime),
-              color: "text-purple-600",
-            },
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              className="dashCard p-6 rounded-2xl shadow-lg"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + index * 0.2 }}
-            >
-              <h2 className="text-lg text-gray-500 mb-1">{item.title}</h2>
-              <p className={`text-3xl font-bold ${item.color}`}>{item.value}</p>
-            </motion.div>
-          ))}
-        </div>
+        {history.length === 0 ? (
+          <div className="bg-white/5 border border-white/10 p-10 rounded-3xl text-center text-gray-400">
+            No activity yet. Start solving to build momentum 🚀
+          </div>
+        ) : (
+          <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1">
+            {history.map((sub, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.08 * idx }}
+                className="flex justify-between items-center p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition"
+              >
+                <div>
+                  <p className="font-semibold text-lg">
+                    {sub?.questionId?.title || "Unknown Problem"}
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    Status:{" "}
+                    <span
+                      className={`font-medium ${
+                        sub.status === "solved"
+                          ? "text-green-400"
+                          : "text-yellow-400"
+                      }`}
+                    >
+                      {sub.status}
+                    </span>{" "}
+                    | Time: {formatTimeInSeconds(sub.timeTaken)}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {new Date(sub.submittedAt).toLocaleString()}
+                  </p>
+                </div>
 
-        {/* ✅ CTA */}
-        <div className="text-center mt-8">
-          <motion.button
-            onClick={() => (window.location.href = "/questions")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow-md text-lg font-semibold transition"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            🚀 Solve a New Question
-          </motion.button>
-        </div>
-
-        {/* ✅ RECENT SUBMISSIONS */}
-        <div className="mb-10 mt-10">
-          <h2 className="text-2xl mb-4">📝 Recent Submissions</h2>
-
-          {history.length === 0 ? (
-            <p>No submissions yet. Start solving!</p>
-          ) : (
-            <div className="space-y-4 max-h-100 overflow-y-auto">
-              {history.map((sub, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 * idx }}
-                  className="dashCard p-5 rounded-xl shadow-xl flex justify-between items-center hover:shadow-md transition"
+                <a
+                  href="/submission"
+                  className="bg-indigo-600 hover:bg-indigo-700 px-5 py-2 rounded-xl text-sm font-semibold transition"
                 >
-                  <div>
-                    <p className="text-lg font-semibold">
-                      {sub?.questionId?.title || "Unknown"}
-                    </p>
-                    <p className="text-sm opacity-70">
-                      Status:{" "}
-                      <span
-                        className={`font-medium ${
-                          sub.status === "solved"
-                            ? "text-green-600"
-                            : "text-yellow-500"
-                        }`}
-                      >
-                        {sub.status}
-                      </span>{" "}
-                      | Time: {formatTimeInSeconds(sub.timeTaken)}
-                    </p>
-                    <p className="text-sm opacity-70">
-                      {new Date(sub.submittedAt).toLocaleString()}
-                    </p>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 transition text-sm font-medium">
-                    <a href="/submission">View</a>
-                  </button>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* ✅ LOGOUT MODAL */}
-        {showLogoutModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-900 text-black dark:text-white p-6 rounded-lg shadow-xl w-80">
-              <h2 className="text-lg font-semibold mb-4">
-                Are you sure you want to logout?
-              </h2>
-              <div className="flex justify-end space-x-4">
-                <button
-                  onClick={() => setShowLogoutModal(false)}
-                  className="bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 px-4 py-2 rounded"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleConfirmLogout}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
+                  View
+                </a>
+              </motion.div>
+            ))}
           </div>
         )}
-      </motion.div>
+      </div>
+
+      {showLogoutModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-6 rounded-2xl border border-white/10 w-80">
+            <h2 className="text-lg font-semibold mb-4">Confirm logout?</h2>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowLogoutModal(false)}
+                className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmLogout}
+                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

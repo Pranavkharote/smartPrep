@@ -38,7 +38,7 @@ const QuestionList = () => {
     fetchQuestions();
   }, []);
 
-  // Filtering logic
+   
   const filteredQuestions = questions.filter((q) => {
     const matchesDifficulty =
       !filters.difficulty || q.difficulty === filters.difficulty;
@@ -52,71 +52,119 @@ const QuestionList = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white p-4 md:p-8 qlist">
-      {/* Top bar with back button */}
-      <DarkModeToggle />
-      <div className="flex justify-between items-center mb-6">
-        <button
-          onClick={() => navigate("/")}
-          className="bg-red-500 text-white px-4 py-1 rounded-full shadow hover:bg-red-600 transition"
-        >
-          ← Back
-        </button>
-        <h1 className="text-2xl md:text-3xl font-bold  text-center flex-1 mx-4">
-          📚 Question Bank
-        </h1>
-      </div>
+ <div
+  className="
+    min-h-screen p-4 md:p-8 transition-colors
+    bg-gradient-to-br from-[#0f0f1a] via-[#080812] to-[#05050d]
+    text-white
+  "
+>
+   
+  <div className="max-w-7xl mx-auto flex items-center justify-between mb-8">
 
-      {/* Filter navbar */}
-      <NavbarFilter onFilterChange={setFilters} />
-
-      {/* Question list */}
-      <div className="mt-8 max-w-5xl mx-auto grid gap-5">
-        {filteredQuestions.length === 0 ? (
-          <p className="text-center text-gray-500">
-            No questions match the selected filters.
-          </p>
-        ) : (
-          filteredQuestions.map((question, index) => (
-            <motion.div
-              key={question._id}
-              onClick={() => navigate(`/questions/${question._id}`)}
-              className=" p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer transition questions"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 * index }}
-            >
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-lg md:text-xl font-semibold ">
-                  {index + 1}. {question.title}
-                </h2>
-                <span
-                  className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium ${
-                    difficultyColors[question.difficulty] ||
-                    "bg-gray-200 text-gray-800"
-                  }`}
-                >
-                  {question.difficulty}
-                </span>
-              </div>
-              <p className="text-gray-600 tgray text-sm mb-2 line-clamp-2">
-                {question.description}
-              </p>
-              <div className="flex gap-2 flex-wrap mt-1">
-                {question.tags?.map((tag, i) => (
-                  <span
-                    key={i}
-                    className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          ))
-        )}
-      </div>
+    <div className="flex items-center gap-4">
+      <button
+        onClick={() => navigate("/")}
+        className="
+          px-4 py-2 rounded-xl text-sm font-semibold transition
+          bg-gradient-to-r from-red-500 to-pink-600
+          hover:scale-105 shadow-lg
+        "
+      >
+        ← Back
+      </button>
     </div>
+
+    <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-cyan-400">
+      📚 Question Bank
+    </h1>
+
+    <div className="w-24" />  
+  </div>
+
+   
+  <div className="max-w-7xl mx-auto mb-10">
+    <div
+      className="
+        bg-black/40 border border-white/10 rounded-2xl p-4 shadow-xl
+        backdrop-blur-xl
+      "
+    >
+      <NavbarFilter onFilterChange={setFilters} />
+    </div>
+  </div>
+ 
+  <div className="max-w-6xl mx-auto grid gap-5">
+
+    {filteredQuestions.length === 0 ? (
+      <div
+        className="
+          text-center py-16 rounded-3xl
+          bg-black/40 border border-white/10 text-gray-400
+        "
+      >
+        No questions match the selected filters.
+      </div>
+    ) : (
+      filteredQuestions.map((question, index) => (
+        <motion.div
+          key={question._id}
+          onClick={() => navigate(`/questions/${question._id}`)}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.05 }}
+          className="
+            cursor-pointer rounded-2xl p-6 transition-all duration-200
+            bg-gradient-to-b from-[#0f0f1a] to-[#05050d]
+            border border-white/10 shadow-xl
+            hover:shadow-2xl hover:-translate-y-0.5
+          "
+        > 
+          <div className="flex justify-between items-center mb-3 gap-4">
+            <h2 className="text-lg md:text-xl font-bold leading-snug text-white">
+              {index + 1}. {question.title}
+            </h2>
+
+            <span
+              className={`shrink-0 px-3 py-1 rounded-full text-xs md:text-sm font-bold tracking-wide
+                ${
+                  question.difficulty === "Easy"
+                    ? "bg-gradient-to-r from-green-400 to-emerald-500 text-black"
+                    : question.difficulty === "Hard"
+                    ? "bg-gradient-to-r from-red-500 to-pink-600 text-white"
+                    : "bg-gradient-to-r from-yellow-400 to-orange-500 text-black"
+                }
+              `}
+            >
+              {question.difficulty}
+            </span>
+          </div>
+ 
+          <p className="text-sm md:text-base mb-3 line-clamp-2 text-gray-300">
+            {question.description}
+          </p>
+ 
+          <div className="flex gap-2 flex-wrap mt-2">
+            {question.tags?.map((tag, i) => (
+              <span
+                key={i}
+                className="
+                  text-xs font-bold px-2.5 py-1 rounded-full
+                  bg-white/5 border border-white/10 text-blue-300
+                "
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+      ))
+    )}
+
+  </div>
+</div>
+
+
   );
 };
 

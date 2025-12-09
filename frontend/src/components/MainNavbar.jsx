@@ -8,6 +8,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import DarkModeToggle from "./ThemeToggle";
+
 const navigation = [{ name: "Dashboard", href: "/dashboard", current: true }];
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -17,13 +18,11 @@ function classNames(...classes) {
 
 export default function MainNavbar() {
   const [questions, setQuestions] = useState([]);
+
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await axios.get(
-          // "http://localhost:8080/questions",
-          `${BACKEND_URL}/questions`,
-         {
+        const res = await axios.get(`${BACKEND_URL}/questions`, {
           withCredentials: true,
         });
         setQuestions(res.data || []);
@@ -33,6 +32,7 @@ export default function MainNavbar() {
     };
     fetchQuestions();
   }, []);
+
   const { questionId } = useParams();
   const currentIndex = questions
     ? questions.findIndex((q) => q._id === questionId)
@@ -43,18 +43,26 @@ export default function MainNavbar() {
     currentIndex >= 0 && currentIndex < questions.length - 1
       ? questions[currentIndex + 1]
       : null;
+
   return (
-    <Disclosure as="nav" className="bg-gray-100 mainNav">
+    <Disclosure
+      as="nav"
+      className="bg-gradient-to-r from-[#0b0b15] to-[#05050d] border-b border-white/10"
+    >
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
+ 
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+
+            {/* Back Button */}
             <div className="flex shrink-0 items-center">
-              <button className="flex px-2 rounded-2xl text-2xl">
+              <button className="flex px-3 py-1.5 rounded-full text-lg text-gray-300 hover:text-white hover:bg-white/10 transition">
                 <a href="/questions">
-                  <i className="fa-solid fa-left-long "></i>
+                  <i className="fa-solid fa-left-long"></i>
                 </a>
               </button>
             </div>
+ 
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 {navigation.map((item) => (
@@ -64,9 +72,9 @@ export default function MainNavbar() {
                     aria-current={item.current ? "page" : undefined}
                     className={classNames(
                       item.current
-                        ? "bg-white border text-[#222222] mainNav"
-                        : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                      "rounded-md px-3 py-2 text-sm font-medium"
+                        ? "bg-white/10 text-white border border-white/20"
+                        : "text-gray-400 hover:bg-white/10 hover:text-white",
+                      "rounded-md px-3 py-2 text-sm font-medium transition"
                     )}
                   >
                     {item.name}
@@ -74,43 +82,48 @@ export default function MainNavbar() {
                 ))}
               </div>
             </div>
-            <div className="text-[#e1e1e1 ] mx-5 text-3xl ps-3 c">
+ 
+            <div className="text-gray-300 mx-5 text-2xl ps-3 flex items-center">
               {prevQuestion ? (
                 <Link to={`/questions/${prevQuestion._id}`}>
                   <i
-                    class="fa-solid fa-angle-left mr-3 "
+                    className="fa-solid fa-angle-left mr-4 hover:text-white transition"
                     title="Previous Question"
                   ></i>
                 </Link>
               ) : (
-                <span className="">
-                  <i className="fa-solid fa-angle-left cursor-not-allowed mr-3"></i>
+                <span>
+                  <i className="fa-solid fa-angle-left mr-4 text-gray-700 cursor-not-allowed"></i>
                 </span>
               )}
+
               {nextQuestion ? (
                 <Link to={`/questions/${nextQuestion._id}`}>
                   <i
-                    className="fa-solid fa-angle-right mr-3 "
+                    className="fa-solid fa-angle-right mr-3 hover:text-white transition"
                     title="Next Question"
                   ></i>
                 </Link>
               ) : (
                 <span className="cursor-not-allowed">
-                  <i className="fa-solid fa-angle-right mr-3"></i>
+                  <i className="fa-solid fa-angle-right mr-3 text-gray-700"></i>
                 </span>
               )}
             </div>
-            <div className=" h-[20px] text-[12px] ms-4 font-medium">
+
+            
+            <div className="h-[20px] text-[12px] ms-4 font-medium text-gray-400">
               <p>See all the Questions</p>
               <a
                 href="/questions"
-                className="text-center text-blue-400 font-bold hover:underline"
+                className="text-blue-400 font-bold hover:underline"
               >
                 All Problems
               </a>
             </div>
           </div>
-          <DarkModeToggle />
+
+ 
         </div>
       </div>
     </Disclosure>

@@ -51,7 +51,7 @@ export default function Authentication() {
         transition={{ duration: 0.6 }}
         className="bg-white inlogin shadow-xl rounded-2xl w-full max-w-md px-8 py-10"
       >
-        {/* Logo */}
+        
         <div className="flex justify-center mb-4">
           <img
             src="/ChatGPT Image Jul 12, 2025, 01_36_46 PM.png"
@@ -59,8 +59,7 @@ export default function Authentication() {
             className="w-24 h-24 rounded-full shadow-md"
           />
         </div>
-
-        {/* Title */}
+ 
         <h2 className="text-center mb-2 text-3xl font-bold tracking-tight text-green-600">
           {formState === 0 ? "Login" : "Signup"}
         </h2>
@@ -68,7 +67,7 @@ export default function Authentication() {
           Practice coding questions, track your progress & grow!
         </p>
 
-        {/* Toggle Buttons */}
+      
         <div className="flex mb-6 border border-green-200 rounded-xl overflow-hidden">
           <button
             className={`flex-1 py-2 font-semibold ${
@@ -93,8 +92,7 @@ export default function Authentication() {
             Signup
           </button>
         </div>
-
-        {/* Form */}
+ 
         <form
           className="space-y-4"
           onSubmit={(e) => {

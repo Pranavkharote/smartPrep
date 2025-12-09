@@ -31,59 +31,77 @@ const formatTime = (seconds) => {
 };
 
   return (
-    <div className="w-full lg:w-1/2 overflow-y-auto ps-3 my-10 " >
-      {/* <div className="p-6 bg-gray-100 min-h-screen w-200px "> */}
+  <div className="w-full lg:w-1/2 overflow-y-auto ps-3 my-10">
+  <div className="space-y-6">
 
-        <div className="space-y-6">
-          {history.length === 0 ? (
-            <p className="text-center text-gray-600">
-              No submissions found yet.
+    {history.length === 0 ? (
+      <p className="text-center text-gray-400">
+        No submissions found yet.
+      </p>
+    ) : (
+      history.map((sub, index) => (
+        <div
+          key={index}
+          className="
+            bg-gradient-to-b from-[#0f0f1a] to-[#05050d]
+            shadow-2xl rounded-2xl p-6 
+            border border-white/10
+          "
+        >
+          {/* ✅ Status */}
+          <div className="flex flex-wrap justify-between items-center mb-4">
+            <span
+              className={`px-3 py-1 text-sm rounded-full font-semibold tracking-wide
+                ${
+                  sub.status === "solved"
+                    ? "bg-gradient-to-r from-green-400 to-emerald-500 text-black"
+                    : "bg-gradient-to-r from-yellow-400 to-orange-500 text-black"
+                }`}
+            >
+              {sub.status}
+            </span>
+          </div>
+
+          {/* ✅ Meta Info */}
+          <div className="text-gray-300 space-y-1 mb-4 text-sm">
+            <p>
+              ⏱ <strong className="text-cyan-400">Time Taken:</strong>{" "}
+              {formatTime(sub.timeTaken)}
             </p>
-          ) : (
-            history.map((sub, index) => (
-              <div
-                key={index}
-                className="bg-white shadow-lg rounded-xl p-6 border border-gray-200 mainNav "
-              >
-                <div className="flex flex-wrap justify-between items-center mb-4">
-                  <span
-                    className={`px-3 py-1 text-sm rounded-full font-medium ${
-                      sub.status === "solved"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
-                  >
-                    {sub.status}
-                  </span>
-                </div>
+            <p>
+              💻 <strong className="text-purple-400">Language:</strong>{" "}
+              {sub.language}
+            </p>
+            <p>
+              📅 <strong className="text-yellow-400">Submitted At:</strong>{" "}
+              {new Date(sub.submittedAt).toLocaleString()}
+            </p>
+          </div>
 
-                <div className="text-gray-700 space-y-1 mb-4 mainNav">
-                  <p>
-                    ⏱ <strong>Time Taken:</strong> {formatTime(sub.timeTaken)}
-                  </p>
-                  <p>Language Used : {sub.language}</p>
-                  <p>
-                    📅 <strong>Submitted At:</strong>{" "}
-                    {new Date(sub.submittedAt).toLocaleString()}
-                  </p>
-                  {/* <p>language: {sub.languageId}</p> */}
-                </div>
+          {/* ✅ Code Block */}
+          <div>
+            <p className="font-semibold mb-2 text-pink-400">
+              🧠 Submitted Code:
+            </p>
 
-                <div>
-                  <p className="font-medium mb-1">🧠 Submitted Code:</p>
-                  <pre className="bg-gray-900 text-white p-4 rounded-md overflow-x-auto text-sm leading-relaxed">
-                    {/* {sub.submittedCode} */}
-                  <CopyCode code={sub.submittedCode}/>
-                  </pre>
-                </div>
-
-              
-              </div>
-            ))
-          )}
+            <pre className="
+              bg-black/70 text-green-400 
+              p-4 rounded-xl 
+              overflow-x-auto text-sm 
+              leading-relaxed 
+              border border-green-500/20
+              shadow-inner
+            ">
+              <CopyCode code={sub.submittedCode} />
+            </pre>
+          </div>
         </div>
-      {/* </div> */}
-    </div>
+      ))
+    )}
+
+  </div>
+</div>
+
   );
 };
 

@@ -27,106 +27,151 @@ const QuestionComponent = () => {
 
   return (
     <>
-      {/* <LeftNavbar /> */}
-      <div className="w-full lg:w-1/2 no-scrollbar overflow-y-auto mb-6 p-6  border border-slate-200 rounded-xl shadow-sm  space-y-4 questionDetails">
-        {/* Title & Difficulty */}
+  <div
+    className="
+      w-full lg:w-1/2 mt-10
+      mb-6 p-4 sm:p-5 md:p-6 
+      space-y-6 rounded-3xl border border-white/10 shadow-2xl
+      max-h-[85vh] overflow-y-auto no-scrollbar
+      bg-gradient-to-b from-[#0f0f1a] to-[#05050d]
+      text-white
+    "
+  > 
+    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+      <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight tracking-wide">
+        {question.title}
+      </h1>
 
-        <strong className="text-2xl block mb-1 mt-3">{question.title}</strong>
-        <i className="text-sm">
-          {question.difficulty == "Easy" ? (
-            <p className="text-green-600">Easy</p>
-          ) : (
-            <p className="text-yellow-600">Medium </p>
-          )}
-          {question.difficulty == "hard" ? (
-            <p className="text-red-500">Hard</p>
-          ) : (
-            " "
-          )}
-        </i>
-
-        {/* Problem Statement */}
-        <div className="mt-4">
-          <h3 className="font-semibold mb-1 ">Problem Statement</h3>
-          <p className=" leading-relaxed">{question.description}</p>
-        </div>
-
-        {/* Topics */}
-        {question.tags?.length > 0 && (
-          <div className="mt-4">
-            <h3 className="font-semibold mb-1 ">Topics</h3>
-            <ul className="list-inside list-decimal space-y-1">
-              {question.tags?.map((tag, index) => (
-                <li key={index} className="">
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Step-by-Step Guide */}
-        {question.stepByStepGuide?.length > 0 && (
-          <div className="mt-4">
-            <h3 className="font-semibold mb-1 ">Step-by-Step Guide</h3>
-            <ol className="list-inside list-decimal space-y-1">
-              {question.stepByStepGuide?.map((step, index) => (
-                <li key={index} className="">
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
-        <div className="mt-4">
-        <strong className="font-medium">Constraints: </strong> <br></br>
-          <code className="bg-gray-500 text-sm">
-            {question.constraints}
-          </code>
-        </div>
-       
-        {/* Test Cases */}
-       {question.testCases?.length > 0 && (
-  <div className="mt-4">
-    <h3 className="font-semibold mb-2">Test Cases</h3>
-    {question.testCases?.map((testCase, index) => (
-      <div
-        key={index}
-        className="mb-3 p-3 bg-slate-50 border border-slate-200 testCases rounded-md text-sm"
+      <span
+        className={`w-fit shrink-0 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold tracking-wide
+          ${
+            question.difficulty === "Easy"
+              ? "bg-gradient-to-r from-green-400 to-emerald-500 text-black"
+              : question.difficulty === "Hard"
+              ? "bg-gradient-to-r from-red-500 to-pink-600 text-white"
+              : "bg-gradient-to-r from-yellow-400 to-orange-500 text-black"
+          }`}
       >
-        <p className="font-medium mb-1">Test Case {index + 1}</p>
+        {question.difficulty}
+      </span>
+    </div>
+ 
+    <div>
+      <h3 className="font-bold text-base sm:text-lg mb-2 text-cyan-400">
+        Problem Statement
+      </h3>
+      <p className="leading-relaxed text-sm sm:text-base text-gray-300">
+        {question.description}
+      </p>
+    </div>
+ 
+    {question.tags?.length > 0 && (
+      <div>
+        <h3 className="font-bold text-base sm:text-lg mb-2 text-purple-400">
+          Topics
+        </h3>
 
-        {/* Input */}
-        <p>
-          <strong>Input:</strong>{" "}
-          {Array.isArray(testCase.input)
-            ? `[${testCase.input.join(", ")}]`
-            : typeof testCase.input === "object"
-            ? Object.entries(testCase.input)
-                .map(
-                  ([key, value]) =>
-                    `${key}: ${Array.isArray(value) ? `[${value.join(", ")}]` : value}`
-                )
-                .join(", ")
-            : testCase.input}
-        </p>
-
-        {/* Expected Output */}
-        <p>
-          <strong>Expected Output:</strong>{" "}
-          {Array.isArray(testCase.expectedOutput)
-            ? `[${testCase.expectedOutput.join(", ")}]`
-            : typeof testCase.expectedOutput === "object"
-            ? JSON.stringify(testCase.expectedOutput)
-            : testCase.expectedOutput}
-        </p>
+        <div className="flex flex-wrap gap-2">
+          {question.tags.map((tag, index) => (
+            <span
+              key={index}
+              className="
+                px-3 py-1 rounded-full text-xs font-bold tracking-wide
+                bg-white/5 border border-white/15 text-blue-300
+                shadow-sm
+              "
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
-    ))}
+    )}
+ 
+    {question.stepByStepGuide?.length > 0 && (
+      <div>
+        <h3 className="font-bold text-base sm:text-lg mb-2 text-green-400">
+          Step-by-Step Guide
+        </h3>
+
+        <ol className="space-y-2 list-decimal list-inside text-sm sm:text-base text-gray-300">
+          {question.stepByStepGuide.map((step, index) => (
+            <li key={index}>{step}</li>
+          ))}
+        </ol>
+      </div>
+    )}
+ 
+    {question.constraints && (
+      <div
+        className="
+          rounded-xl p-3 sm:p-4 text-xs sm:text-sm font-mono
+          overflow-x-auto
+          bg-black/50 border border-white/10 text-gray-200
+        "
+      >
+        <strong className="block mb-1 font-semibold text-yellow-400">
+          Constraints
+        </strong>
+        {question.constraints}
+      </div>
+    )}
+ 
+    {question.testCases?.length > 0 && (
+      <div>
+        <h3 className="font-bold text-base sm:text-lg mb-3 text-pink-400">
+          Test Cases
+        </h3>
+
+        <div className="space-y-4">
+          {question.testCases.map((testCase, index) => (
+            <div
+              key={index}
+              className="
+                rounded-2xl p-4 border border-white/10 shadow-lg
+                bg-black/40
+              "
+            >
+              <p className="font-semibold mb-2 text-sm sm:text-base text-cyan-300">
+                Test Case {index + 1}
+              </p>
+
+              <div className="text-xs sm:text-sm space-y-1 text-gray-300 break-words font-mono">
+                <p>
+                  <strong className="text-yellow-400">Input:</strong>{" "}
+                  {Array.isArray(testCase.input)
+                    ? `[${testCase.input.join(", ")}]`
+                    : typeof testCase.input === "object"
+                    ? Object.entries(testCase.input)
+                        .map(
+                          ([key, value]) =>
+                            `${key}: ${
+                              Array.isArray(value)
+                                ? `[${value.join(", ")}]`
+                                : value
+                            }`
+                        )
+                        .join(", ")
+                    : testCase.input}
+                </p>
+
+                <p>
+                  <strong className="text-green-400">Expected Output:</strong>{" "}
+                  {Array.isArray(testCase.expectedOutput)
+                    ? `[${testCase.expectedOutput.join(", ")}]`
+                    : typeof testCase.expectedOutput === "object"
+                    ? JSON.stringify(testCase.expectedOutput)
+                    : testCase.expectedOutput}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
-)}
+</>
 
-      </div>
-    </>
   );
 };
 

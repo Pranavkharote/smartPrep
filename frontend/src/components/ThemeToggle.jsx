@@ -6,15 +6,15 @@ export default function DarkModeToggle() {
     return localStorage.getItem('theme') === 'dark';
   });
 
-  useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add('dark-mode');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.body.classList.remove('dark-mode');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDarkMode]);
+  // useEffect(() => {
+  //   if (isDarkMode) {
+  //     document.body.classList.add('dark-mode');
+  //     localStorage.setItem('theme', 'dark');
+  //   } else {
+  //     document.body.classList.remove('dark-mode');
+  //     localStorage.setItem('theme', 'light');
+  //   }
+  // }, [isDarkMode]);
 
   return (
     <button  className="absolute right-3 top-3 "
