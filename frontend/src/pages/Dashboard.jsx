@@ -128,14 +128,14 @@ const Dashboard = () => {
               {getGreeting()}, {userData?.name || "Coder"} 👋
             </h2>
             <p className="text-gray-400">
-              Your personal interview command center
+              Your personal coding practice center
             </p>
           </div>
 
-          <div className="ml-auto flex items-center gap-2 bg-indigo-600/20 px-4 py-2 rounded-full text-sm font-semibold">
+          {/* <div className="ml-auto flex items-center gap-2 bg-indigo-600/20 px-4 py-2 rounded-full text-sm font-semibold">
             <FaFire className="text-orange-400" />
             Streak Active
-          </div>
+          </div> */}
         </div>
       </motion.div>
 
