@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
-import DarkModeToggle from "../components/ThemeToggle";
 import "react-toastify/dist/ReactToastify.css";
 import { FaUserLock, FaUserPlus } from "react-icons/fa";
 
@@ -44,8 +43,6 @@ export default function Authentication() {
 
 return (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 px-4 text-white">
-    {/* <DarkModeToggle /> */}
-
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
