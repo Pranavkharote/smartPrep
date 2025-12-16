@@ -449,7 +449,7 @@ ${promptToSend}
                 <p className="text-cyan-400 font-semibold">
                   You: <span className="text-white">{msg.user}</span>
                 </p>
-                <div className="text-green-400 mt-1">
+                <div className="text-slate-200 mt-1">
                   AI:
                   {typeof msg.ai === "string" ? (
                     <MarkdownRenderer markdownText={msg.ai} />
