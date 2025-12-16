@@ -381,7 +381,7 @@ ${promptToSend}
           </div>
 
           {output && (
-            <pre className="mt-4 p-4 rounded-lg text-sm bg-black border border-green-500/30 text-green-400 max-h-[200px] overflow-y-auto font-mono shadow-inner">
+            <pre className="mt-4 p-4 rounded-lg text-sm bg-black border border-green-500/30 text-slate-200 max-h-[200px] overflow-y-auto font-mono shadow-inner">
               {output}
             </pre>
           )}
