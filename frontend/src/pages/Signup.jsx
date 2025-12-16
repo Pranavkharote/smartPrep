@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
-import DarkModeToggle from "../components/ThemeToggle";
+
 
 
 function Signup() {
@@ -78,7 +78,7 @@ function Signup() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 login">
-    <DarkModeToggle />
+  
       <div className="bg-white  shadow-xl rounded-xl w-full max-w-md px-7 h-140 inlogin">
         <div className="flex justify-center ">
             <img

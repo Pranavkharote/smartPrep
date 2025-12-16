@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaReact, FaNodeJs, FaDatabase } from "react-icons/fa";
 import { SiTailwindcss, SiMongodb, SiExpress } from "react-icons/si";
-import DarkModeToggle from "../components/ThemeToggle";
+
 import GithubCorner from "react-github-corner";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
