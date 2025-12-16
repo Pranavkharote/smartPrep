@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "../api/axiosConfig";
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
-import DarkModeToggle from "../components/ThemeToggle";
+// import DarkModeToggle from "../components/ThemeToggle";
 import Loader from "../assets/Loader";
 
 const SubmissionHistory = () => {
@@ -48,7 +48,7 @@ const SubmissionHistory = () => {
                 bg-gradient-to-br from-[#0f0f1a] via-[#080812] to-[#05050d] 
                 text-white"
     >
-      <DarkModeToggle />
+      {/* <DarkModeToggle /> */}
 
       <h1
         className="text-3xl font-extrabold mb-10 text-center 
@@ -70,7 +70,7 @@ const SubmissionHistory = () => {
             shadow-2xl rounded-2xl p-6
           "
             >
-              {/* ✅ TITLE + STATUS */}
+          
               <div className="flex flex-wrap justify-between items-center mb-4 gap-3">
                 <h2 className="text-xl font-semibold text-cyan-400">
                   {sub.questionId?.title || "Untitled Question"}
@@ -88,7 +88,7 @@ const SubmissionHistory = () => {
                 </span>
               </div>
 
-              {/* ✅ META INFO */}
+           
               <div className="space-y-1 mb-4 text-gray-300 text-sm">
                 <p>
                   ⏱ <strong className="text-cyan-400">Time Taken:</strong>{" "}
@@ -100,7 +100,7 @@ const SubmissionHistory = () => {
                 </p>
               </div>
 
-              {/* ✅ CODE */}
+    
               <div>
                 <p className="font-semibold mb-2 text-pink-400">
                   🧠 Submitted Code:

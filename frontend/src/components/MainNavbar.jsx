@@ -7,7 +7,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import DarkModeToggle from "./ThemeToggle";
+// import DarkModeToggle from "./ThemeToggle";
 
 const navigation = [{ name: "Dashboard", href: "/dashboard", current: true }];
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;

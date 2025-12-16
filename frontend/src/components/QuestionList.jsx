@@ -3,7 +3,7 @@ import axios from "../api/axiosConfig";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import NavbarFilter from "./NavbarFilter"; // the new UI version of NavbarFilter
-import DarkModeToggle from "./ThemeToggle";
+// import DarkModeToggle from "./ThemeToggle";
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
 
 const difficultyColors = {
