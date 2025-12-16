@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaReact, FaNodeJs, FaDatabase } from "react-icons/fa";
 import { SiTailwindcss, SiMongodb, SiExpress } from "react-icons/si";
-
 import GithubCorner from "react-github-corner";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
@@ -21,9 +20,7 @@ const WelcomePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f0f1a] via-[#080812] to-[#05050d] text-white">
-      <div className="absolute top-4 left-6 flex items-center gap-3 z-50">
-        {/* <DarkModeToggle /> */}
-      </div>
+      <div className="absolute top-4 left-6 flex items-center gap-3 z-50"></div>
 
       <GithubCorner href="https://github.com/pranavkharote/smartPrep" />
 

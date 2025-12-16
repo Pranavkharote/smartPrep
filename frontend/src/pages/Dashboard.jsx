@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext } from "react";
 import { motion } from "framer-motion";
 import axios from "../api/axiosConfig";
 import Loader from "../assets/Loader";
-import DarkModeToggle from "../components/ThemeToggle";
 import "../index.css";
 import { Link } from "react-router-dom";
 import { FaHome, FaFire, FaSignOutAlt } from "react-icons/fa";
@@ -15,7 +14,7 @@ const Dashboard = () => {
 
   const { userData, handleLogout } = useContext(AuthContext);
 
-  // ✅ Greeting based on time
+
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return "Good Morning";
@@ -23,7 +22,6 @@ const Dashboard = () => {
     return "Good Evening";
   };
 
-  // ✅ Avatar initials
   const getInitials = (name = "") => {
     if (!name) return "U";
     const parts = name.trim().split(" ");
@@ -31,7 +29,7 @@ const Dashboard = () => {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   };
 
-  // ✅ Fetch submission history (JWT auto-attached)
+
   useEffect(() => {
     const fetchHistory = async () => {
       try {
