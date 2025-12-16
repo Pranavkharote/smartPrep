@@ -41,70 +41,74 @@ const Login = () => {
     setUserInfo({ email: "", password: "" });
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 login">
-      <DarkModeToggle />
+return (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white p-6">
+    <DarkModeToggle />
 
-      <div className="bg-white shadow-xl rounded-xl w-full max-w-md p-8 inlogin">
-        <div className="flex justify-center mb-6">
-          <img
-            src="/ChatGPT Image Jul 12, 2025, 01_36_46 PM.png"
-            alt="SmartPrep Logo"
-            className="w-30 h-30"
+    <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-8">
+      <div className="flex justify-center mb-6">
+        <img
+          src="/ChatGPT Image Jul 12, 2025, 01_36_46 PM.png"
+          alt="SmartPrep Logo"
+          className="w-24 h-24"
+        />
+      </div>
+
+      <h2 className="text-center mb-2 text-3xl font-extrabold tracking-wide">
+        Smart<span className="text-indigo-400">Prep</span> Login
+      </h2>
+
+      <p className="text-center text-gray-400 mb-8 text-sm">
+        Practice coding, track progress, and grow consistently
+      </p>
+
+      <form className="space-y-5" onSubmit={handleSubmit}>
+        <div>
+          <label className="block text-sm mb-1 text-gray-400">Email</label>
+          <input
+            type="email"
+            placeholder="you@example.com"
+            className="w-full px-4 py-2 rounded-xl bg-black/30 border border-white/10 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white placeholder-gray-500"
+            name="email"
+            onChange={handleOnChange}
+            value={email}
+            required
           />
         </div>
 
-        <h2 className="text-center mb-4 text-3xl font-bold tracking-tight text-green-600">
-          SmartPrep Login
-        </h2>
+        <div>
+          <label className="block text-sm mb-1 text-gray-400">Password</label>
+          <input
+            type="password"
+            placeholder="••••••••"
+            className="w-full px-4 py-2 rounded-xl bg-black/30 border border-white/10 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white placeholder-gray-500"
+            name="password"
+            onChange={handleOnChange}
+            value={password}
+            required
+          />
+        </div>
 
-        <p className="text-center opacity-50 mb-6 text-sm">
-          Practice coding questions, track your progress & grow!
-        </p>
+        <button
+          disabled={loading}
+          className="w-full mt-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:brightness-110 text-white font-bold py-3 rounded-2xl transition shadow-lg"
+        >
+          {loading ? "Logging In..." : "Login"}
+        </button>
+      </form>
 
-        <form className="space-y-5" onSubmit={handleSubmit}>
-          <div>
-            <label className="block text-sm mb-1 opacity-80">Email</label>
-            <input
-              type="email"
-              placeholder="you@example.com"
-              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-80"
-              name="email"
-              onChange={handleOnChange}
-              value={email}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm mb-1 opacity-80">Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 opacity-50"
-              name="password"
-              onChange={handleOnChange}
-              value={password}
-              required
-            />
-          </div>
-
-          <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-md transition-colors duration-200">
-            {loading ? "Logging In..." : "Login"}
-          </button>
-        </form>
-
-        <p className="text-center mt-4 text-gray-500 text-sm">
-          Don’t have an account?{" "}
-          <Link className="text-green-600 hover:underline" to="/signup">
-            Sign up
-          </Link>
-        </p>
-      </div>
-
-      <ToastContainer />
+      <p className="text-center mt-6 text-gray-400 text-sm">
+        Don’t have an account?{" "}
+        <Link className="text-indigo-400 hover:underline" to="/signup">
+          Sign up
+        </Link>
+      </p>
     </div>
-  );
+
+    <ToastContainer />
+  </div>
+);
+
 };
 
 export default Login;
