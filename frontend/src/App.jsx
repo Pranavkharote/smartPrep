@@ -1,7 +1,5 @@
 import QuestionList from "./components/QuestionList";
-import Login from "./pages/Login";
 import MainQuestionEditorComponent from "./components/MainQuestionEditorComponent";
-import Signup from "./pages/Signup";
 import { Routes, Route, Router } from "react-router-dom";
 import "./index.css";
 import Dashboard from "./pages/Dashboard";
