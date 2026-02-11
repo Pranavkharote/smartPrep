@@ -10,6 +10,12 @@ const authenticateUser = require("../middlewares/AuthMiddleware");
 const Gemini = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(Gemini);
 
+console.log("RENDER ENV CHECK:", {
+  exists: !!process.env.GEMINI_API_KEY,
+  length: process.env.GEMINI_API_KEY?.length,
+});
+
+
 router.post("/ask", authenticateUser, async (req, res) => {
   const { prompt, questionTitle, questionDescription  } = req.body;
 
